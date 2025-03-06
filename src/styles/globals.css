@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fondo decorativo */
+.background-decoration {
+    @apply absolute top-0 left-0 w-full h-full overflow-hidden z-[-1];
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+    /* Modo claro */
+    .dark & {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        /* Modo oscuro */
+    }
+}
+
+/* Curva superior (luz blanca en modo claro, tenue en oscuro) */
+.background-decoration::before {
+    content: "";
+    @apply absolute -top-52 -left-52 w-[400px] h-[400px] rounded-full;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+    filter: blur(50px);
+    opacity: 0.6;
+
+    .dark & {
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+        opacity: 0.4;
+        /* Menos intensa en modo oscuro */
+    }
+}
+
+/* Curva inferior (luz azul en modo claro, púrpura suave en oscuro) */
+.background-decoration::after {
+    content: "";
+    @apply absolute -bottom-40 right-[-150px] w-[300px] h-[300px] rounded-full;
+    background: radial-gradient(circle, rgba(100, 150, 255, 0.5) 0%, rgba(100, 150, 255, 0) 70%);
+    filter: blur(40px);
+    opacity: 0.5;
+
+    .dark & {
+        background: radial-gradient(circle, rgba(147, 51, 234, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+        opacity: 0.5;
+        /* Cambio a tono púrpura para modo oscuro */
+    }
+}
