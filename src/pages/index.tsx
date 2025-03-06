@@ -1,409 +1,138 @@
+import DefaultLayout from "@/layouts/default";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
-import { Form } from "@heroui/form";
 import { Image } from "@heroui/image";
-import { Select, SelectItem } from "@heroui/select";
-import { cn } from "@heroui/theme";
+import { motion } from "framer-motion";
 
-import { useGlobalStore } from "@/hooks/useGlobalStore";
-import DefaultLayout from "@/layouts/default";
-import { Input } from "@heroui/input";
-import { Listbox, ListboxItem } from "@heroui/listbox";
-import { BugIcon, Droplets, FlameKindling, MonitorX, ShieldAlert, UtilityPole } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+const LandingPage = () => {
+  const products = [
+    { name: "iPhone Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "Cell Phone Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "Chromebook Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "Laptop Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "iPad Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "Tablet Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "Camera Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "Gaming System Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "iPod Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "eReader Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "Apple Watch Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+    { name: "Smartwatch Insurance", image: "https://http2.mlstatic.com/D_NQ_NP_896424-MLA71783367608_092023-O.webp" },
+  ];
 
-// Static text content
-const TEXT_CONTENT = {
-  title: "Phone Insurance",
-  subtitle: "Protect your device with comprehensive coverage",
-  lossesTitle: "Losses Covered",
-  quoteTitle: "Get a no-obligation quote",
-  quoteDescription:
-    "Make sure your valuable personal electronic devices are protected! Mishaps can happen at any time, Worth Ave. Group can protect your Phone against cracked screens, spills, theft and more!",
-  disclaimer: "",
-};
-
-const AVAILABLE_OPTIONS = {
-  states: [
-    { key: "Maine", label: "Maine" },
-    { key: "California", label: "California" },
-    { key: "New York", label: "New York" },
-    { key: "Texas", label: "Texas" }
-  ],
-  coverageAmounts: [
-    { key: "$649.00", label: "$649.00" },
-    { key: "$799.00", label: "$799.00" },
-    { key: "$999.00", label: "$999.00" }
-  ],
-  deductibles: [
-    { key: "$75", label: "$75" },
-    { key: "$100", label: "$100" },
-    { key: "$150", label: "$150" }
-  ],
-  policyTerms: [
-    { key: "1 Year", label: "1 Year" },
-    { key: "2 Year", label: "2 Year" },
-    { key: "3 Year", label: "3 Year" }
-  ],
-  paymentOptions: [
-    { key: "Annual One-Time", label: "Annual One-Time" },
-    { key: "Monthly", label: "Monthly" },
-    { key: "Quarterly", label: "Quarterly" }
-  ]
-};
-
-// Lista de servicios
-const SERVICES = [
-  {
-    key: "cracked_screens",
-    label: "Cracked Screens",
-    icon: <MonitorX className="text-lg" />,
-    color: "bg-primary/10 text-primary",
-  },
-  {
-    key: "spills_liquid",
-    label: "Spills & Liquid Submersion",
-    icon: <Droplets className="text-lg" />,
-    color: "bg-warning/10 text-warning",
-  },
-  {
-    key: "accidental_damage",
-    label: "Accidental Damage (Drops)",
-    icon: <BugIcon className="text-lg" />,
-    color: "bg-danger/10 text-danger",
-  },
-  {
-    key: "theft_vandalism",
-    label: "Theft & Vandalism",
-    icon: <ShieldAlert className="text-lg" />,
-    color: "bg-success/10 text-success",
-  },
-  {
-    key: "natural_disasters",
-    label: "Fire, Flood & Natural Disasters",
-    icon: <FlameKindling className="text-lg" />,
-    color: "bg-secondary/10 text-secondary",
-  },
-  {
-    key: "power_surge",
-    label: "Power Surge By Lightning",
-    icon: <UtilityPole className="text-lg" />,
-    color: "bg-default/50 text-foreground",
-  },
-];
-const IconWrapper = ({ children, className }: any) => (
-  <div
-    className={cn(
-      className,
-      "flex items-center rounded-small justify-center w-7 h-7",
-    )}
-  >
-    {children}
-  </div>
-);
-
-export default function IndexPage() {
-  const [errors, setErrors] = useState({}) as any
-  const { store, setStore } = useGlobalStore();
-  const navigate = useNavigate();
-  const [steps, setSteps] = useState(1);
-
-  const [formValues, setFormValues] = useState({
-    state: new Set([]),
-    coverageAmount: new Set([]),
-    deductible: new Set([]),
-    policyTerm: new Set([]),
-    paymentOption: new Set([]),
-
-    manufacturer: "",
-    model: "",
-    serialNumber: ""
-  });
-  console.log(formValues)
-  const updateFormValue = (name, value) => {
-    setFormValues((prev) => ({ ...prev, [name]: value }));
-  };
-
-
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const data = formValues
-    const newErrors = {} as any;
-
-    if (steps === 2) { //onFinish
-      const parsedData = {
-        ...data,
-        state: Array.from(data.state)[0],
-        coverageAmount: Array.from(data.coverageAmount)[0],
-        deductible: Array.from(data.deductible)[0],
-        policyTerm: Array.from(data.policyTerm)[0],
-        paymentOption: Array.from(data.paymentOption)[0],
-      };
-      setStore({ cart: [...store?.cart || [], parsedData] });
-    }
-
-
-    setSteps(steps + 1)
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-
-      return;
-    }
-
-
-    setErrors({});
-  };
+  const fadeIn = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 1 } } };
+  const slideUp = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { duration: 0.8 } } };
+  const slideRight = { hidden: { x: -20, opacity: 0 }, visible: { x: 0, opacity: 1, transition: { duration: 0.8 } } };
 
   return (
     <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <div className="grid grid-cols-12 gap-6 max-w-6xl w-full">
-          {/* Columna izquierda: Imagen y lista de servicios */}
-          <div className="col-span-4 flex flex-col gap-4">
-            <Card className="py-4">
-              <CardBody className="overflow-visible py-2">
-                <Image
-                  alt="Card background"
-                  className="object-cover rounded-xl"
-                  src="https://img.freepik.com/free-vector/customer-getting-insurance-coverage-protection-using-smartphone-demand-insurance-online-policy-personalized-isurance-service-concept-pinkish-coral-bluevector-isolated-illustration_335657-1337.jpg?t=st=1741198135~exp=1741201735~hmac=656c113ef59d13b16d5f4caae72784ee9dca60e2220ea96fc017a1d68f1ac80f&w=1060"
-                  width={270}
-                />
-                <div className="flex flex-col  self-center">
-                  <h4 className="font-bold text-large">{TEXT_CONTENT.title}</h4>
-                  <small className="text-default-500">
-                    {TEXT_CONTENT.subtitle}
-                  </small>
-                  <p className="text-tiny uppercase font-bold mt-4 mb-2">
-                    {TEXT_CONTENT.lossesTitle}
-                  </p>
-                  <Listbox
-                    aria-label="Services Covered"
-                    className="p-0 gap-0 bg-content1 max-w-[300px] overflow-visible shadow-small rounded-medium"
-                    itemClasses={{
-                      base: "px-3 first:rounded-t-medium last:rounded-b-medium rounded-none gap-3 h-12 data-[hover=true]:bg-default-100/80",
-                    }}
-                  >
-                    {SERVICES.map((service) => (
-                      <ListboxItem
-                        key={service.key}
-                        startContent={
-                          <IconWrapper className={service.color}>
-                            {service.icon}
-                          </IconWrapper>
-                        }
-                      >
-                        {service.label}
-                      </ListboxItem>
-                    ))}
-                  </Listbox>
+      <div className="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        {/* Hero Section */}
+        <section className="relative py-16 bg-gradient-to-r from-blue-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 text-white mb-12" style={{ background: 'radial-gradient(#ab65655e, #e0e4ee)' }}>
+          <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center">
+            {/* Left Content */}
+            <motion.div
+              className="w-full md:w-1/2 text-center md:text-left mb-8 md:mb-0"
+              initial="hidden"
+              animate="visible"
+              variants={fadeIn}
+            >
+              <motion.div className="flex justify-center mb-4" variants={slideUp}>
+                <span className="text-green-600 font-semibold dark:text-green-400">Trustpilot</span>
+                <span className="ml-2 text-yellow-400">⭐⭐⭐⭐☆</span>
+              </motion.div>
+              <motion.h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight" variants={slideUp}>
+                Your Trusted Partner <br /> for Electronic Device Insurance
+              </motion.h1>
+              <motion.p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-6" variants={slideUp} transition={{ delay: 0.2 }}>
+                Reliable coverage for all your devices, backed by decades of expertise.
+              </motion.p>
+              <motion.div className="flex justify-center space-x-4 mb-6" variants={slideUp} transition={{ delay: 0.4 }}>
+                <Button color="primary" size="md" className="px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-shadow dark:bg-blue-600 dark:hover:bg-blue-700">
+                  Get Individual Quotes
+                </Button>
+                <Button color="danger" size="md" className="px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-shadow dark:bg-red-600 dark:hover:bg-red-700">
+                  K-12 School Quotes
+                </Button>
+              </motion.div>
+              <motion.div className="flex justify-center gap-4 items-center mb-6" variants={slideUp} transition={{ delay: 0.6 }}>
+                <Image src="https://via.placeholder.com/150?text=Damaged+Laptop" alt="Damaged Laptop" className="w-20 h-20 object-cover rounded-lg shadow-md" />
+                <Image src="https://via.placeholder.com/150?text=Damaged+Phone" alt="Damaged Phone" className="w-16 h-16 object-cover rounded-lg shadow-md" />
+                <Image src="https://via.placeholder.com/150?text=Damaged+Tablet" alt="Damaged Tablet" className="w-18 h-18 object-cover rounded-lg shadow-md" />
+              </motion.div>
+              <motion.div className="flex justify-center gap-4 text-sm text-gray-700 dark:text-gray-300" variants={slideUp} transition={{ delay: 0.8 }}>
+                <div className="flex items-center bg-yellow-100 dark:bg-yellow-800 px-4 py-2 rounded-full shadow-md">
+                  <span className="mr-2">✅</span> +50 Years in the Business
                 </div>
-              </CardBody>
-            </Card>
+                <div className="flex items-center bg-blue-100 dark:bg-blue-800 px-4 py-2 rounded-full shadow-md">
+                  <span className="mr-2">👍</span> Backed by an A Best Rated Underwriter
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Side (Images with Animation) */}
+            <div className="w-full md:w-1/2 relative flex justify-center">
+              <motion.img
+                src="https://purepng.com/public/uploads/large/purepng.com-apple-iphone-xappleapple-iphonephonesmartphonemobile-devicetouch-screeniphone-xiphone-10electronicsobjects-2515306895701eqxj.png"
+                alt="Hero Image"
+                initial="hidden"
+                animate="visible"
+                className="w-64 md:w-96 rotate-12"
+                variants={slideRight}
+                style={{ top: '4rem', left: '12rem', width: '17rem', transform: 'rotate(25deg) !important', position: 'absolute' }}
+              />
+              <motion.img
+                src="https://purepng.com/public/uploads/large/purepng.com-laptop-notebooklaptopsnotebooknotebook-computerclamshell-1701528355017rdiqu.png"
+                alt="Hero Image"
+                initial="hidden"
+                animate="visible"
+                variants={slideRight}
+                transition={{ delay: 0.2 }}
+                style={{ top: '-17rem', left: '15rem', width: '20rem', transform: 'rotate(5deg)', position: 'absolute' }}
+              />
+            </div>
           </div>
+        </section>
 
-          {/* Columna derecha: Formulario en dos columnas */}
-          <div className="col-span-8 ">
-            <Card className="p-4 h-full ">
-              <h2 className="font-bold text-xl mb-4">
-                {TEXT_CONTENT.quoteTitle}
-              </h2>
-              <p className="text-default-500 mb-4">
-                {TEXT_CONTENT.quoteDescription}
-              </p>
-              <Form
-                className="w-full space-y-4"
-                validationErrors={errors}
-                onReset={() => setSteps(1)}
-                onSubmit={onSubmit}
-              >
-                {steps === 1 && <div className="w-full grid grid-cols-2 gap-4">
-
-                  <Select
-                    isRequired
-                    label="State"
-                    labelPlacement="outside"
-                    name="state"
-                    placeholder="Select your state"
-                    items={AVAILABLE_OPTIONS.states}
-                    onSelectionChange={(value) => updateFormValue("state", value)}
-                    selectedKeys={formValues.state}
-                  >
-                    {(state) => (
-                      <SelectItem key={state.key}>
-                        {state.label}
-                      </SelectItem>
-                    )}
-                  </Select>
-
-                  <Select
-                    isRequired
-                    label="Coverage Amount"
-                    labelPlacement="outside"
-                    name="coverageAmount"
-                    placeholder="Select coverage amount"
-                    items={AVAILABLE_OPTIONS.coverageAmounts}
-                    onSelectionChange={(value) => updateFormValue("coverageAmount", value)}
-                    selectedKeys={formValues.coverageAmount}
-
-                  >
-                    {(coverageAmount) => (
-                      <SelectItem key={coverageAmount.key}>
-                        {coverageAmount.label}
-                      </SelectItem>
-                    )}
-                  </Select>
-
-                  <Select
-                    isRequired
-                    label="Deductible"
-                    labelPlacement="outside"
-                    name="deductible"
-                    placeholder="Select deductible"
-                    items={AVAILABLE_OPTIONS.deductibles}
-                    onSelectionChange={(value) => updateFormValue("deductible", value)}
-                    selectedKeys={formValues.deductible}
-                  >
-                    {(deductible) => (
-                      <SelectItem key={deductible.key}>
-                        {deductible.label}
-                      </SelectItem>
-                    )}
-
-                  </Select>
-
-                  <Select
-                    isRequired
-                    label="Policy Term"
-                    labelPlacement="outside"
-                    name="policyTerm"
-                    placeholder="Select policy term"
-                    items={AVAILABLE_OPTIONS.policyTerms}
-                    onSelectionChange={(value) => updateFormValue("policyTerm", value)}
-                    selectedKeys={formValues.policyTerm}
-                  >
-                    {(policyTerm) => (
-                      <SelectItem key={policyTerm.key}>
-                        {policyTerm.label}
-                      </SelectItem>
-                    )}
-                  </Select>
-
-                  <Select
-                    isRequired
-                    label="Payment Option"
-                    labelPlacement="outside"
-                    name="paymentOption"
-                    placeholder="Select payment option"
-                    items={AVAILABLE_OPTIONS.paymentOptions}
-                    onSelectionChange={(value) => updateFormValue("paymentOption", value)}
-                    selectedKeys={formValues.paymentOption}
-                  >
-                    {(paymentOption) => (
-                      <SelectItem key={paymentOption.key}>
-                        {paymentOption.label}
-                      </SelectItem>
-                    )}
-                  </Select>
-
-                </div>}
-
-                {steps === 2 && <div className="w-full grid grid-cols-2 gap-4">
-                  <Input
-                    isRequired
-                    label="Manufacturer"
-                    labelPlacement="outside"
-                    name="manufacturer"
-                    placeholder="Enter manufacturer"
-                    onValueChange={(value) => updateFormValue("manufacturer", value)}
-                    value={formValues.manufacturer}
-                  />
-
-
-                  <Input
-                    isRequired
-                    label="Model"
-                    labelPlacement="outside"
-                    name="model"
-                    placeholder="Enter model"
-                    value={formValues.model}
-                    onValueChange={(value) => updateFormValue("model", value)}
-
-                  />
-
-                  <Input
-                    isRequired
-                    label="Device Serial Number"
-                    labelPlacement="outside"
-                    name="serialNumber"
-                    placeholder="Enter serial number"
-                    value={formValues.serialNumber}
-                    onValueChange={(value) => updateFormValue("serialNumber", value)}
-                  />
-                </div>}
-
-                {steps === 3 && (
-                  <div className="w-full grid grid-cols-1 gap-4">
-                    <div className="flex flex-col items-center justify-center p-6 bg-success/10 rounded-medium">
-                      <h3 className="text-xl font-bold text-success mb-2">
-                        Application Completed!
-                      </h3>
-                      <p className="text-default-600 text-center">
-                        Thank you for choosing our phone insurance. We have successfully received your application.
-                        You will soon receive an email with your policy details and next steps.
-                        Your device is on its way to being protected!
-                      </p>
-                      <Button
-                        color="success"
-                        className="mt-4 text-white"
-                        onClick={() => {
-                          navigate("/cart");
-                        }}
-                      >
-                        Go to cart
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {steps !== 3 && <div className="flex gap-4">
-                  <Button className="w-full" color="primary" type="submit">
-                    {steps === 1 ? "Next" : "Submit"}
-                  </Button>
-                  <Button variant="bordered"
-                    onPress={() => {
-                      if (steps === 1) {
-                        setFormValues({
-                          state: new Set([]),
-                          coverageAmount: new Set([]),
-                          deductible: new Set([]),
-                          policyTerm: new Set([]),
-                          paymentOption: new Set([]),
-
-                          manufacturer: "",
-                          model: "",
-                          serialNumber: ""
-                        });
-                      } else {
-                        setSteps(steps - 1)
-                      }
-                    }}
-                  >
-                    {steps === 1 ? "Reset" : "Back"}
-                  </Button>
-                </div>}
-
-                <p className="text-tiny text-warning">
-                  {TEXT_CONTENT.disclaimer}
-                </p>
-
-
-              </Form>
-            </Card>
+        {/* Products Section */}
+        <section className="py-12 bg-white dark:bg-gray-800">
+          <div className="max-w-5xl mx-auto px-4">
+            <motion.h2
+              className="text-2xl font-semibold text-gray-800 dark:text-white mb-8 text-center"
+              initial="hidden"
+              animate="visible"
+              variants={fadeIn}
+            >
+              Our Products
+            </motion.h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {products.map((product, index) => (
+                <motion.div
+                  key={index}
+                  className="p-3 text-center shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-700"
+                  initial="hidden"
+                  animate="visible"
+                  variants={slideUp}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card>
+                    <CardBody>
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        className="w-16 h-16 mx-auto mb-2 object-contain rounded-md"
+                      />
+                      <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">{product.name}</p>
+                    </CardBody>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </DefaultLayout>
   );
-}
+};
+
+export default LandingPage;

@@ -6,7 +6,7 @@ export const siteConfig = {
   navItems: [
     {
       label: "Get Insurance",
-      href: "/",
+      href: "/get-insurance",
     },
     {
       label: "Cart",
