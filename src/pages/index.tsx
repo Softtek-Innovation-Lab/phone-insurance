@@ -105,7 +105,7 @@ const IconWrapper = ({ children, className }: any) => (
 
 export default function IndexPage() {
   const [errors, setErrors] = useState({}) as any
-  const { store, setStore, clearStore } = useGlobalStore();
+  const { store, setStore } = useGlobalStore();
   const navigate = useNavigate();
   const [steps, setSteps] = useState(1);
 
@@ -152,7 +152,7 @@ export default function IndexPage() {
       return;
     }
 
-    
+
     setErrors({});
   };
 
