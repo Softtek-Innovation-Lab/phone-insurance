@@ -1,4 +1,3 @@
-# Workflow para desplegar una aplicación Vite + React a GitHub Pages
 name: Deploy Vite React App to Pages
 
 on:
@@ -28,14 +27,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'  
-          cache: 'yarn'   
+          node-version: '20'
+          cache: 'yarn'
       
       - name: Install dependencies
-        run: yarn install --frozen-lockfile  
+        run: yarn install --frozen-lockfile
       
       - name: Build
-        run: yarn build  
+        run: yarn build
+      
+      - name: Copy index.html to 404.html
+        run: cp dist/index.html dist/404.html
       
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -43,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'  
+          path: './dist'
       
       - name: Deploy to GitHub Pages
         id: deployment
