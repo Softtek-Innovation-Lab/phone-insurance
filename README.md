@@ -1,6 +1,6 @@
-# Vite & HeroUI Template
+# Phone Insurance Demo
 
-This is a template for creating applications using Vite and HeroUI (v2).
+Demo 
 
 [Try it on CodeSandbox](https://githubbox.com/frontio-ai/vite-template)
 
