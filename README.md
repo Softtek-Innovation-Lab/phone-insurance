@@ -2,7 +2,11 @@
 
 Demo 
 
-[Try it on CodeSandbox](https://githubbox.com/frontio-ai/vite-template)
+![image](https://github.com/user-attachments/assets/025be121-7fdc-46ae-89ba-1237c4c69f3e)
+
+![image](https://github.com/user-attachments/assets/ef4cc7f7-c57e-4d3b-bcee-4532a300e8a0)
+
+
 
 ## Technologies Used
 
