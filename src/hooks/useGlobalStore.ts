@@ -1,6 +1,6 @@
 // hooks/useGlobalStore.ts
 import { useContext } from "react";
-import { GlobalStoreContext, GlobalStoreProvider } from "../providers/GlobalStoreProvider";
+import { GlobalStoreContext } from "../providers/GlobalStoreProvider";
 
 export function useGlobalStore(): GlobalStoreContextType {
     const context = useContext(GlobalStoreContext);

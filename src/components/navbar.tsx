@@ -1,29 +1,25 @@
-import { Button } from "@heroui/button";
+import { Input } from "@heroui/input";
 import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
-import { Input } from "@heroui/input";
 import {
   Navbar as HeroUINavbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
+  NavbarMenuToggle,
 } from "@heroui/navbar";
 import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
 
-import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
 import {
-  TwitterIcon,
   GithubIcon,
-  DiscordIcon,
-  HeartFilledIcon,
-  SearchIcon,
+  Logo,
+  SearchIcon
 } from "@/components/icons";
-import { Logo } from "@/components/icons";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { siteConfig } from "@/config/site";
 
 export const Navbar = () => {
   const searchInput = (

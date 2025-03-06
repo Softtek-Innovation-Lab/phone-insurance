@@ -1,16 +1,10 @@
 // pages/CartPage.tsx
+import { useGlobalStore } from "@/hooks/useGlobalStore";
+import DefaultLayout from "@/layouts/default";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
-import { Checkbox } from "@heroui/checkbox";
-import { Form } from "@heroui/form";
 import { Image } from "@heroui/image";
-import { Select, SelectItem } from "@heroui/select";
-import { cn } from "@heroui/theme";
-import DefaultLayout from "@/layouts/default";
-import { Listbox, ListboxItem } from "@heroui/listbox";
-import { BugIcon, Droplets, FlameKindling, MonitorX, ShieldAlert, UtilityPole } from "lucide-react";
 import { Input } from "@heroui/input";
-import { useGlobalStore } from "@/hooks/useGlobalStore";
 import { useNavigate } from "react-router-dom";
 
 // Static content

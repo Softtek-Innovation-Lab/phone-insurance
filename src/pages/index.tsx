@@ -1,18 +1,17 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
-import { Checkbox } from "@heroui/checkbox";
 import { Form } from "@heroui/form";
 import { Image } from "@heroui/image";
 import { Select, SelectItem } from "@heroui/select";
 import { cn } from "@heroui/theme";
 
+import { useGlobalStore } from "@/hooks/useGlobalStore";
 import DefaultLayout from "@/layouts/default";
+import { Input } from "@heroui/input";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { BugIcon, Droplets, FlameKindling, MonitorX, ShieldAlert, UtilityPole } from "lucide-react";
 import { useState } from "react";
-import { Input } from "@heroui/input";
-import { useGlobalStore } from "@/hooks/useGlobalStore";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Static text content
 const TEXT_CONTENT = {
@@ -153,12 +152,7 @@ export default function IndexPage() {
       return;
     }
 
-    if (data.terms !== "true") {
-      setErrors({ terms: "Please accept the terms" });
-
-      return;
-    }
-
+    
     setErrors({});
   };
 
