@@ -1,9 +1,8 @@
 "use client"
 
-import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 
 const Footer = () => {
     const [email, setEmail] = useState('');
