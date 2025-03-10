@@ -1,120 +1,70 @@
-import { Input } from "@heroui/input";
-import { Kbd } from "@heroui/kbd";
-import { Link } from "@heroui/link";
-import {
-  Navbar as HeroUINavbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuToggle,
-} from "@heroui/navbar";
-import { link as linkStyles } from "@heroui/theme";
-import clsx from "clsx";
+"use client"
 
-import {
-  GithubIcon,
-  Logo,
-  SearchIcon
-} from "@/components/icons";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { siteConfig } from "@/config/site";
+import { Link } from "react-router-dom"
+
+import { siteConfig } from "@/config/site"
+import { cn } from "@/lib/utils"
 
 export const Navbar = () => {
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
-  );
-
-  return (
-    <HeroUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand className="gap-3 max-w-fit">
-          <Link
-            className="flex justify-start items-center gap-1"
-            color="foreground"
-            href="/"
-          >
-            <Logo />
-            <p className="font-bold text-inherit ml-2">Demo Insurance</p>
+ 
+  return (<>
+    <header className="sticky top-0 z-40 h-[6.3rem] w-full  bg-background  content-center">
+      <div className="app-container flex  items-center justify-between">
+           <Link to="/" className="flex items-center gap-1">
+            <img src="/assets/travelex-logo.svg" alt="Travelex" className="w-72 h-14 w-auto" />
           </Link>
-        </NavbarBrand>
-        <div className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
+
+          <nav className="hidden lg:flex items-center gap-6 ml-6">
+            {siteConfig.navItems.map((item) => (
               <Link
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  "text-md font-bold transition-colors hover:text-primary",
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
-                color="foreground"
-                href={item.href}
               >
                 {item.label}
               </Link>
-            </NavbarItem>
-          ))}
-        </div>
-      </NavbarContent>
+            ))}
+          </nav>
+         
+      </div>
+    </header>
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
-        <NavbarItem className="hidden sm:flex gap-2">
-          <ThemeSwitch />
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
+    <nav style={{ background: "#f9f9f9" }} aria-label="Breadcrumb" className="h-12 content-center">
+      <div className="app-container flex items-center gap-2 text-sm">
+        <ol className=" inline-flex  space-x-1 md:space-x-2 rtl:space-x-reverse">
+          <li className="inline-flex items-center">
+            <a href="#" className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+              <svg className="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+              </svg>
+              Home
+            </a>
+          </li>
+          <li>
+            <div className="flex items-center">
+              <svg className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+              </svg>
+              <a href="#" className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">About Insurance</a>
+            </div>
+          </li>
+          <li aria-current="page">
+            <div className="flex items-center">
+              <svg className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+              </svg>
+              <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Get Insurance</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </nav>
 
-      </NavbarContent>
+  </>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
-        <ThemeSwitch />
-        <NavbarMenuToggle />
-      </NavbarContent>
+  )
+}
 
-      <NavbarMenu>
-        {searchInput}
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </div>
-      </NavbarMenu>
-    </HeroUINavbar>
-  );
-};
