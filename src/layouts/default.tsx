@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import { Navbar } from "@/components/navbar";
 
 export default function DefaultLayout({
@@ -10,9 +11,10 @@ export default function DefaultLayout({
       <Navbar />
       <div className="background-decoration"></div>
 
-      <main className="container mx-auto max-w-7xl px-6 flex-grow pt-16">
+      <main>
         {children}
       </main>
+      <Footer />
     </div>
   );
 }

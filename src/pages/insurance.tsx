@@ -12,6 +12,7 @@ import { Listbox, ListboxItem } from "@heroui/listbox";
 import { BugIcon, Droplets, FlameKindling, MonitorX, ShieldAlert, UtilityPole } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { products } from "@/utils/constants";
 
 // Static text content
 const TEXT_CONTENT = {
@@ -162,12 +163,12 @@ export default function InsurancePage() {
         <div className="grid grid-cols-12 gap-6 max-w-6xl w-full">
           {/* Columna izquierda: Imagen y lista de servicios */}
           <div className="col-span-4 flex flex-col gap-4">
-            <Card className="py-4">
-              <CardBody className="overflow-visible py-2">
+            <Card className="py-4 ">
+              <CardBody className="overflow-visible py-2 items-center" >
                 <Image
                   alt="Card background"
                   className="object-cover rounded-xl"
-                  src="https://img.freepik.com/free-vector/customer-getting-insurance-coverage-protection-using-smartphone-demand-insurance-online-policy-personalized-isurance-service-concept-pinkish-coral-bluevector-isolated-illustration_335657-1337.jpg?t=st=1741198135~exp=1741201735~hmac=656c113ef59d13b16d5f4caae72784ee9dca60e2220ea96fc017a1d68f1ac80f&w=1060"
+                  src='https://purepng.com/public/uploads/large/nikon-camera-hfr.png'
                   width={270}
                 />
                 <div className="flex flex-col  self-center">
