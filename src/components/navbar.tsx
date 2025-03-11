@@ -4,31 +4,31 @@ import { Link } from "react-router-dom"
 
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
-
+import travelexLogo from "@/assets/travelex-logo.svg"
 export const Navbar = () => {
-  
+
   return (<>
     <header className="sticky top-0 z-40 h-[6.3rem] w-full  bg-background  content-center">
       <div className="app-container flex  items-center justify-between">
-           <Link to="/" className="flex items-center gap-1">
-            <img src="/assets/travelex-logo.svg" alt="Travelex" className="w-72 h-14 w-auto" />
-          </Link>
+        <Link to="/" className="flex items-center gap-1">
+          <img src={travelexLogo} alt="Travelex" className="w-72 h-14 w-auto" />
+        </Link>
 
-          <nav className="hidden lg:flex items-center gap-6 ml-6">
-            {siteConfig.navItems.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={cn(
-                  "text-md font-bold transition-colors hover:text-primary",
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-         
+        <nav className="hidden lg:flex items-center gap-6 ml-6">
+          {siteConfig.navItems.map((item) => (
+            <Link
+              key={item.href}
+              to={item.href}
+              className={cn(
+                "text-md font-bold transition-colors hover:text-primary",
+                "data-[active=true]:text-primary data-[active=true]:font-medium",
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
       </div>
     </header>
 

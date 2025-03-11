@@ -1,12 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { products } from "@/utils/constants"
 
+import heroPattern from '@/assets/hero-pattern.svg';
+import laptopImage from '@/assets/laptop.png';
+import phoneImage from '@/assets/phone.png';
+import cameraImage from '@/assets/camera-nikon.png';
+
 export default function HeroSection() {
     return (
         <section className="relative py-16 mb-12 bg-hero-index text-white">
             <span>
                 <img
-                    src="https://www.travelex.co.uk/media/6496/hero-pattern.svg"
+                    src={heroPattern}
                     className="absolute top-0 right-0 object-cover"
                 />
             </span>
@@ -71,7 +76,7 @@ export default function HeroSection() {
                     >
                         <div className="relative">
                             <img
-                                src="https://purepng.com/public/uploads/large/purepng.com-laptop-notebooklaptopsnotebooknotebook-computerclamshell-1701528355017rdiqu.png"
+                                src={laptopImage}
                                 width={280}
                                 height={200}
                                 alt="Laptop"
@@ -89,7 +94,7 @@ export default function HeroSection() {
                     <div className="opacity-0  absolute z-[9] animate-zoom-in" style={{ top: "15rem", right: "-5rem" }}>
                         <div className="relative">
                             <img
-                                src="https://purepng.com/public/uploads/large/purepng.com-apple-iphone-xappleapple-iphonephonesmartphonemobile-devicetouch-screeniphone-xiphone-10electronicsobjects-2515306895701eqxj.png"
+                                src={phoneImage}
                                 width={150}
                                 height={300}
                                 alt="Smartphone"
@@ -110,7 +115,7 @@ export default function HeroSection() {
                     >
                         <div className="relative">
                             <img
-                                src="https://purepng.com/public/uploads/large/nikon-camera-hfr.png"
+                                src={cameraImage}
                                 width={200}
                                 height={200}
                                 alt="Camera"
