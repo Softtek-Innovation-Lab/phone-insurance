@@ -1,8 +1,8 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Vite + HeroUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "Insurance Demo",
+  description: "Insurance Demo.",
   navItems: [
     {
       label: "Get Insurance",
@@ -20,10 +20,10 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/frontio-ai/heroui",
-    twitter: "https://twitter.com/hero_ui",
-    docs: "https://heroui.com",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
+    github: "https://github.com",
+    twitter: "https://twitter.com",
+    docs: "https://docs.example.com",
+    discord: "https://discord.gg",
+    sponsor: "https://patreon.com",
   },
 };
