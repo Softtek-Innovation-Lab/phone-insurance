@@ -12,6 +12,7 @@ import { Listbox, ListboxItem } from "@heroui/listbox";
 import { BugIcon, Droplets, FlameKindling, MonitorX, ShieldAlert, UtilityPole } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import cameraNikom from "@/assets/camera-nikon.png"
 
 // Static text content
 const TEXT_CONTENT = {
@@ -167,7 +168,7 @@ export default function InsurancePage() {
                 <Image
                   alt="Card background"
                   className="object-cover rounded-xl"
-                  src='https://purepng.com/public/uploads/large/nikon-camera-hfr.png'
+                  src={cameraNikom}
                   width={270}
                 />
                 <div className="flex flex-col  self-center">
