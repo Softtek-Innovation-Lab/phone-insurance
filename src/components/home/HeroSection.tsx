@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button"
 import { products } from "@/utils/constants"
 
 import heroPattern from '@/assets/hero-pattern.svg';
-import laptopImage from '@/assets/laptop.png';
-import phoneImage from '@/assets/phone.png';
-import cameraImage from '@/assets/camera-nikon.png';
+import laptopImage from '@/assets/laptop.webp';
+import phoneImage from '@/assets/phone.webp';
+import cameraImage from '@/assets/camera-nikon.webp';
 
 export default function HeroSection() {
     return (
