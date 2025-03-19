@@ -1,20 +1,14 @@
-import { Button } from "@/components/ui/button"
-import { products } from "@/utils/constants"
+import { Button } from "@/components/ui/button";
+import { products } from "@/utils/constants";
 
-import heroPattern from '@/assets/hero-pattern.svg';
+import cameraImage from '@/assets/camera-nikon.webp';
 import laptopImage from '@/assets/laptop.webp';
 import phoneImage from '@/assets/phone.webp';
-import cameraImage from '@/assets/camera-nikon.webp';
 
 export default function HeroSection() {
     return (
         <section className="relative py-16 mb-12 bg-hero-index text-white">
-            <span>
-                <img
-                    src={heroPattern}
-                    className="absolute top-0 right-0 object-cover"
-                />
-            </span>
+           
             <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center">
                 {/* Left Content */}
                 <div className="w-full md:w-1/2 text-center md:text-left mb-8 md:mb-0 animate-fade-in">

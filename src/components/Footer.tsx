@@ -121,7 +121,7 @@ const Footer = () => {
                                     required
                                     className="bg-white dark:bg-gray-800"
                                 />
-                                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                                <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white">
                                     Subscribe
                                 </Button>
                             </div>

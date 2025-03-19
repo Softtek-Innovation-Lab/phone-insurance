@@ -1,70 +1,114 @@
-"use client"
+"use client";
 
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { UserCircle } from "lucide-react";
+import travelersLogo from "@/assets/travelers-logo.svg";
 
-import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
-import travelexLogo from "@/assets/travelex-logo.svg"
 export const Navbar = () => {
+  return (
+    <header className="sticky top-0 z-40 w-full bg-white border-b border-gray-200">
+      <div className="mx-auto">
+        {/* Top Section: Logo and Top Navigation */}
+        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-12">
+          {/* Logo */}
+          <Link to="/" title="Travelers Home Page">
+            <img src={travelersLogo} alt="Travelers" className="h-8" />
+            <span className="sr-only">Travelers Home Page</span>
+          </Link>
 
-  return (<>
-    <header className="sticky top-0 z-40 h-[6.3rem] w-full  bg-background  content-center">
-      <div className="app-container flex  items-center justify-between">
-        <Link to="/" className="flex items-center gap-1">
-          <img src={travelexLogo} alt="Travelex" className="w-72 h-14 w-auto" />
-        </Link>
+          {/* Top Navigation */}
+          <nav aria-label="Top navigation">
+            <ul className="hidden lg:flex items-center gap-6 text-xs font-medium text-gray-700 uppercase">
+              <li>
+                <Link to="/contact-us" className="hover:text-red-600">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="https://brokersireland.ie/?option=com_wrapper&view=wrapper&Itemid=575"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-red-600"
+                >
+                  Find a Broker
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
 
-        <nav className="hidden lg:flex items-center gap-6 ml-6">
-          {siteConfig.navItems.map((item) => (
+        {/* Main Navigation Section: Gray Background */}
+        <div className="bg-gray-100">
+          <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-10">
+            {/* Main Navigation Links */}
+            <nav className="flex justify-center gap-8" aria-label="Main navigation">
+              <Link
+                to="/industry-solutions"
+                className="text-base font-medium text-gray-700 hover:text-red-600"
+              >
+                Industry Solutions
+              </Link>
+              <Link
+                to="/products-services"
+                className="text-base font-medium text-gray-700 hover:text-red-600"
+              >
+                Products & Services
+              </Link>
+              <Link
+                to="/travelers-advantage"
+                className="text-base font-medium text-gray-700 hover:text-red-600"
+              >
+                Why Travelers
+              </Link>
+              <Link
+                to="/brokers"
+                className="text-base font-medium text-gray-700 hover:text-red-600"
+              >
+                Brokers
+              </Link>
+              <Link
+                to="/claims-centre"
+                className="text-base font-medium text-gray-700 hover:text-red-600"
+              >
+                Claims Centre
+              </Link>
+            </nav>
+
+            {/* Log In Button */}
             <Link
-              key={item.href}
-              to={item.href}
-              className={cn(
-                "text-md font-bold transition-colors hover:text-primary",
-                "data-[active=true]:text-primary data-[active=true]:font-medium",
-              )}
+              to="https://www.mytravelers.travelers.co.uk/wps/portal/trv/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-4 hidden lg:flex items-center gap-2 border border-red-600 px-3 py-1 text-red-600 font-semibold text-sm uppercase rounded hover:bg-red-600 hover:text-white transition"
             >
-              {item.label}
+              <UserCircle className="h-4 w-4" />
+              <span>Log In</span>
             </Link>
-          ))}
-        </nav>
 
+            {/* Mobile Menu Toggle */}
+            <button
+              className="lg:hidden flex items-center p-2 text-gray-700 hover:text-red-600"
+              aria-label="Open mobile menu"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
-
-    <nav style={{ background: "#f9f9f9" }} aria-label="Breadcrumb" className="h-12 content-center">
-      <div className="app-container flex items-center gap-2 text-sm">
-        <ol className=" inline-flex  space-x-1 md:space-x-2 rtl:space-x-reverse">
-          <li className="inline-flex items-center">
-            <a href="/" className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-              <svg className="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
-              </svg>
-              Home
-            </a>
-          </li>
-          <li>
-            <div className="flex items-center">
-              <svg className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-              </svg>
-              <a href="#" className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">About Insurance</a>
-            </div>
-          </li>
-          <li aria-current="page">
-            <div className="flex items-center">
-              <svg className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-              </svg>
-              <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Get Insurance</span>
-            </div>
-          </li>
-        </ol>
-      </div>
-    </nav>
-
-  </>
-
-  )
-}
-
+  );
+};
