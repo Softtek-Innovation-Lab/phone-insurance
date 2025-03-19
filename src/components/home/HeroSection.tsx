@@ -8,7 +8,7 @@ import phoneImage from '@/assets/phone.webp';
 export default function HeroSection() {
     return (
         <section className="relative py-16 mb-12 bg-hero-index text-white">
-           
+
             <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center">
                 {/* Left Content */}
                 <div className="w-full md:w-1/2 text-center md:text-left mb-8 md:mb-0 animate-fade-in">
@@ -25,13 +25,13 @@ export default function HeroSection() {
                     <div className="opacity-0 flex justify-center md:justify-start space-x-4 mb-6 animate-slide-up animation-delay-400">
                         <Button
                             variant="default"
-                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                            className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
                         >
                             Get Individual Quotes
                         </Button>
                         <Button
                             variant="destructive"
-                            className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                            className="px-6 py-2 bg-red-900 hover:bg-red-1000 text-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
                         >
                             K-12 School Quotes
                         </Button>

@@ -16,23 +16,14 @@ export const Navbar = () => {
             <span className="sr-only">Travelers Home Page</span>
           </Link>
 
-          {/* Top Navigation */}
+          {/* Top Navigation (Disabled) */}
           <nav aria-label="Top navigation">
-            <ul className="hidden lg:flex items-center gap-6 text-xs font-medium text-gray-700 uppercase">
+            <ul className="hidden lg:flex items-center gap-6 text-xs font-medium text-gray-400 uppercase cursor-not-allowed">
               <li>
-                <Link to="/contact-us" className="hover:text-red-600">
-                  Contact Us
-                </Link>
+                <span className="pointer-events-none">Contact Us</span>
               </li>
               <li>
-                <Link
-                  to="https://brokersireland.ie/?option=com_wrapper&view=wrapper&Itemid=575"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-red-600"
-                >
-                  Find a Broker
-                </Link>
+                <span className="pointer-events-none">Find a Broker</span>
               </li>
             </ul>
           </nav>
@@ -43,48 +34,47 @@ export const Navbar = () => {
           <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-10">
             {/* Main Navigation Links */}
             <nav className="flex justify-center gap-8" aria-label="Main navigation">
+
+              {/* Active Links: Get Insurance and Cart */}
               <Link
-                to="/industry-solutions"
+                to="/get-insurance"
                 className="text-base font-medium text-gray-700 hover:text-red-600"
               >
+                Get Insurance
+              </Link>
+              <Link
+                to="/cart"
+                className="text-base font-medium text-gray-700 hover:text-red-600"
+              >
+                Cart
+              </Link>
+              {/* Disabled Links */}
+              <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
                 Industry Solutions
-              </Link>
-              <Link
-                to="/products-services"
-                className="text-base font-medium text-gray-700 hover:text-red-600"
-              >
+              </span>
+              <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
                 Products & Services
-              </Link>
-              <Link
-                to="/travelers-advantage"
-                className="text-base font-medium text-gray-700 hover:text-red-600"
-              >
+              </span>
+              <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
                 Why Travelers
-              </Link>
-              <Link
-                to="/brokers"
-                className="text-base font-medium text-gray-700 hover:text-red-600"
-              >
+              </span>
+              <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
                 Brokers
-              </Link>
-              <Link
-                to="/claims-centre"
-                className="text-base font-medium text-gray-700 hover:text-red-600"
-              >
+              </span>
+              <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
                 Claims Centre
-              </Link>
+              </span>
+
+
             </nav>
 
-            {/* Log In Button */}
-            <Link
-              to="https://www.mytravelers.travelers.co.uk/wps/portal/trv/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-4 hidden lg:flex items-center gap-2 border border-red-600 px-3 py-1 text-red-600 font-semibold text-sm uppercase rounded hover:bg-red-600 hover:text-white transition"
+            {/* Log In Button (Disabled) */}
+            <span
+              className="ml-4 hidden lg:flex items-center gap-2 border border-gray-400 px-3 py-1 text-gray-400 font-semibold text-sm uppercase rounded cursor-not-allowed pointer-events-none"
             >
               <UserCircle className="h-4 w-4" />
               <span>Log In</span>
-            </Link>
+            </span>
 
             {/* Mobile Menu Toggle */}
             <button
