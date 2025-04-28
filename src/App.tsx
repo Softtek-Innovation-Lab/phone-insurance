@@ -8,7 +8,7 @@ function App() {
   return (
     <Routes>
       <Route element={<IndexPage />} path="/" />
-      <Route element={<InsurancePage />} path="/get-insurance" />
+      <Route element={<InsurancePage />} path="/get-insurance/:productId" />
       <Route element={<CartPage />} path="/cart" />
 
     </Routes>

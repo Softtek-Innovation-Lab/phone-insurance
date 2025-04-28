@@ -9,11 +9,12 @@ import DefaultLayout from "@/layouts/default";
 import { Input } from "@heroui/input";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { BugIcon, Droplets, FlameKindling, MonitorX, ShieldAlert, UtilityPole } from "lucide-react";
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { createOrSavePolicy } from "@/store/slices/policySlice";
+import { products } from '@/data/products';
 
 const TEXT_CONTENT = {
   subtitle: "Protect your device with comprehensive coverage",
@@ -102,11 +103,11 @@ export default function InsurancePage() {
   const [errors, setErrors] = useState({});
   const { store, setStore } = useGlobalStore();
   const navigate = useNavigate();
-  const location = useLocation();
+  const { productId } = useParams<{ productId: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const [steps, setSteps] = useState(1);
 
-  const product = location.state?.product || {
+  const product = products.find(p => p.ProductId === parseInt(productId || '')) || {
     name: "Default Device Insurance",
     image: "/placeholder.svg",
     SumInsured: 1000,
@@ -120,6 +121,10 @@ export default function InsurancePage() {
     ProductElementId: 789611472,
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const coverageAmounts = [
     { key: `${product.SumInsured}`, label: `$${product.SumInsured}.00` },
     { key: `${product.SumInsured * 1.2}`, label: `$${product.SumInsured * 1.2}.00` },

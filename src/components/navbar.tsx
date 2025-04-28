@@ -36,12 +36,22 @@ export const Navbar = () => {
             <nav className="flex justify-center gap-8" aria-label="Main navigation">
 
               {/* Active Links: Get Insurance and Cart */}
-              <Link
-                to="/get-insurance"
+              <a
+                href="#get-insurance"
                 className="text-base font-medium text-gray-700 hover:text-red-600"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.getElementById("get-insurance");
+                  if (element) {
+                    const offset = -50;
+                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                    const offsetPosition = elementPosition + offset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                  }
+                }}
               >
                 Get Insurance
-              </Link>
+              </a>
               <Link
                 to="/cart"
                 className="text-base font-medium text-gray-700 hover:text-red-600"

@@ -4,7 +4,7 @@ import { Image } from "@heroui/image";
 import './ProductsSection.css';
 import { useNavigate } from 'react-router-dom';
 import { products } from '@/data/products';
- 
+
 const ProductsSection = () => {
     const [activeCategory, setActiveCategory] = useState('All');
     const [visibleProducts, setVisibleProducts] = useState(products);
@@ -50,8 +50,14 @@ const ProductsSection = () => {
         };
     }, []);
 
+    const handleGetInsurance = (product: (typeof products)[0]) => {
+        navigate(`/get-insurance/${product.ProductId}`, { state: { product } })
+    };
+
     return (
-        <section className="py-16 bg-white dark:bg-gray-800 products-section" ref={sectionRef}>
+        <section 
+            id='get-insurance'
+        className="py-16 bg-white dark:bg-gray-800 products-section" ref={sectionRef}>
             <div className="max-w-6xl mx-auto px-4">
                 <div className="text-center mb-12 product-title">
                     <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
@@ -102,7 +108,7 @@ const ProductsSection = () => {
                                     <span className="product-category">{product.category}</span>
                                     <button
                                         className="product-button"
-                                        onClick={() => navigate('/get-insurance', { state: { product } })}
+                                        onClick={() => handleGetInsurance(product)}
                                     >
                                         Get Insurance
                                     </button>
