@@ -1,14 +1,13 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
 import './ProductsSection.css';
-import { products } from '@/utils/constants';
 import { useNavigate } from 'react-router-dom';
-
+import { products } from '@/data/products';
+ 
 const ProductsSection = () => {
     const [activeCategory, setActiveCategory] = useState('All');
-    const [visibleProducts, setVisibleProducts] = useState<{ name: string; image: string; category: string; }[]>([]);
+    const [visibleProducts, setVisibleProducts] = useState(products);
     const sectionRef = useRef(null);
     const navigate = useNavigate();
 
@@ -20,10 +19,7 @@ const ProductsSection = () => {
         { name: "Other", icon: "📷" },
     ];
 
-
-
     useEffect(() => {
-        // Filter products based on active category
         if (activeCategory === 'All') {
             setVisibleProducts(products);
         } else {
@@ -32,7 +28,6 @@ const ProductsSection = () => {
     }, [activeCategory]);
 
     useEffect(() => {
-        // Set up Intersection Observer for animation
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach(entry => {
@@ -44,7 +39,6 @@ const ProductsSection = () => {
             { threshold: 0.1 }
         );
 
-        // Observe the section
         if (sectionRef.current) {
             observer.observe(sectionRef.current);
         }
@@ -68,7 +62,6 @@ const ProductsSection = () => {
                     </p>
                 </div>
 
-                {/* Category Filter */}
                 <div className="flex flex-wrap justify-center gap-3 mb-10">
                     <button
                         className={`category-btn ${activeCategory === 'All' ? 'active' : ''}`}
@@ -89,7 +82,6 @@ const ProductsSection = () => {
                     ))}
                 </div>
 
-                {/* Products Grid with View Transitions */}
                 <div className="products-grid">
                     {visibleProducts.map((product, index) => (
                         <div
@@ -108,8 +100,10 @@ const ProductsSection = () => {
                                     </div>
                                     <h3 className="product-name">{product.name}</h3>
                                     <span className="product-category">{product.category}</span>
-                                    <button className="product-button"
-                                        onClick={() => navigate('Get-Insurance')} >
+                                    <button
+                                        className="product-button"
+                                        onClick={() => navigate('/get-insurance', { state: { product } })}
+                                    >
                                         Get Insurance
                                     </button>
                                 </CardBody>

@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { products } from "@/utils/constants";
 
 import cameraImage from '@/assets/camera-nikon.webp';
 import laptopImage from '@/assets/laptop.webp';
 import phoneImage from '@/assets/phone.webp';
+import { products } from "@/data/products";
 
 export default function HeroSection() {
     return (
