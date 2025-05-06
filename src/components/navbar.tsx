@@ -1,10 +1,14 @@
 "use client";
 
 import { Link } from "react-router-dom";
-import { UserCircle } from "lucide-react";
+import { ShoppingCart, UserCircle } from "lucide-react";
 import travelersLogo from "@/assets/travelers-logo.svg";
+import { useGlobalStore } from "@/hooks/useGlobalStore";
 
 export const Navbar = () => {
+  const { store } = useGlobalStore();
+  const cartItemCount = store?.cart?.length || 0;
+
   return (
     <header className="sticky top-0 z-40 w-full bg-white border-b border-gray-200">
       <div className="mx-auto">
@@ -47,6 +51,8 @@ export const Navbar = () => {
                     const elementPosition = element.getBoundingClientRect().top + window.scrollY;
                     const offsetPosition = elementPosition + offset;
                     window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                  }else {
+                    window.location.href = "/";
                   }
                 }}
               >
@@ -78,13 +84,29 @@ export const Navbar = () => {
 
             </nav>
 
-            {/* Log In Button (Disabled) */}
-            <span
-              className="ml-4 hidden lg:flex items-center gap-2 border border-gray-400 px-3 py-1 text-gray-400 font-semibold text-sm uppercase rounded cursor-not-allowed pointer-events-none"
-            >
-              <UserCircle className="h-4 w-4" />
-              <span>Log In</span>
-            </span>
+            <div className="ml-4 hidden lg:flex items-center gap-4">
+              {/* Cart Icon with Counter */}
+              <Link 
+                to="/cart" 
+                className="relative flex items-center text-gray-700 hover:text-red-600"
+                aria-label="Shopping Cart"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 bg-red-600 text-white text-xs font-bold rounded-full">
+                    {cartItemCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Log In Button (Disabled) */}
+              <span
+                className="flex items-center gap-2 border border-gray-400 px-3 py-1 text-gray-400 font-semibold text-sm uppercase rounded cursor-not-allowed pointer-events-none"
+              >
+                <UserCircle className="h-4 w-4" />
+                <span>Log In</span>
+              </span>
+            </div>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -95,7 +117,7 @@ export const Navbar = () => {
                 className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
-                viewBox="0 0 24 24"
+                viewBox="0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
