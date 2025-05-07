@@ -17,14 +17,14 @@ import { AppDispatch } from "@/store";
 const TEXT_CONTENT = {
   title: "Secure Your Products - Insurance Cart",
   emptyMessage: "Your cart is empty.",
-  headers: ["Producto", "Detalles", "Cobertura", "Precio", "Acciones"],
+  headers: ["Product", "Details", "Coverage", "Price", "Actions"],
   continueShopping: "Continue Shopping",
   clearCart: "Clear Shopping Cart",
   subtotal: "Subtotal",
   processingFee: "Processing Fee (USD)",
   orderTotal: "Order Total (USD)",
   riskFactor: "Risk Factor",
-  proceedToCheckout: "Comprar y generar comprobante",
+  proceedToCheckout: "Buy and Generate Receipt",
 };
 
 // Mock cart item (initial data)
