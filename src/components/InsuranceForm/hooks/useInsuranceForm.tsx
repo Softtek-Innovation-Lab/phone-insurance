@@ -1,12 +1,9 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from '@/store';
+import { DUMMY_DATA } from '@/components/InsuranceForm/constants';
 import { useGlobalStore } from '@/hooks/useGlobalStore';
 import { useNotification } from '@/providers/NotificationProvider';
-import { createOrSavePolicy } from '@/store/slices/policySlice';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FormErrors, FormValues, parseFormValues, validateStep1, validateStep2 } from '../utils';
-import { DUMMY_DATA } from '@/components/InsuranceForm/constants';
 
 interface UseInsuranceFormProps {
   product: any;
@@ -18,7 +15,6 @@ export const useInsuranceForm = ({ product, useDummyData = false }: UseInsurance
   const [steps, setSteps] = useState(1);
   const { store, setStore } = useGlobalStore();
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
   const { addNotification } = useNotification();
 
   const initialFormValues = useDummyData ? DUMMY_DATA : {
