@@ -5,6 +5,7 @@ import { useHref, useNavigate } from "react-router-dom";
 import { GlobalStoreProvider } from "./providers/GlobalStoreProvider";
 import { Provider as ReduxProvider } from "react-redux"; 
 import { store } from "@/store";
+import NotificationProvider from "./providers/NotificationProvider";
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -17,11 +18,12 @@ export function Provider({ children }: { children: React.ReactNode }) {
 
   return (
     <ReduxProvider store={store}>
-
       <GlobalStoreProvider>
-        <HeroUIProvider navigate={navigate} useHref={useHref}>
-          {children}
-        </HeroUIProvider>
+        <NotificationProvider>
+          <HeroUIProvider navigate={navigate} useHref={useHref}>
+            {children}
+          </HeroUIProvider>
+        </NotificationProvider>
       </GlobalStoreProvider>
     </ReduxProvider>
   );
