@@ -388,7 +388,7 @@ export default function CartPage() {
                     isDisabled={isGenerating || receiptGenerated}
                     onClick={generateReceipt}
                   >
-                    {isGenerating ? "Generando comprobante..." : TEXT_CONTENT.proceedToCheckout}
+                    {isGenerating ? "Generating receipt..." : TEXT_CONTENT.proceedToCheckout}
                   </Button>
                 </CardBody>
               </Card>
