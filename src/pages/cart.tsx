@@ -217,23 +217,23 @@ export default function CartPage() {
                     <div>
                       <p className="font-medium text-lg">{item.name}</p>
                       <div className="text-sm text-default-600 mt-1">
-                        <p><span className="font-semibold">Fabricante:</span> {item.manufacturer}</p>
-                        <p><span className="font-semibold">Modelo:</span> {item.model}</p>
-                        <p><span className="font-semibold">N° Serie:</span> {item.serialNumber}</p>
-                        <p><span className="font-semibold">Estado:</span> {item.state}</p>
+                      <p><span className="font-semibold">Manufacturer:</span> {item.manufacturer}</p>
+                      <p><span className="font-semibold">Model:</span> {item.model}</p>
+                      <p><span className="font-semibold">Serial No.:</span> {item.serialNumber}</p>
+                      <p><span className="font-semibold">State:</span> {item.state}</p>
                       </div>
                     </div>
 
-                    {/* Columna 3: Cobertura, deducible, término y factor de riesgo */}
+                    {/* Column 3: Coverage, deductible, term, and risk factor */}
                     <div className="text-sm">
-                      <p><span className="font-semibold">Cobertura:</span> ${item.coverageAmount}</p>
-                      <p><span className="font-semibold">Deducible:</span> {item.deductible}</p>
-                      <p><span className="font-semibold">Término:</span> {item.policyTerm}</p>
+                      <p><span className="font-semibold">Coverage:</span> ${item.coverageAmount}</p>
+                      <p><span className="font-semibold">Deductible:</span> {item.deductible}</p>
+                      <p><span className="font-semibold">Term:</span> {item.policyTerm}</p>
                       <p>
-                        <span className="font-semibold">Factor de riesgo:</span>
-                        <span className={`ml-1 font-medium ${getRiskColor(item.riskFactor)}`}>
-                          {item.riskFactor}
-                        </span>
+                      <span className="font-semibold">Risk factor:</span>
+                      <span className={`ml-1 font-medium ${getRiskColor(item.riskFactor)}`}>
+                        {item.riskFactor}
+                      </span>
                       </p>
                     </div>
 
@@ -241,7 +241,7 @@ export default function CartPage() {
                     <div>
                       <p className="font-medium">${item.unitPrice.toFixed(2)}</p>
                       <div className="flex items-center mt-2">
-                        <span className="text-sm mr-2">Cantidad:</span>
+                        <span className="text-sm mr-2">Quantity:</span>
                         <Input
                           type="number"
                           min={1}
@@ -295,74 +295,74 @@ export default function CartPage() {
               {/* Receipt (appears after clicking 'Generate') */}
               {receiptGenerated && (
                 <Card className="bg-white border border-gray-200">
-                  <CardBody className="p-6">
+                    <CardBody className="p-6">
                     <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-xl font-bold">Comprobante de Compra</h3>
+                      <h3 className="text-xl font-bold">Purchase Receipt</h3>
                       <p className="text-gray-500 text-sm">{new Date().toLocaleDateString()}</p>
                     </div>
 
                     {/* Policy Details */}
                     {policyData && (
                       <div className="bg-blue-50 p-4 rounded-md mb-4">
-                        <h4 className="font-bold text-blue-800 mb-2">Resumen de Póliza</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <p><span className="font-semibold">Número de Póliza:</span> {policyData.PolicyNo || 'N/A'}</p>
-                            <p>
-                              <span className="font-semibold">Titular:</span> {policyData.PolicyCustomerList?.[0]?.CustomerName || 'N/A'}
-                              {policyData.PolicyCustomerList?.[0]?.DateOfBirth && ` (Nacimiento: ${formatDate(policyData.PolicyCustomerList[0].DateOfBirth)})`}
-                            </p>
-                            <p><span className="font-semibold">ID Cliente:</span> {policyData.PolicyCustomerList?.[0]?.IdNo || 'N/A'}</p>
-                            <p><span className="font-semibold">Fecha Efectiva:</span> {formatDate(policyData.EffectiveDate)}</p>
-                            <p><span className="font-semibold">Fecha Expiración:</span> {formatDate(policyData.ExpiryDate)}</p>
-                          </div>
-                          <div>
-                            <p><span className="font-semibold">Prima Bruta:</span> ${policyData.GrossPremium?.toFixed(2) || 'N/A'}</p>
-                            <p><span className="font-semibold">IVA ({(policyData.VatRate || 0) * 100}%):</span> ${policyData.Vat?.toFixed(2) || 'N/A'}</p>
-                            <p><span className="font-semibold">Prima Total:</span> ${policyData.DuePremium?.toFixed(2) || 'N/A'}</p>
-                            <p><span className="font-semibold">Fecha Emisión:</span> {formatDate(policyData.IssueDate)}</p>
-                            <p><span className="font-semibold">Emisor:</span> {policyData.IssueUserRealName || 'N/A'}</p>
-                            <p><span className="font-semibold">Producto:</span> {policyData.ProductCode} (v{policyData.ProductVersion})</p>
-                          </div>
-                        </div>
-                        <p className="mt-2 text-sm">
-                          <span className="font-semibold">Estado:</span> <span className="text-green-600 font-medium">
-                            {policyData.PolicyStatus === 2 ? 'Activa' : `Estado ${policyData.PolicyStatus}`}
-                          </span>
+                      <h4 className="font-bold text-blue-800 mb-2">Policy Summary</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                        <div>
+                        <p><span className="font-semibold">Policy Number:</span> {policyData.PolicyNo || 'N/A'}</p>
+                        <p>
+                          <span className="font-semibold">Holder:</span> {policyData.PolicyCustomerList?.[0]?.CustomerName || 'N/A'}
+                          {policyData.PolicyCustomerList?.[0]?.DateOfBirth && ` (Birth: ${formatDate(policyData.PolicyCustomerList[0].DateOfBirth)})`}
                         </p>
+                        <p><span className="font-semibold">Customer ID:</span> {policyData.PolicyCustomerList?.[0]?.IdNo || 'N/A'}</p>
+                        <p><span className="font-semibold">Effective Date:</span> {formatDate(policyData.EffectiveDate)}</p>
+                        <p><span className="font-semibold">Expiration Date:</span> {formatDate(policyData.ExpiryDate)}</p>
+                        </div>
+                        <div>
+                        <p><span className="font-semibold">Gross Premium:</span> ${policyData.GrossPremium?.toFixed(2) || 'N/A'}</p>
+                        <p><span className="font-semibold">VAT ({(policyData.VatRate || 0) * 100}%):</span> ${policyData.Vat?.toFixed(2) || 'N/A'}</p>
+                        <p><span className="font-semibold">Total Premium:</span> ${policyData.DuePremium?.toFixed(2) || 'N/A'}</p>
+                        <p><span className="font-semibold">Issue Date:</span> {formatDate(policyData.IssueDate)}</p>
+                        <p><span className="font-semibold">Issuer:</span> {policyData.IssueUserRealName || 'N/A'}</p>
+                        <p><span className="font-semibold">Product:</span> {policyData.ProductCode} (v{policyData.ProductVersion})</p>
+                        </div>
+                      </div>
+                      <p className="mt-2 text-sm">
+                        <span className="font-semibold">Status:</span> <span className="text-green-600 font-medium">
+                        {policyData.PolicyStatus === 2 ? 'Active' : `Status ${policyData.PolicyStatus}`}
+                        </span>
+                      </p>
                       </div>
                     )}
                     
                     <div className="border-t border-gray-200 pt-4 mb-4">
-                      <h4 className="font-medium mb-2">Resumen de la compra:</h4>
+                      <h4 className="font-medium mb-2">Purchase Summary:</h4>
                       {cart.map((item, i) => (
-                        <div key={`receipt-${item.id}-${i}`} className="flex justify-between mb-2 text-sm">
-                          <span>{item.name} ({item.quantity}) - {item.manufacturer} {item.model}</span>
-                          <span>${(item.unitPrice * item.quantity).toFixed(2)}</span>
-                        </div>
+                      <div key={`receipt-${item.id}-${i}`} className="flex justify-between mb-2 text-sm">
+                        <span>{item.name} ({item.quantity}) - {item.manufacturer} {item.model}</span>
+                        <span>${(item.unitPrice * item.quantity).toFixed(2)}</span>
+                      </div>
                       ))}
                     </div>
 
                     <div className="border-t border-gray-200 pt-4">
                       <div className="flex justify-between mb-1">
-                        <span>{TEXT_CONTENT.subtotal}</span>
-                        <span>${subtotal.toFixed(2)}</span>
+                      <span>{TEXT_CONTENT.subtotal}</span>
+                      <span>${subtotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between mb-1">
-                        <span>{TEXT_CONTENT.processingFee}</span>
-                        <span>${processingFee.toFixed(2)}</span>
+                      <span>{TEXT_CONTENT.processingFee}</span>
+                      <span>${processingFee.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between font-bold mt-2 pt-2 border-t">
-                        <span>{TEXT_CONTENT.orderTotal}</span>
-                        <span>${orderTotal.toFixed(2)}</span>
+                      <span>{TEXT_CONTENT.orderTotal}</span>
+                      <span>${orderTotal.toFixed(2)}</span>
                       </div>
                     </div>
 
                     <div className="mt-6 text-center">
-                      <p className="text-green-600 font-medium">¡Gracias por tu compra!</p>
-                      <p className="text-sm text-gray-500 mt-1">Tu seguro ya está activo</p>
+                      <p className="text-green-600 font-medium">Thank you for your purchase!</p>
+                      <p className="text-sm text-gray-500 mt-1">Your insurance is now active</p>
                     </div>
-                  </CardBody>
+                    </CardBody>
                 </Card>
               )}
 
