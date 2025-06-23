@@ -51,7 +51,7 @@ export const Navbar = () => {
                     const elementPosition = element.getBoundingClientRect().top + window.scrollY;
                     const offsetPosition = elementPosition + offset;
                     window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-                  }else {
+                  } else {
                     window.location.href = "/";
                   }
                 }}
@@ -86,8 +86,8 @@ export const Navbar = () => {
 
             <div className="ml-4 hidden lg:flex items-center gap-4">
               {/* Cart Icon with Counter */}
-              <Link 
-                to="/cart" 
+              <Link
+                to="/cart"
                 className="relative flex items-center text-gray-700 hover:text-red-600"
                 aria-label="Shopping Cart"
               >
@@ -117,7 +117,7 @@ export const Navbar = () => {
                 className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
-                viewBox="0 24 24"
+                viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path

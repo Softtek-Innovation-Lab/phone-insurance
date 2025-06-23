@@ -6,26 +6,15 @@ import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
+import { Divider } from "@heroui/divider";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, ShoppingCart, Shield, CreditCard, MapPin, Phone, Mail, User, Package } from "lucide-react";
 import { generatePolicy } from "@/store/slices/policySlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-
-// Static content
-const TEXT_CONTENT = {
-  title: "Secure Your Products - Insurance Cart",
-  emptyMessage: "Your cart is empty.",
-  headers: ["Product", "Details", "Coverage", "Price", "Actions"],
-  continueShopping: "Continue Shopping",
-  clearCart: "Clear Shopping Cart",
-  subtotal: "Subtotal",
-  processingFee: "Processing Fee (USD)",
-  orderTotal: "Order Total (USD)",
-  riskFactor: "Risk Factor",
-  proceedToCheckout: "Buy and Generate Receipt",
-};
+import { faker } from '@faker-js/faker';
+// Static content removed - not needed with the new multi-step design
 
 // Mock cart item (initial data)
 const INITIAL_CART_ITEM = {
@@ -68,36 +57,90 @@ interface PolicyResponse {
   ProductVersion?: string;
 }
 
+// Customer information interface
+interface CustomerInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
 export default function CartPage() {
   const { store, setStore, clearStore } = useGlobalStore();
   const { addNotification } = useNotification();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [receiptGenerated, setReceiptGenerated] = useState(false);
   const [policyData, setPolicyData] = useState<PolicyResponse | null>(null);
+  const [currentStep, setCurrentStep] = useState<'cart' | 'checkout' | 'confirmation'>('cart');
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: 'United States'
+  });
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
   // Mapea los datos del carrito y combina con datos iniciales para cualquier campo faltante
-  const cart = store.cart?.map((item) => {
+  const cart = store.cart?.map((item, index) => {
+    console.log(`🔍 Processing cart item ${index}:`, item);
+    console.log(`🆔 Item ID:`, item.id);
+    console.log(`📦 Item product:`, item.product);
+
+    // ⚠️ MIGRACIÓN: Si el item no tiene ID (items agregados antes del fix), generamos uno único
+    const itemId = item.id || `migrated-item-${index}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+
+    if (!item.id) {
+      console.log(`🔧 MIGRATING item ${index} - Generated new ID:`, itemId);
+    }
+
     // Creamos un nuevo objeto combinando los datos iniciales con los del producto real
-    return {
+    const mappedItem = {
       ...INITIAL_CART_ITEM,
       ...item,
-      id: item.id || INITIAL_CART_ITEM.id,
-      unitPrice: item.product?.PredefinedPremium || INITIAL_CART_ITEM.unitPrice,
-      name: item.product?.name || INITIAL_CART_ITEM.name,
-      image: item.product?.image || INITIAL_CART_ITEM.image,
+      // Usar el ID único (ya existente o recién generado para migración)
+      id: itemId,
+      unitPrice: item.product?.PredefinedPremium ?? INITIAL_CART_ITEM.unitPrice,
+      name: item.product?.name ?? INITIAL_CART_ITEM.name,
+      image: item.product?.image ?? INITIAL_CART_ITEM.image,
       // Aseguramos que los valores del formulario se muestren correctamente
-      manufacturer: item.manufacturer || INITIAL_CART_ITEM.manufacturer,
-      model: item.model || INITIAL_CART_ITEM.model,
-      serialNumber: item.serialNumber || INITIAL_CART_ITEM.serialNumber,
+      manufacturer: item.manufacturer ?? INITIAL_CART_ITEM.manufacturer,
+      model: item.model ?? INITIAL_CART_ITEM.model,
+      serialNumber: item.serialNumber ?? INITIAL_CART_ITEM.serialNumber,
       // Otros datos
-      quantity: item.quantity || 1,
-      riskFactor: determineRiskFactor(item.state, item.manufacturer),
-      premium: item.premium || INITIAL_CART_ITEM.premium,
+      quantity: item.quantity ?? 1,
+      riskFactor: determineRiskFactor(item.state ?? INITIAL_CART_ITEM.state, item.manufacturer ?? INITIAL_CART_ITEM.manufacturer),
+      premium: item.premium ?? INITIAL_CART_ITEM.premium,
     };
-  }) || [];
+
+    console.log(`✅ Mapped item ${index} with ID:`, mappedItem.id);
+    return mappedItem;
+  }) ?? [];
+
+  console.log("🛒 Current cart after mapping:", cart);
+  console.log("📋 Original store.cart:", store.cart);
+  console.log("🔢 Cart IDs:", cart.map(item => item.id));
+
+  // 🔧 MIGRACIÓN: Actualizamos el store si algún item fue migrado (no tenía ID)
+  const hasItemsWithoutId = store.cart?.some(item => !item.id) ?? false;
+  if (hasItemsWithoutId && cart.length > 0) {
+    console.log("🔄 Updating store with migrated IDs...");
+    const migratedStoreCart = cart.map(item => ({
+      ...store.cart?.find((_, index) => index === cart.findIndex(c => c.id === item.id)) || {},
+      id: item.id // Ensure the store cart has the migrated IDs
+    }));
+    setStore({ cart: migratedStoreCart });
+  }
 
   // Función para determinar el factor de riesgo basado en el estado y fabricante
   function determineRiskFactor(state: string, manufacturer: string): string {
@@ -111,33 +154,55 @@ export default function CartPage() {
     return "medium";
   }
 
-  // Formato de fecha
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return 'N/A';
-
-    // Si la fecha tiene formato de hora "T", la cortamos
-    const datePart = dateString.split('T')[0];
-
-    // Intentamos formatear la fecha
-    try {
-      const date = new Date(datePart);
-      return date.toLocaleDateString();
-    } catch (e) {
-      return datePart;
-    }
-  };
-
   const updateQuantity = (id: string, quantity: number) => {
-    const updatedCart = cart.map((item) =>
-      item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
-    );
+    console.log("🔄 === UPDATE QUANTITY START ===");
+    console.log("🎯 Target ID:", id);
+    console.log("📊 New quantity:", quantity);
+    console.log("🛒 Current store.cart before update:", store.cart);
+    console.log("🆔 All current IDs in store.cart:", store.cart?.map(item => `"${item.id}"`));
+
+    const updatedCart = store.cart?.map((item, index) => {
+      console.log(`🔍 Checking item ${index}:`);
+      console.log(`   - Item ID: "${item.id}"`);
+      console.log(`   - Target ID: "${id}"`);
+      console.log(`   - Match: ${item.id === id}`);
+      console.log(`   - Current quantity: ${item.quantity}`);
+
+      if (item.id === id) {
+        console.log(`✅ FOUND MATCH! Updating item ${index} from quantity ${item.quantity} to ${Math.max(1, quantity)}`);
+        return { ...item, quantity: Math.max(1, quantity) };
+      } else {
+        console.log(`❌ NO MATCH for item ${index}, keeping original`);
+        return item;
+      }
+    }) || [];
+
+    console.log("🛒 Updated cart result:", updatedCart);
+    console.log("🆔 Updated cart IDs:", updatedCart.map(item => `"${item.id}"`));
+    console.log("📊 Updated cart quantities:", updatedCart.map(item => item.quantity));
     setStore({ cart: updatedCart });
+    console.log("🔄 === UPDATE QUANTITY END ===");
   };
 
   const removeItem = (id: string) => {
-    const updatedCart = cart.filter((item) => item.id !== id);
-    setStore({ cart: updatedCart.length ? updatedCart : [] });
-    addNotification("Producto eliminado del carrito", "info");
+    console.log("🗑️ === REMOVE ITEM START ===");
+    console.log("🎯 Target ID to remove:", id);
+    console.log("🛒 Current store.cart before removal:", store.cart);
+    console.log("🆔 All current IDs in store.cart:", store.cart?.map(item => `"${item.id}"`));
+
+    const updatedCart = store.cart?.filter((item, index) => {
+      console.log(`🔍 Checking item ${index} for removal:`);
+      console.log(`   - Item ID: "${item.id}"`);
+      console.log(`   - Target ID: "${id}"`);
+      console.log(`   - Should keep (ID !== target): ${item.id !== id}`);
+      return item.id !== id;
+    }) || [];
+
+    console.log("🛒 Updated cart after filter:", updatedCart);
+    console.log("🆔 Remaining IDs after removal:", updatedCart.map(item => `"${item.id}"`));
+    setStore({ cart: updatedCart });
+    addNotification("Product removed from cart", "info");
+    console.log("🗑️ === REMOVE ITEM END ===");
   };
 
   // Calcula el subtotal, tarifa de procesamiento y total del pedido
@@ -149,21 +214,37 @@ export default function CartPage() {
   const generateReceipt = () => {
     setIsGenerating(true);
 
-    console.log("Generando comprobante...", cart);
+    // Generate fake customer data if not provided
+    if (!customerInfo.firstName || !customerInfo.lastName) {
+      const fakeCustomer = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        phone: faker.phone.number(),
+        address: faker.location.streetAddress(),
+        city: faker.location.city(),
+        state: faker.location.state(),
+        zipCode: faker.location.zipCode(),
+        country: 'United States'
+      };
+      setCustomerInfo(fakeCustomer);
+    }
+
+    console.log("Generating receipt...", cart);
     generatePolicy(cart, dispatch)
       .then((response) => {
-        console.log('Respuesta completa de la generación de póliza:', response);
+        console.log('Complete policy generation response:', response);
 
-        // Priorizar la respuesta de issue, luego bind, luego calculate
-        const policyResponse = response?.issueResponse || response?.bindResponse || response?.calculateResponse;
-        console.log('Datos de la póliza a mostrar:', policyResponse);
+        // Prioritize issue response, then bind, then calculate
+        const policyResponse = (response?.issueResponse ?? response?.bindResponse) ?? response?.calculateResponse;
+        console.log('Policy data to display:', policyResponse);
 
         setPolicyData(policyResponse);
-        setReceiptGenerated(true);
-        addNotification("¡Comprobante generado exitosamente!", "success");
+        setCurrentStep('confirmation');
+        addNotification("Receipt generated successfully!", "success");
       })
       .catch((error) => {
-        addNotification("Error al generar el comprobante. Inténtalo nuevamente.", "error");
+        addNotification("Error generating receipt. Please try again.", "error");
         console.error("Error generating receipt:", error);
       })
       .finally(() => {
@@ -171,247 +252,582 @@ export default function CartPage() {
       });
   };
 
+  // Helper functions for the improved cart
+  const renderCartStep = () => {
+    if (cart.length === 0) {
+      return (
+        <div className="text-center py-16">
+          <div className="text-6xl mb-4">🛒</div>
+          <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
+          <p className="text-gray-600 mb-6">Add some insurance products to get started</p>
+          <Button color="primary" onPress={() => navigate("/")}>
+            Browse Products
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        {/* Cart Items */}
+        <div className="space-y-4">
+          {cart.map((item) => (
+            <Card key={item.id} className="animate-fade-in shadow-sm hover:shadow-md transition-shadow bg-slate-50 border border-slate-200">
+              <CardBody className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                  {/* Product Image & Info */}
+                  <div className="flex items-center space-x-4">
+                    <div className="relative">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        className="w-20 h-20 rounded-lg object-cover"
+                      />
+                      <div className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
+                        {item.quantity}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">{item.name}</h3>
+                      <p className="text-gray-600">{item.manufacturer} - {item.model}</p>
+                      <div className="flex items-center mt-2">
+                        <Shield className="w-4 h-4 text-green-500 mr-1" />
+                        <span className="text-sm text-green-600">Coverage: ${item.coverageAmount}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Details */}
+                  <div className="space-y-2 text-sm">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <span className="font-medium">Serial:</span>
+                        <p className="text-gray-600">{item.serialNumber}</p>
+                      </div>
+                      <div>
+                        <span className="font-medium">State:</span>
+                        <p className="text-gray-600">{item.state}</p>
+                      </div>
+                      <div>
+                        <span className="font-medium">Term:</span>
+                        <p className="text-gray-600">{item.policyTerm}</p>
+                      </div>
+                      <div>
+                        <span className="font-medium">Deductible:</span>
+                        <p className="text-gray-600">{item.deductible}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Risk & Price */}
+                  <div className="text-center">
+                    <div className="mb-2">
+                      <span className="text-sm font-medium">Risk Factor:</span>
+                      <div className={`inline-block ml-2 px-2 py-1 rounded-full text-xs font-medium ${item.riskFactor === 'low' ? 'bg-green-100 text-green-800' :
+                        item.riskFactor === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                          item.riskFactor === 'medium-high' ? 'bg-orange-100 text-orange-800' :
+                            'bg-red-100 text-red-800'
+                        }`}>
+                        {item.riskFactor}
+                      </div>
+                    </div>
+                    <div className="text-2xl font-bold text-primary">${item.unitPrice.toFixed(2)}</div>
+                    <div className="text-sm text-gray-500">per year</div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-col space-y-3">
+                    <div className="flex items-center justify-center space-x-2">
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="bordered"
+                        onPress={() => updateQuantity(item.id, item.quantity - 1)}
+                        isDisabled={item.quantity <= 1}
+                      >
+                        -
+                      </Button>
+                      <span className="w-8 text-center font-medium">{item.quantity}</span>
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="bordered"
+                        onPress={() => updateQuantity(item.id, item.quantity + 1)}
+                        isDisabled={item.quantity >= 10}
+                      >
+                        +
+                      </Button>
+                    </div>
+                    <Button
+                      color="danger"
+                      variant="light"
+                      size="sm"
+                      onPress={() => removeItem(item.id)}
+                      startContent={<Trash2 size={16} />}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          ))}
+        </div>
+
+        {/* Cart Actions */}
+        <div className="flex justify-between items-center py-4">
+          <Button variant="light" onPress={() => navigate("/")}>
+            Continue Shopping
+          </Button>
+          <div className="flex space-x-4">
+            <Button
+              variant="light"
+              color="danger"
+              onPress={() => {
+                clearStore();
+                addNotification("Cart cleared", "info");
+              }}
+            >
+              Clear Cart
+            </Button>
+            <Button
+              color="primary"
+              size="lg"
+              onPress={() => setCurrentStep('checkout')}
+            >
+              Proceed to Checkout (${orderTotal.toFixed(2)})
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderCheckoutStep = () => {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Customer Information Form */}
+        <Card>
+          <CardBody className="p-6">
+            <h3 className="text-xl font-bold mb-4 flex items-center">
+              <User className="mr-2" />
+              Customer Information
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="First Name"
+                value={customerInfo.firstName}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, firstName: e.target.value })}
+                required
+              />
+              <Input
+                label="Last Name"
+                value={customerInfo.lastName}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, lastName: e.target.value })}
+                required
+              />
+              <Input
+                label="Email"
+                type="email"
+                value={customerInfo.email}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
+                startContent={<Mail size={18} />}
+                required
+              />
+              <Input
+                label="Phone"
+                type="tel"
+                value={customerInfo.phone}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
+                startContent={<Phone size={18} />}
+                required
+              />
+              <Input
+                label="Address"
+                value={customerInfo.address}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, address: e.target.value })}
+                startContent={<MapPin size={18} />}
+                className="md:col-span-2"
+                required
+              />
+              <Input
+                label="City"
+                value={customerInfo.city}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, city: e.target.value })}
+                required
+              />
+              <Input
+                label="State"
+                value={customerInfo.state}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, state: e.target.value })}
+                required
+              />
+              <Input
+                label="ZIP Code"
+                value={customerInfo.zipCode}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, zipCode: e.target.value })}
+                required
+              />
+              <Input
+                label="Country"
+                value={customerInfo.country}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, country: e.target.value })}
+                required
+              />
+            </div>
+          </CardBody>
+        </Card>
+
+        {/* Order Summary */}
+        <Card>
+          <CardBody className="p-6">
+            <h3 className="text-xl font-bold mb-4 flex items-center">
+              <Package className="mr-2" />
+              Order Summary
+            </h3>
+
+            <div className="space-y-4">
+              {cart.map((item) => (
+                <div key={`checkout-${item.id}`} className="flex justify-between items-center py-2 border-b">
+                  <div className="flex items-center space-x-3">
+                    <Image src={item.image} alt={item.name} className="w-12 h-12 rounded object-cover" />
+                    <div>
+                      <p className="font-medium">{item.name}</p>
+                      <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">${(item.unitPrice * item.quantity).toFixed(2)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 space-y-2">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Processing Fee</span>
+                <span>${processingFee.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-lg font-bold pt-2 border-t">
+                <span>Total</span>
+                <span>${orderTotal.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              <Button
+                color="primary"
+                size="lg"
+                className="w-full"
+                onPress={generateReceipt}
+                isLoading={isGenerating}
+                startContent={!isGenerating && <CreditCard size={18} />}
+              >
+                {isGenerating ? "Processing..." : "Complete Purchase"}
+              </Button>
+              <Button
+                variant="light"
+                className="w-full"
+                onPress={() => setCurrentStep('cart')}
+              >
+                Back to Cart
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+    );
+  };
+
+  const renderConfirmationStep = () => {
+    // Generate additional fake data for comprehensive receipt
+    const currentDate = new Date().toLocaleDateString('en-US');
+    const birthDate = faker.date.birthdate({ min: 18, max: 65, mode: 'age' }).toLocaleDateString('en-US');
+    const customerId = faker.string.numeric(9);
+    const issuer = "martin.gimenezartero@softtek.com";
+    const productCode = "TRAV_PROP_MKT";
+    const productVersion = "v1.0";
+    const vatRate = 18;
+    const grossPremium = subtotal;
+    const vat = grossPremium * (vatRate / 100);
+    const totalPremium = grossPremium + vat;
+
+    return (
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* Success Header */}
+        <div className="text-center space-y-4">
+          <div className="text-6xl text-green-500 mb-4">✅</div>
+          <h2 className="text-3xl font-bold text-green-600">Thank you for your purchase!</h2>
+          <p className="text-lg text-gray-600">Your insurance is now active</p>
+        </div>
+
+        {/* Complete Receipt */}
+        <Card className="print:shadow-none">
+          <CardBody className="p-8">
+            {/* Receipt Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-bold mb-2">Purchase Receipt</h1>
+              <p className="text-gray-600">{currentDate}</p>
+            </div>
+
+            {/* Policy Summary */}
+            <div className="mb-8">
+              <h2 className="text-xl font-bold mb-4 text-primary">Policy Summary</h2>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="space-y-3">
+                  <div>
+                    <span className="font-medium">Policy Number:</span>
+                    <p className="text-gray-800">{policyData?.PolicyNo ?? `POTRAV_PROP_MKT${faker.string.numeric(8)}`}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Holder:</span>
+                    <p className="text-gray-800">{customerInfo.firstName} {customerInfo.lastName} (Birth: {birthDate})</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Customer ID:</span>
+                    <p className="text-gray-800">{customerId}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Effective Date:</span>
+                    <p className="text-gray-800">{policyData?.EffectiveDate ?? new Date().toLocaleDateString('en-US')}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <span className="font-medium">Expiration Date:</span>
+                    <p className="text-gray-800">{policyData?.ExpiryDate ?? new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toLocaleDateString('en-US')}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Gross Premium:</span>
+                    <p className="text-gray-800">${grossPremium.toFixed(2)}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">VAT ({vatRate}%):</span>
+                    <p className="text-gray-800">${vat.toFixed(2)}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Total Premium:</span>
+                    <p className="text-gray-800 font-bold text-lg">${totalPremium.toFixed(2)}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <span className="font-medium">Issue Date:</span>
+                    <p className="text-gray-800">{new Date(Date.now() - 24 * 60 * 60 * 1000).toLocaleDateString('en-US')}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Issuer:</span>
+                    <p className="text-gray-800">{issuer}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Product:</span>
+                    <p className="text-gray-800">{productCode} ({productVersion})</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Status:</span>
+                    <p className="text-green-600 font-medium">Active</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <div>
+                  <span className="font-medium">Contact:</span>
+                  <p className="text-gray-800">{customerInfo.email}</p>
+                </div>
+              </div>
+            </div>
+
+            <Divider className="my-6" />
+
+            {/* Purchase Summary */}
+            <div className="mb-8">
+              <h2 className="text-xl font-bold mb-4 text-primary">Purchase Summary:</h2>
+              <div className="space-y-4">
+                {cart.map((item) => (
+                  <div key={`receipt-${item.id}`} className="flex justify-between items-center py-3 border-b border-gray-100">
+                    <div className="flex items-center space-x-4">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        className="w-16 h-16 rounded-lg object-cover"
+                      />
+                      <div>
+                        <h3 className="font-medium">{item.name} ({item.quantity})</h3>
+                        <p className="text-sm text-gray-600">{item.manufacturer} {item.model}</p>
+                        <div className="flex items-center mt-1">
+                          <Shield className="w-4 h-4 text-green-500 mr-1" />
+                          <span className="text-sm text-green-600">Coverage: ${item.coverageAmount}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold">${(item.unitPrice * item.quantity).toFixed(2)}</p>
+                      <p className="text-sm text-gray-600">${item.unitPrice.toFixed(2)} each</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Totals */}
+              <div className="mt-6 space-y-3">
+                <div className="flex justify-between text-lg">
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Processing Fee (USD)</span>
+                  <span>${processingFee.toFixed(2)}</span>
+                </div>
+                <Divider />
+                <div className="flex justify-between text-xl font-bold text-primary">
+                  <span>Order Total (USD)</span>
+                  <span>${orderTotal.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Customer Information */}
+            <div className="mb-6">
+              <h3 className="text-lg font-bold mb-3">Customer Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p><strong>Name:</strong> {customerInfo.firstName} {customerInfo.lastName}</p>
+                  <p><strong>Email:</strong> {customerInfo.email}</p>
+                  <p><strong>Phone:</strong> {customerInfo.phone}</p>
+                </div>
+                <div>
+                  <p><strong>Address:</strong> {customerInfo.address}</p>
+                  <p><strong>City:</strong> {customerInfo.city}, {customerInfo.state} {customerInfo.zipCode}</p>
+                  <p><strong>Country:</strong> {customerInfo.country}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Policy Details */}
+            {policyData && (
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+                <h3 className="text-lg font-bold mb-3 text-blue-800">Additional Policy Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p><strong>Policy Status Code:</strong> {policyData.PolicyStatus}</p>
+                    <p><strong>Organization Code:</strong> {policyData.OrgCode}</p>
+                  </div>
+                  <div>
+                    <p><strong>Issue User:</strong> {policyData.IssueUserRealName}</p>
+                    <p><strong>VAT Rate:</strong> {policyData.VatRate}%</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Footer */}
+            <div className="text-center text-gray-600 text-sm mt-8 pt-6 border-t">
+              <p>Questions about your policy? Contact us at support@phoneinsurance.com</p>
+              <p>Policy documents will be sent to your email within 24 hours.</p>
+              <p className="mt-2 font-medium">Thank you for choosing our insurance services!</p>
+            </div>
+          </CardBody>
+        </Card>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 print:hidden">
+          <Button
+            color="primary"
+            size="lg"
+            onPress={() => navigate("/")}
+          >
+            Continue Shopping
+          </Button>
+          <Button
+            variant="bordered"
+            size="lg"
+            onPress={() => window.print()}
+          >
+            Print Receipt
+          </Button>
+          <Button
+            variant="light"
+            size="lg"
+            onPress={() => {
+              clearStore();
+              setCurrentStep('cart');
+              addNotification("Starting new order", "info");
+            }}
+          >
+            New Order
+          </Button>
+          <Button
+            variant="bordered"
+            size="lg"
+            onPress={() => window.open("https://softtek-sandbox-am.insuremo.com/ui/admin/#/", "_blank")}
+            className="border-blue-500 text-blue-600 hover:bg-blue-50"
+          >
+            View in InsureMo
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="max-w-6xl w-full px-4">
-          <h1 className="text-2xl font-bold mb-6">{TEXT_CONTENT.title}</h1>
+          {/* Header with Step Indicator */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
+              <ShoppingCart className="text-primary" />
+              {currentStep === 'cart' && 'Shopping Cart'}
+              {currentStep === 'checkout' && 'Checkout'}
+              {currentStep === 'confirmation' && 'Order Confirmation'}
+            </h1>
 
-          {/* Cart Header */}
-          <div className="grid grid-cols-5 mb-4 bg-gray-800 p-3 rounded-t-md">
-            {TEXT_CONTENT.headers.map((header, index) => (
-              <div
-                key={header + index}
-                className={`text-white font-medium ${index === 0 ? "col-span-1" :
-                  index === 1 ? "col-span-1" :
-                    ""
-                  }`}
-              >
-                {header}
+            {/* Step Indicator */}
+            <div className="flex items-center justify-center mb-6">
+              <div className="flex items-center space-x-4">
+                <div className={`flex items-center ${currentStep === 'cart' ? 'text-primary' : 'text-gray-400'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${currentStep === 'cart' ? 'border-primary bg-primary text-white' : 'border-gray-300'
+                    }`}>
+                    1
+                  </div>
+                  <span className="ml-2 font-medium">Cart</span>
+                </div>
+
+                <div className={`w-16 h-1 ${currentStep !== 'cart' ? 'bg-primary' : 'bg-gray-300'}`}></div>
+
+                <div className={`flex items-center ${currentStep === 'checkout' ? 'text-primary' : 'text-gray-400'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${currentStep === 'checkout' ? 'border-primary bg-primary text-white' :
+                    currentStep === 'confirmation' ? 'border-primary bg-primary text-white' : 'border-gray-300'
+                    }`}>
+                    2
+                  </div>
+                  <span className="ml-2 font-medium">Checkout</span>
+                </div>
+
+                <div className={`w-16 h-1 ${currentStep === 'confirmation' ? 'bg-primary' : 'bg-gray-300'}`}></div>
+
+                <div className={`flex items-center ${currentStep === 'confirmation' ? 'text-primary' : 'text-gray-400'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${currentStep === 'confirmation' ? 'border-primary bg-primary text-white' : 'border-gray-300'
+                    }`}>
+                    3
+                  </div>
+                  <span className="ml-2 font-medium">Confirmation</span>
+                </div>
               </div>
-            ))}
-          </div>
-
-          {/* Cart Item */}
-          {cart.length === 0 ? (
-            <Card>
-              <CardBody>
-                <p className="text-default-500 text-center">{TEXT_CONTENT.emptyMessage}</p>
-              </CardBody>
-            </Card>
-          ) : (
-            <Card className="mb-4">
-              <CardBody className="p-0">
-                {cart.map((item, i) => (
-                  <div key={item.id + i} className="grid grid-cols-5 items-center p-4 border-b last:border-b-0">
-                    {/* Columna 1: Imagen */}
-                    <div className="flex justify-center">
-                      <Image
-                        alt={item.name}
-                        src={item.image}
-                        className="w-20 h-20 object-cover rounded-md"
-                      />
-                    </div>
-
-                    {/* Columna 2: Nombre y modelo */}
-                    <div>
-                      <p className="font-medium text-lg">{item.name}</p>
-                      <div className="text-sm text-default-600 mt-1">
-                        <p><span className="font-semibold">Manufacturer:</span> {item.manufacturer}</p>
-                        <p><span className="font-semibold">Model:</span> {item.model}</p>
-                        <p><span className="font-semibold">Serial No.:</span> {item.serialNumber}</p>
-                        <p><span className="font-semibold">State:</span> {item.state}</p>
-                      </div>
-                    </div>
-
-                    {/* Column 3: Coverage, deductible, term, and risk factor */}
-                    <div className="text-sm">
-                      <p><span className="font-semibold">Coverage:</span> ${item.coverageAmount}</p>
-                      <p><span className="font-semibold">Deductible:</span> {item.deductible}</p>
-                      <p><span className="font-semibold">Term:</span> {item.policyTerm}</p>
-                      <p>
-                        <span className="font-semibold">Risk factor:</span>
-                        <span className={`ml-1 font-medium ${getRiskColor(item.riskFactor)}`}>
-                          {item.riskFactor}
-                        </span>
-                      </p>
-                    </div>
-
-                    {/* Columna 4: Precio */}
-                    <div>
-                      <p className="font-medium">${item.unitPrice.toFixed(2)}</p>
-                      <div className="flex items-center mt-2">
-                        <span className="text-sm mr-2">Quantity:</span>
-                        <Input
-                          type="number"
-                          min={1}
-                          value={item.quantity}
-                          onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
-                          className="w-16 h-8"
-                          size="sm"
-                        />
-                      </div>
-                      <p className="font-semibold mt-2">
-                        Total: ${(item.unitPrice * item.quantity).toFixed(2)}
-                      </p>
-                    </div>
-
-                    {/* Columna 5: Botón eliminar */}
-                    <div className="flex justify-center">
-                      <Button
-                        isIconOnly
-                        color="danger"
-                        variant="light"
-                        className="rounded-full"
-                        onClick={() => removeItem(item.id)}
-                      >
-                        <Trash2 size={20} />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </CardBody>
-            </Card>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex justify-between mb-6">
-            <Button variant="light" onPress={() => navigate("/")}>
-              {TEXT_CONTENT.continueShopping}
-            </Button>
-            {cart.length > 0 && (
-              <Button variant="light" color="danger" onPress={() => {
-                clearStore();
-                addNotification("El carrito ha sido vaciado", "info");
-              }}>
-                {TEXT_CONTENT.clearCart}
-              </Button>
-            )}
-          </div>
-
-          {/* Summary */}
-          {cart.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Receipt (appears after clicking 'Generate') */}
-              {receiptGenerated && (
-                <Card className="bg-white border border-gray-200">
-                  <CardBody className="p-6">
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-xl font-bold">Purchase Receipt</h3>
-                      <p className="text-gray-500 text-sm">{new Date().toLocaleDateString()}</p>
-                    </div>
-
-                    {/* Policy Details */}
-                    {policyData && (
-                      <div className="bg-blue-50 p-4 rounded-md mb-4">
-                        <h4 className="font-bold text-blue-800 mb-2">Policy Summary</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <p><span className="font-semibold">Policy Number:</span> {policyData.PolicyNo || 'N/A'}</p>
-                            <p>
-                              <span className="font-semibold">Holder:</span> {policyData.PolicyCustomerList?.[0]?.CustomerName || 'N/A'}
-                              {policyData.PolicyCustomerList?.[0]?.DateOfBirth && ` (Birth: ${formatDate(policyData.PolicyCustomerList[0].DateOfBirth)})`}
-                            </p>
-                            <p><span className="font-semibold">Customer ID:</span> {policyData.PolicyCustomerList?.[0]?.IdNo || 'N/A'}</p>
-                            <p><span className="font-semibold">Effective Date:</span> {formatDate(policyData.EffectiveDate)}</p>
-                            <p><span className="font-semibold">Expiration Date:</span> {formatDate(policyData.ExpiryDate)}</p>
-                          </div>
-                          <div>
-                            <p><span className="font-semibold">Gross Premium:</span> ${policyData.GrossPremium?.toFixed(2) || 'N/A'}</p>
-                            <p><span className="font-semibold">VAT ({(policyData.VatRate || 0) * 100}%):</span> ${policyData.Vat?.toFixed(2) || 'N/A'}</p>
-                            <p><span className="font-semibold">Total Premium:</span> ${policyData.DuePremium?.toFixed(2) || 'N/A'}</p>
-                            <p><span className="font-semibold">Issue Date:</span> {formatDate(policyData.IssueDate)}</p>
-                            <p><span className="font-semibold">Issuer:</span> {policyData.IssueUserRealName || 'N/A'}</p>
-                            <p><span className="font-semibold">Product:</span> {policyData.ProductCode} (v{policyData.ProductVersion})</p>
-                          </div>
-                        </div>
-                        <p className="mt-2 text-sm">
-                          <span className="font-semibold">Status:</span> <span className="text-green-600 font-medium">
-                            {policyData.PolicyStatus === 2 ? 'Active' : `Status ${policyData.PolicyStatus}`}
-                          </span>
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="border-t border-gray-200 pt-4 mb-4">
-                      <h4 className="font-medium mb-2">Purchase Summary:</h4>
-                      {cart.map((item, i) => (
-                        <div key={`receipt-${item.id}-${i}`} className="flex justify-between mb-2 text-sm">
-                          <span>{item.name} ({item.quantity}) - {item.manufacturer} {item.model}</span>
-                          <span>${(item.unitPrice * item.quantity).toFixed(2)}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="border-t border-gray-200 pt-4">
-                      <div className="flex justify-between mb-1">
-                        <span>{TEXT_CONTENT.subtotal}</span>
-                        <span>${subtotal.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between mb-1">
-                        <span>{TEXT_CONTENT.processingFee}</span>
-                        <span>${processingFee.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between font-bold mt-2 pt-2 border-t">
-                        <span>{TEXT_CONTENT.orderTotal}</span>
-                        <span>${orderTotal.toFixed(2)}</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 text-center">
-                      <p className="text-green-600 font-medium">Thank you for your purchase!</p>
-                      <p className="text-sm text-gray-500 mt-1">Your insurance is now active</p>
-                    </div>
-                  </CardBody>
-                </Card>
-              )}
-
-              <Card className={`bg-gray-100 ${receiptGenerated ? 'lg:col-start-2' : 'lg:col-span-2'}`}>
-                <CardBody className="flex flex-col gap-2">
-                  <div className="flex justify-between">
-                    <span>{TEXT_CONTENT.subtotal}</span>
-                    <span>${subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{TEXT_CONTENT.processingFee}</span>
-                    <span>${processingFee.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between font-bold">
-                    <span>{TEXT_CONTENT.orderTotal}</span>
-                    <span>${orderTotal.toFixed(2)}</span>
-                  </div>
-                  <Button
-                    color="primary"
-                    size="lg"
-                    className="mt-4"
-                    isLoading={isGenerating}
-                    isDisabled={isGenerating || receiptGenerated}
-                    onClick={generateReceipt}
-                  >
-                    {isGenerating ? "Generating receipt..." : TEXT_CONTENT.proceedToCheckout}
-                  </Button>
-                </CardBody>
-              </Card>
             </div>
-          )}
+          </div>
+
+          {/* Content based on current step */}
+          {currentStep === 'cart' && renderCartStep()}
+          {currentStep === 'checkout' && renderCheckoutStep()}
+          {currentStep === 'confirmation' && renderConfirmationStep()}
         </div>
       </section>
     </DefaultLayout>
   );
-}
-
-// Función auxiliar para determinar el color del factor de riesgo
-function getRiskColor(riskFactor: 'low' | 'medium' | 'medium-high' | 'high'): string {
-  switch (riskFactor) {
-    case 'low':
-      return 'text-green-600';
-    case 'medium':
-      return 'text-amber-600';
-    case 'medium-high':
-      return 'text-orange-600';
-    case 'high':
-      return 'text-red-600';
-    default:
-      return 'text-gray-600';
-  }
 }

@@ -4,219 +4,306 @@
 
 /* Fondo decorativo */
 .background-decoration {
-    @apply absolute top-0 left-0 w-full h-full overflow-hidden z-[-1];
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    height: 100% !important;
-    position: fixed;
+  @apply absolute top-0 left-0 w-full h-full overflow-hidden z-[-1];
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  height: 100% !important;
+  position: fixed;
 
-    /* Modo claro */
-    .dark & {
-        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        /* Modo oscuro */
-    }
+  /* Modo claro */
+  .dark & {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    /* Modo oscuro */
+  }
 }
 
 /* Curva superior (luz blanca en modo claro, tenue en oscuro) */
 .background-decoration::before {
-    content: "";
-    @apply absolute -top-52 -left-52 w-[400px] h-[400px] rounded-full;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
-    filter: blur(50px);
-    opacity: 0.6;
+  content: '';
+  @apply absolute -top-52 -left-52 w-[400px] h-[400px] rounded-full;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  filter: blur(50px);
+  opacity: 0.6;
 
-    .dark & {
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
-        opacity: 0.4;
-        /* Menos intensa en modo oscuro */
-    }
+  .dark & {
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(0, 0, 0, 0) 70%
+    );
+    opacity: 0.4;
+    /* Menos intensa en modo oscuro */
+  }
 }
 
 /* Curva inferior (luz azul en modo claro, púrpura suave en oscuro) */
 .background-decoration::after {
-    content: "";
-    @apply absolute -bottom-40 right-[-150px] w-[300px] h-[300px] rounded-full;
-    background: radial-gradient(circle, rgba(100, 150, 255, 0.5) 0%, rgba(100, 150, 255, 0) 70%);
-    filter: blur(40px);
+  content: '';
+  @apply absolute -bottom-40 right-[-150px] w-[300px] h-[300px] rounded-full;
+  background: radial-gradient(
+    circle,
+    rgba(100, 150, 255, 0.5) 0%,
+    rgba(100, 150, 255, 0) 70%
+  );
+  filter: blur(40px);
+  opacity: 0.5;
+
+  .dark & {
+    background: radial-gradient(
+      circle,
+      rgba(147, 51, 234, 0.4) 0%,
+      rgba(0, 0, 0, 0) 70%
+    );
     opacity: 0.5;
-
-    .dark & {
-        background: radial-gradient(circle, rgba(147, 51, 234, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
-        opacity: 0.5;
-        /* Cambio a tono púrpura para modo oscuro */
-    }
+    /* Cambio a tono púrpura para modo oscuro */
+  }
 }
 
 @layer base {
-    :root {
-        --background: 0 0% 100%;
-        --foreground: 0 0% 3.9%;
-        --card: 0 0% 100%;
-        --card-foreground: 0 0% 3.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 0 0% 3.9%;
-        --primary: 0 0% 9%;
-        --primary-foreground: 0 0% 98%;
-        --secondary: 0 0% 96.1%;
-        --secondary-foreground: 0 0% 9%;
-        --muted: 0 0% 96.1%;
-        --muted-foreground: 0 0% 45.1%;
-        --accent: 0 0% 96.1%;
-        --accent-foreground: 0 0% 9%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 89.8%;
-        --input: 0 0% 89.8%;
-        --ring: 0 0% 3.9%;
-        --chart-1: 12 76% 61%;
-        --chart-2: 173 58% 39%;
-        --chart-3: 197 37% 24%;
-        --chart-4: 43 74% 66%;
-        --chart-5: 27 87% 67%;
-        --radius: 0.5rem
-    }
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
 
-    .dark {
-        --background: 0 0% 3.9%;
-        --foreground: 0 0% 98%;
-        --card: 0 0% 3.9%;
-        --card-foreground: 0 0% 98%;
-        --popover: 0 0% 3.9%;
-        --popover-foreground: 0 0% 98%;
-        --primary: 0 0% 98%;
-        --primary-foreground: 0 0% 9%;
-        --secondary: 0 0% 14.9%;
-        --secondary-foreground: 0 0% 98%;
-        --muted: 0 0% 14.9%;
-        --muted-foreground: 0 0% 63.9%;
-        --accent: 0 0% 14.9%;
-        --accent-foreground: 0 0% 98%;
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 14.9%;
-        --input: 0 0% 14.9%;
-        --ring: 0 0% 83.1%;
-        --chart-1: 220 70% 50%;
-        --chart-2: 160 60% 45%;
-        --chart-3: 30 80% 55%;
-        --chart-4: 280 65% 60%;
-        --chart-5: 340 75% 55%
-    }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
 }
 
 @layer base {
-    * {
-        @apply border-border;
-    }
+  * {
+    @apply border-border;
+  }
 
-    body {
-        @apply bg-background text-foreground;
-    }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
-
 
 .app-container {
-    max-width: 1060px;
-    margin: 0 auto;
+  max-width: 1060px;
+  margin: 0 auto;
 }
 
 .bg-hero-index {
-    background: linear-gradient(82.04deg, #760000 12.27%, #d63022 73.73%)
+  background: linear-gradient(82.04deg, #760000 12.27%, #d63022 73.73%);
 }
-
 
 /* Animaciones CSS */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+  from {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes zoomIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
 
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Clases de animación */
 .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
+  animation: fadeIn 0.6s ease-out forwards;
 }
 
 .animate-slide-up {
-    animation: slideUp 0.5s ease-out forwards;
+  animation: slideUp 0.5s ease-out forwards;
 }
 
 .animate-zoom-in {
-    animation: zoomIn 0.6s ease-out forwards;
+  animation: zoomIn 0.6s ease-out forwards;
 }
 
 .animate-fade-up {
-    animation: fadeUp 0.8s ease-out forwards;
+  animation: fadeUp 0.8s ease-out forwards;
 }
 
 /* Delays de animación */
 .animation-delay-200 {
-    animation-delay: 0.2s;
+  animation-delay: 0.2s;
 }
 
 .animation-delay-300 {
-    animation-delay: 0.3s;
+  animation-delay: 0.3s;
 }
 
 .animation-delay-400 {
-    animation-delay: 0.4s;
+  animation-delay: 0.4s;
 }
 
 .animation-delay-500 {
-    animation-delay: 0.5s;
+  animation-delay: 0.5s;
 }
 
 .animation-delay-600 {
-    animation-delay: 0.6s;
+  animation-delay: 0.6s;
 }
 
 .animation-delay-700 {
-    animation-delay: 0.7s;
+  animation-delay: 0.7s;
 }
 
 .animation-delay-800 {
-    animation-delay: 0.8s;
+  animation-delay: 0.8s;
 }
 
 .animation-delay-1000 {
-    animation-delay: 1s;
+  animation-delay: 1s;
+}
+
+/* Custom Slider Styles */
+.slider-thumb::-webkit-slider-thumb {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.slider-thumb::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.slider-thumb::-webkit-slider-track {
+  background: #e5e7eb;
+  border-radius: 5px;
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-in-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out forwards;
+}
+
+/* Special class for elements that need to start invisible */
+.animate-delayed {
+  opacity: 0;
+}
+
+.animate-delayed.animate-fade-up {
+  animation: fadeUp 0.8s ease-out forwards;
+}
+
+.animate-delayed.animate-zoom-in {
+  animation: zoomIn 0.6s ease-out forwards;
+}
+
+.animate-delayed.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
 }

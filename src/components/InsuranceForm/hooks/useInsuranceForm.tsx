@@ -68,13 +68,26 @@ export const useInsuranceForm = ({ product, useDummyData = false }: UseInsurance
       newErrors = validateStep2(formValues);
       if (Object.keys(newErrors).length === 0) {
         const parsedData = parseFormValues(formValues, product);
-        
+
+        console.log("🛒 === ADDING TO CART ===");
+        console.log("📦 Parsed data to add:", parsedData);
+        console.log("🆔 New item ID:", parsedData.id);
+        console.log("🛒 Current cart before adding:", store?.cart);
+        console.log("🆔 Current cart IDs:", store?.cart?.map(item => `"${item.id}"`));
+
         try {
-          setStore({ cart: [...(store?.cart || []), parsedData] });
-          addNotification(`${product.name} ha sido agregado al carrito.`, "success");
-          
+          const newCart = [...(store?.cart ?? []), parsedData];
+          console.log("🛒 New cart after adding:", newCart);
+          console.log("🆔 New cart IDs:", newCart.map(item => `"${item.id}"`));
+
+          setStore({ cart: newCart });
+          addNotification(`${product.name} has been added to cart.`, "success");
+
+          console.log("✅ Item added successfully to cart");
+          console.log("🛒 === END ADDING TO CART ===");
           setSteps(3);
         } catch (error) {
+          console.error("❌ Error adding to cart:", error);
           newErrors.api = "Failed to create policy. Please try again.";
         }
       }

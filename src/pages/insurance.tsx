@@ -1,22 +1,24 @@
+import { TEXT_CONTENT } from "@/components/InsuranceForm/constants";
+import { useInsuranceForm } from "@/components/InsuranceForm/hooks/useInsuranceForm";
+import { ProductInfo } from "@/components/InsuranceForm/ProductInfo";
+import { ConfirmationStep } from "@/components/InsuranceForm/steps/ConfirmationStep";
+import { Step1Form } from "@/components/InsuranceForm/steps/Step1Form";
+import { Step2Form } from "@/components/InsuranceForm/steps/Step2Form";
+import { products } from "@/data/products";
+import DefaultLayout from "@/layouts/default";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import { Form } from "@heroui/form";
-import { useEffect } from "react";
+import { Shield } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { products } from "@/data/products";
-import DefaultLayout from "@/layouts/default";
-import { TEXT_CONTENT } from "@/components/InsuranceForm/constants";
-import { ProductInfo } from "@/components/InsuranceForm/ProductInfo";
-import { Step1Form } from "@/components/InsuranceForm/steps/Step1Form";
-import { Step2Form } from "@/components/InsuranceForm/steps/Step2Form";
-import { ConfirmationStep } from "@/components/InsuranceForm/steps/ConfirmationStep";
-import { useInsuranceForm } from "@/components/InsuranceForm/hooks/useInsuranceForm";
 
 export default function InsurancePage() {
   const { productId } = useParams<{ productId: string }>();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Encontrar el producto por ID o usar producto por defecto
-  const product = products.find((p) => p.ProductId === parseInt(productId || "")) || {
+  const product = products.find((p) => p.ProductId === parseInt(productId ?? "")) ?? {
     name: "Default Device Insurance",
     image: "/placeholder.svg",
     SumInsured: 1000,
@@ -41,15 +43,31 @@ export default function InsurancePage() {
     goBack,
     navigateToCart,
     submitForm
-  } = useInsuranceForm({ 
+  } = useInsuranceForm({
     product,
-    useDummyData: true 
+    useDummyData: true
   });
 
   // Scroll al inicio cuando el componente se crea
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const stepLabels = ["Device Info", "Personal Details", "Confirmation"];
+
+  const breadcrumbItems = [
+    { label: "Products", href: "/" },
+    { label: product.name, icon: <Shield size={16} /> }
+  ];
+
+  const handleSubmit = async (e: any) => {
+    setIsLoading(true);
+    try {
+      await submitForm(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <DefaultLayout>
@@ -70,24 +88,24 @@ export default function InsurancePage() {
                 onSubmit={submitForm}
               >
                 {steps === 1 && (
-                  <Step1Form 
-                    formValues={formValues} 
-                    errors={errors} 
+                  <Step1Form
+                    formValues={formValues}
+                    errors={errors}
                     updateFormValue={updateFormValue}
                     coverageAmounts={coverageAmounts}
                   />
                 )}
 
                 {steps === 2 && (
-                  <Step2Form 
-                    formValues={formValues} 
-                    errors={errors} 
+                  <Step2Form
+                    formValues={formValues}
+                    errors={errors}
                     updateFormValue={updateFormValue}
                   />
                 )}
 
                 {steps === 3 && (
-                  <ConfirmationStep 
+                  <ConfirmationStep
                     productName={product.name}
                     navigateToCart={navigateToCart}
                   />

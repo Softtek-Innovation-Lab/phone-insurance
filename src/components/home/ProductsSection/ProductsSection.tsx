@@ -4,10 +4,12 @@ import { Image } from "@heroui/image";
 import './ProductsSection.css';
 import { useNavigate } from 'react-router-dom';
 import { products } from '@/data/products';
+import { SearchBar } from '@/components/ui/SearchBar';
 
 const ProductsSection = () => {
     const [activeCategory, setActiveCategory] = useState('All');
     const [visibleProducts, setVisibleProducts] = useState(products);
+    const [searchQuery, setSearchQuery] = useState('');
     const sectionRef = useRef(null);
     const navigate = useNavigate();
 
@@ -19,13 +21,25 @@ const ProductsSection = () => {
         { name: "Other", icon: "📷" },
     ];
 
+    // Filter products based on category and search query
     useEffect(() => {
-        if (activeCategory === 'All') {
-            setVisibleProducts(products);
-        } else {
-            setVisibleProducts(products.filter(product => product.category === activeCategory));
+        let filtered = products;
+
+        // Filter by category
+        if (activeCategory !== 'All') {
+            filtered = filtered.filter(product => product.category === activeCategory);
         }
-    }, [activeCategory]);
+
+        // Filter by search query
+        if (searchQuery.trim()) {
+            filtered = filtered.filter(product =>
+                product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                product.category.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        setVisibleProducts(filtered);
+    }, [activeCategory, searchQuery]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -54,10 +68,14 @@ const ProductsSection = () => {
         navigate(`/get-insurance/${product.ProductId}`, { state: { product } })
     };
 
+    const handleSearch = (query: string) => {
+        setSearchQuery(query);
+    };
+
     return (
-        <section 
+        <section
             id='get-insurance'
-        className="py-16 bg-white dark:bg-gray-800 products-section" ref={sectionRef}>
+            className="py-16 bg-white dark:bg-gray-800 products-section" ref={sectionRef}>
             <div className="max-w-6xl mx-auto px-4">
                 <div className="text-center mb-12 product-title">
                     <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
@@ -77,7 +95,7 @@ const ProductsSection = () => {
                     </button>
                     {categories.map((category, index) => (
                         <button
-                            key={index}
+                            key={category.name}
                             className={`category-btn ${activeCategory === category.name ? 'active' : ''}`}
                             style={{ "--delay": `${index * 0.1}s` } as React.CSSProperties}
                             onClick={() => setActiveCategory(category.name)}
@@ -86,6 +104,13 @@ const ProductsSection = () => {
                             {category.name}
                         </button>
                     ))}
+                </div>
+
+                <div className="mb-10">
+                    <SearchBar
+                        placeholder="Search for products or categories..."
+                        onSearch={handleSearch}
+                    />
                 </div>
 
                 <div className="products-grid">
