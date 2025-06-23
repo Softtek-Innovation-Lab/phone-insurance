@@ -2,12 +2,12 @@
 
 import { Link } from "react-router-dom";
 import { ShoppingCart, UserCircle } from "lucide-react";
-import travelersLogo from "@/assets/travelers-logo.svg";
+import travelersLogo from "@/assets/generic-logo.png"
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 
 export const Navbar = () => {
   const { store } = useGlobalStore();
-  const cartItemCount = store?.cart?.length || 0;
+  const cartItemCount = store?.cart?.length ?? 0;
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white border-b border-gray-200">
