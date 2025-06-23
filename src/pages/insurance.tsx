@@ -9,13 +9,11 @@ import DefaultLayout from "@/layouts/default";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import { Form } from "@heroui/form";
-import { Shield } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export default function InsurancePage() {
   const { productId } = useParams<{ productId: string }>();
-  const [isLoading, setIsLoading] = useState(false);
 
   // Encontrar el producto por ID o usar producto por defecto
   const product = products.find((p) => p.ProductId === parseInt(productId ?? "")) ?? {
@@ -52,22 +50,6 @@ export default function InsurancePage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const stepLabels = ["Device Info", "Personal Details", "Confirmation"];
-
-  const breadcrumbItems = [
-    { label: "Products", href: "/" },
-    { label: product.name, icon: <Shield size={16} /> }
-  ];
-
-  const handleSubmit = async (e: any) => {
-    setIsLoading(true);
-    try {
-      await submitForm(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <DefaultLayout>
