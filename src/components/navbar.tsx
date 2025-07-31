@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, UserCircle } from "lucide-react";
 import travelersLogo from "@/assets/generic-logo.png"
 import { useGlobalStore } from "@/hooks/useGlobalStore";
+import { useAuth } from "@/auth/AuthProvider";
 
 export const Navbar = () => {
   const { store } = useGlobalStore();
+  const { user, logout } = useAuth();
   const cartItemCount = store?.cart?.length ?? 0;
 
   return (
@@ -77,9 +79,12 @@ export const Navbar = () => {
               <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
                 Brokers
               </span>
-              <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
+              <Link
+                to="/claims-centre"
+                className="text-base font-medium text-gray-700 hover:text-red-600"
+              >
                 Claims Centre
-              </span>
+              </Link>
 
 
             </nav>
@@ -99,13 +104,30 @@ export const Navbar = () => {
                 )}
               </Link>
 
-              {/* Log In Button (Disabled) */}
-              <span
-                className="flex items-center gap-2 border border-gray-400 px-3 py-1 text-gray-400 font-semibold text-sm uppercase rounded cursor-not-allowed pointer-events-none"
-              >
-                <UserCircle className="h-4 w-4" />
-                <span>Log In</span>
-              </span>
+              {/* User/Login Icon */}
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <Link to="/profile" className="flex items-center gap-2 text-gray-700 hover:text-red-600">
+                    <UserCircle className="h-5 w-5" />
+                    <span className="text-sm font-medium">{user.name}</span>
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="text-sm font-medium text-red-600 hover:underline"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="flex items-center text-gray-700 hover:text-red-600"
+                  aria-label="Login"
+                >
+                  <UserCircle className="h-5 w-5" />
+                  <span className="ml-1 text-sm font-medium">Login</span>
+                </Link>
+              )}
             </div>
 
             {/* Mobile Menu Toggle */}

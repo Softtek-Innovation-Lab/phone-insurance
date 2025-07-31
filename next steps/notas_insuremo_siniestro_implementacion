@@ -21,3 +21,25 @@ si no tiene ningun siniestro, le aparece un mensaje que diga "no tiene
 siniestros".
 
 
+asegurar4
+
+
+una vez que se completa el formmulario ir a 
+Claims Centre
+
+una pagina que muestra registro calculo y pago
+con PolicyNo: "POTRAV_PROP_MKT00000083"
+
+una pagina que muestra pestanas
+nuevo accidente
+    - una semana desde que se creo. fnol y
+
+
+
+Pasos a seguir:
+    - Crear la pagina Claims Centre
+    - Crear una pestana 'Nuevo accidente'
+        - Llamar a fnol con:
+            - PolicyNo (generado al momento de hacer la compra)
+            - Date of loss
+            DEVUELVE LAS COVERTURAS CON LA SUMA ASEGURADA

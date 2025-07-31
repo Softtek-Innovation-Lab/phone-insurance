@@ -1,20 +1,37 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/images/*.{png,jpg,gif,ico,svg}", "/css/*", "/js/*", "/*.{png,jpg,gif,ico,svg,css,js,json}"]
+    "exclude": [
+      "/images/*.{png,jpg,gif,ico,svg}",
+      "/css/*",
+      "/js/*",
+      "/*.{png,jpg,gif,ico,svg,css,js,json}"
+    ]
   },
   "routes": [
     {
       "route": "/",
-      "allowedRoles": ["anonymous"]
+      "allowedRoles": [
+        "anonymous"
+      ]
     },
     {
       "route": "/cart",
-      "allowedRoles": ["anonymous"]
+      "allowedRoles": [
+        "anonymous"
+      ]
     },
     {
       "route": "/insurance",
-      "allowedRoles": ["anonymous"]
+      "allowedRoles": [
+        "anonymous"
+      ]
+    },
+    {
+      "route": "/login",
+      "allowedRoles": [
+        "anonymous"
+      ]
     }
   ],
   "responseOverrides": {

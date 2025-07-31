@@ -8,8 +8,8 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  accessToken: null,
-  status: 'idle',
+  accessToken: localStorage.getItem('api_token') || null,
+  status: localStorage.getItem('api_token') ? 'succeeded' : 'idle', // <-- FIX
   error: null,
 };
 
@@ -20,13 +20,19 @@ export const getToken = createAsyncThunk('auth/getToken', async (credentials: { 
       'x-ebao-tenant-code': 'softtek',
     },
   });
-  return response.data.access_token;
+  return response.data;
 });
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.accessToken = null;
+      state.status = 'idle';
+      localStorage.removeItem('api_token');
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getToken.pending, (state) => {
@@ -34,13 +40,16 @@ const authSlice = createSlice({
       })
       .addCase(getToken.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.accessToken = action.payload;
+        state.accessToken = action.payload.access_token;
+        localStorage.setItem('api_token', action.payload.access_token);
       })
       .addCase(getToken.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Failed to get token';
+        localStorage.removeItem('api_token');
       });
   },
 });
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

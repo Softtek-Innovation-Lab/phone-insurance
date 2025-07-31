@@ -1,0 +1,1137 @@
+{
+	"info": {
+		"_postman_id": "54659947-9c74-4dff-a04a-a255cc870135",
+		"name": "Warranty-1023",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5801327"
+	},
+	"item": [
+		{
+			"name": "open claim without policy",
+			"item": [
+				{
+					"name": "open claim without policy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"//var TaskId = jsonData.Model.TaskId;\r",
+									"//var taskId = bar;\r",
+									"//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+									"//pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+									"pm.environment.set(\"ClaimNo1\", jsonData.Model.ClaimCase.ClaimNo);\r",
+									"//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+									"// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ReportChannel\": \"2\",\r\n    \"OperationType\": \"1\",\r\n    \"ClaimCase\": {\r\n        \"@type\": \"ClaimCase-ClaimCase\",\r\n        \"AccidentTime\": \"2024-10-23T14:32:07\",\r\n        \"ClaimObjectList\": [\r\n            {\r\n                \"@type\": \"ClaimObject-ClaimObject\",\r\n                \"DamageType\": \"02\",\r\n                \"Property\": {\r\n                    \"@type\": \"EClaimProperty-EClaimProperty\"\r\n                },\r\n                \"RiskName\": \"01\",\r\n                \"SequenceNo\": 1,\r\n                \"StatusCode\": \"01\",\r\n                \"SubClaimType\": \"02\",\r\n                \"DamageObject\": \"Table\"\r\n            }\r\n        ],\r\n        \"EcsHasOtherPolicies\": \"0\",\r\n        \"EcsIsFromApp\": \"N\",\r\n        \"EcsProductLineCode\": \"06\",\r\n        \"EcsProductVersion\": \"20241001_V01\",\r\n        \"FnolRemark\": \"\",\r\n        \"FnolStatus\": \"01\",\r\n        \"LossCause\": \"23\",\r\n        \"NoticeTime\": \"2024-10-23T16:33:58\",\r\n        \"ProductCode\": \"X_EX_US_FURNWTY1\",\r\n        \"RecordType\": \"1\",\r\n        \"VersionSeq\": 1,\r\n        \"WithPolicy\": \"0\",\r\n        \"SettlementTimes\": 0\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/fnol",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"fnol"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query claim",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"//var TaskId = jsonData.Model.TaskId;\r",
+									"//var taskId = bar;\r",
+									"//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+									"pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+									"//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+									"//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+									"// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SortFieldsAndTypes\": {\r\n        \"AccidentTime\": \"desc\"\r\n    },\r\n    \"PageNo\": 1,\r\n    \"PageSize\": 10,\r\n    \"ClaimNo\": \"{{ClaimNo1}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/api/v1/queryClaim",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"api",
+								"v1",
+								"queryClaim"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "claim-auto finish",
+			"item": [
+				{
+					"name": "fnol",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"//var TaskId = jsonData.Model.TaskId;\r",
+									"//var taskId = bar;\r",
+									"//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+									"pm.environment.set(\"ClaimNo2\", jsonData.Model.ClaimNo);\r",
+									"//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+									"//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+									"// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ReportChannel\": \"2\",\r\n    \"OperationType\": \"2\",\r\n    \"ClaimCase\": {\r\n        \"@type\": \"ClaimCase-ClaimCase\",\r\n        \"AccidentTime\": \"2024-10-23T14:45:35\",\r\n        \"ClaimObjectList\": [\r\n            {\r\n                \"@type\": \"ClaimObject-ClaimObject\",\r\n                \"DamageType\": \"02\",\r\n                \"Property\": {\r\n                    \"@type\": \"EClaimProperty-EClaimProperty\"\r\n                },\r\n                \"SequenceNo\": 1,\r\n                \"StatusCode\": \"01\",\r\n                \"SubClaimType\": \"02\",\r\n                \"DamageObject\": \"Table\",\r\n                \"RiskName\": 10868330056\r\n            }\r\n        ],\r\n        \"EcsHasOtherPolicies\": \"0\",\r\n        \"EcsIsFromApp\": \"N\",\r\n        \"EcsProductLineCode\": \"06\",\r\n        \"EcsProductVersion\": \"20241001_V01\",\r\n        \"FnolRemark\": \"\",\r\n        \"FnolStatus\": \"01\",\r\n        \"LossCause\": \"19\",\r\n        \"NoticeTime\": \"2024-10-23T15:03:58\",\r\n        \"PolicyNo\": \"POX_EX_US_FURNWTY100000005\",\r\n        \"PolicyOrgCode\": \"77710\",\r\n        \"ProductCode\": \"X_EX_US_FURNWTY1\",\r\n        \"RecordType\": \"1\",\r\n        \"VersionSeq\": 3,\r\n        \"WithPolicy\": \"0\",\r\n        \"PolicyHolderName\": \"Jane Smith\",\r\n        \"SettlementTimes\": 0\r\n    },\r\n    \"ClaimCasePayeeList\": [\r\n        {\r\n            \"@type\": \"ClaimCasePayee-ClaimCasePayee\",\r\n            \"PayModeCode\": \"04\",\r\n            \"ClaimCasePayeeItemItemList\": [\r\n                {\r\n                    \"@type\": \"ClaimCasePayeeItem-ClaimCasePayeeItem\",\r\n                    \"PartialFinal\": \"01\",\r\n                    \"ReserveType\": \"01\",\r\n                    \"CoverageCode\": \"MASTERFURNWTY0BASELAYERFURNITUREASSEMBLYDEFECTS\",\r\n                    \"IndemnityAmount\": 1600,\r\n                    \"SettlementAmount\": 1600\r\n                }\r\n            ],\r\n            \"SettlementTaxAmount\": \"1600.00\",\r\n            \"PayeeName\": \"Jane\",\r\n            \"BankAccountName\": \"Jane\",\r\n            \"BankName\": \"Bank\",\r\n            \"BankAccountNo\": \"119834455344222\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v2/fnol",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v2",
+								"fnol"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query claim",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"//var TaskId = jsonData.Model.TaskId;\r",
+									"//var taskId = bar;\r",
+									"//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+									"pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+									"//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+									"//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+									"// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SortFieldsAndTypes\": {\r\n        \"AccidentTime\": \"desc\"\r\n    },\r\n    \"PageNo\": 1,\r\n    \"PageSize\": 10,\r\n    \"ClaimNo\": \"{{ClaimNo2}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/api/v1/queryClaim",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"api",
+								"v1",
+								"queryClaim"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "claim-common process",
+			"item": [
+				{
+					"name": "fnol",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"//var TaskId = jsonData.Model.TaskId;\r",
+									"//var taskId = bar;\r",
+									"//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+									"pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+									"//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+									"//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+									"// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ReportChannel\": \"2\",\r\n    \"OperationType\": \"2\",\r\n    \"ClaimCase\": {\r\n        \"@type\": \"ClaimCase-ClaimCase\",\r\n        \"AccidentTime\": \"2024-10-23T10:20:26\",\r\n        \"CaseStatus\": \"01\",\r\n        \"EcsIsFromApp\": \"N\",\r\n        \"EcsProductLineCode\": \"06\",\r\n        \"EcsProductVersion\": \"20241001_V01\",\r\n        \"FnolStatus\": \"01\",\r\n        \"NoticeTime\": \"2024-10-23T15:05:34\",\r\n        \"PolicyNo\": \"POX_EX_US_FURNWTY100000005\",\r\n        \"PolicyOrgCode\": \"77710\",\r\n        \"ProductCode\": \"X_EX_US_FURNWTY1\",\r\n        \"RecordType\": \"1\",\r\n        \"VersionSeq\": 2,\r\n        \"WithPolicy\": \"1\",\r\n        \"PolicyHolderName\": \"Jane Smith\",\r\n        \"SettlementTimes\": 0,\r\n        \"LossCause\": \"23\",\r\n        \"EcsHasOtherPolicies\": \"0\",\r\n        \"ClaimObjectList\": [\r\n            {\r\n                \"@type\": \"ClaimObject-ClaimObject\",\r\n                \"SequenceNo\": 1,\r\n                \"Property\": {\r\n                    \"@type\": \"EClaimProperty-EClaimProperty\"\r\n                },\r\n                \"DamageType\": \"02\",\r\n                \"RiskName\": 10868330056,\r\n                \"SubClaimType\": \"02\",\r\n                \"DamageObject\": \"Table\"\r\n            }\r\n        ],\r\n        \"FnolRemark\": \"\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/fnol",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"fnol"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "taskquery registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"var TaskId = jsonData.Model.TaskInfoList[0].TaskId\r",
+									"pm.environment.set(\"TaskId\",TaskId);\r",
+									"pm.environment.set(\"CaseId\", jsonData.Model.TaskInfoList[0].CaseId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"AccidentTimeFrom\": \"\",\r\n    \"AccidentTimeTo\": \"\",\r\n    \"NoticeTimeFrom\": \"\",\r\n    \"NoticeTimeTo\": \"\",\r\n    \"PolicyNo\": \"\",\r\n    \"ProductLineCode\": \"\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"ClaimantName\": \"\",\r\n    \"PolicyHolderName\": \"\",\r\n    \"TaskType\":\"\",\r\n    \"MultipleQuery\": \"\",\r\n    \"PageNo\":\"1\",\r\n    \"PageSize\":\"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/api/v1/queryTask",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"api",
+								"v1",
+								"queryTask"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TaskAssignment registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Task Assignment successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/taskAssignment",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"taskAssignment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "load registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"'jsonData.Model.ClaimCase.ClaimNo'\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"//var TaskId = jsonData.Model.TaskId;\r",
+									"//var taskId = bar;\r",
+									"\r",
+									"\r",
+									"//pm.response.text(jsonData.Model.ClaimCase.ClaimNo)\r",
+									"\r",
+									"pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase));\r",
+									"pm.environment.set(\"AccidentTime\",jsonData.Model.ClaimCase.AccidentTime);\r",
+									"pm.environment.set(\"ObjectId\",jsonData.Model.ClaimCase.ClaimObjectList[0].ObjectId);\r",
+									"pm.environment.set(\"PropertyId\",jsonData.Model.ClaimCase.ClaimObjectList[0].Property.PropertyId);\r",
+									"pm.environment.set(\"ClmPolicyId\",jsonData.Model.ClaimCase.ClmPolicyId);\r",
+									"pm.environment.set(\"EcsUpdateTime\",jsonData.Model.ClaimCase.EcsUpdateTime);\r",
+									"pm.environment.set(\"NoticeTime\",jsonData.Model.ClaimCase.NoticeTime);\r",
+									"pm.environment.set(\"ProcessDefId\",jsonData.Model.ClaimCase.ProcessDefId);\r",
+									"pm.environment.set(\"VersionSeq\",jsonData.Model.ClaimCase.VersionSeq);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Registration Load successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"OperationType\": \"3\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/registration",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registration submit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"'jsonData.Model.ClaimCase.ClaimNo'\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"//var TaskId = jsonData.Model.TaskId;\r",
+									"//var taskId = bar;\r",
+									"\r",
+									"\r",
+									"//pm.response.text(jsonData.Model.ClaimCase.ClaimNo)\r",
+									"//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase));\r",
+									"\r",
+									"//pm.environment.set(\"ClaimCasepk\", jsonData.Model.ClaimCase[\"@pk\"]);\r",
+									"//pm.environment.set(\"ClaimCaseBusinessObjectId\", jsonData.Model.ClaimCase.BusinessObjectId);\r",
+									"//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+									"\r",
+									"//pm.environment.set(\"ClaimObjectListpk\", jsonData.Model.ClaimCase.ClaimObjectList[0][\"@pk\"]);\r",
+									"//pm.environment.set(\"ClaimObjectListBusinessObjectId\", jsonData.Model.ClaimCase.ClaimObjectList[0].BusinessObjectId);\r",
+									"//pm.environment.set(\"Injury\", JSON.stringify(jsonData.Model.ClaimCase.ClaimObjectList[0].Injury));\r",
+									"//pm.environment.set(\"RiskName\", jsonData.Model.ClaimCase.ClaimObjectList[0].RiskName);\r",
+									"//pm.environment.set(\"SubClaimType\", jsonData.Model.ClaimCase.ClaimObjectList[0].SubClaimType);\r",
+									"\r",
+									"//pm.environment.set(\"ClaimPartyList\", JSON.stringify(jsonData.Model.ClaimCase.ClaimPartyList[0]));\r",
+									"\r",
+									"//pm.environment.set(\"ClmPolicyId\", jsonData.Model.ClaimCase.ClmPolicyId);\r",
+									"//pm.environment.set(\"VersionSeq\", jsonData.Model.ClaimCase.VersionSeq);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Registration Load successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"OperationType\": \"2\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"UpdateReserve\": \"1\",\r\n    \"ClaimCase\": {{ClaimCase}}\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/registration",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "taskquery calculation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"var TaskId = jsonData.Model.TaskInfoList[0].TaskId\r",
+									"pm.environment.set(\"TaskId\",TaskId);\r",
+									"pm.environment.set(\"CaseId\", jsonData.Model.TaskInfoList[0].CaseId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"AccidentTimeFrom\": \"\",\r\n    \"AccidentTimeTo\": \"\",\r\n    \"NoticeTimeFrom\": \"\",\r\n    \"NoticeTimeTo\": \"\",\r\n    \"PolicyNo\": \"\",\r\n    \"ProductLineCode\": \"\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"ClaimantName\": \"\",\r\n    \"PolicyHolderName\": \"\",\r\n    \"TaskType\":\"\",\r\n    \"MultipleQuery\": \"\",\r\n    \"PageNo\":\"1\",\r\n    \"PageSize\":\"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/api/v1/queryTask",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"api",
+								"v1",
+								"queryTask"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TaskAssignment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Task Assignment successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/taskAssignment",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"taskAssignment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculation load",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var requestBody = pm.request.body.raw;\r",
+									"var body_json = JSON.parse(requestBody);\r",
+									"var requestTaskId = body_json.TaskId;\r",
+									"console.log(\"requestTaskId:\", requestTaskId);\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"CreateDate\",jsonData.Model.CurrentCalculation.CreateDate);\r",
+									"pm.environment.set(\"VersionSeq\",jsonData.Model.CurrentCalculation.VersionSeq);\r",
+									"pm.environment.set(\"CalculationId\",jsonData.Model.CurrentCalculation.CalculationId);\r",
+									"\r",
+									"pm.test(\"Document Load successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\",\r\n    \"OperationType\": \"3\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/calculation",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"calculation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Claiculation Submit successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\": \"ClaimCalculateRequestForm-ClaimCalculateRequestForm\",\r\n    \"CurrentCalculation\": {\r\n        \"@pk\": \"\",\r\n        \"@type\": \"EClaimCalculation-EClaimCalculation\",\r\n        \"AdjustedAmount\": \"0.00\",\r\n        \"AdjustedTaxAmount\": \"0.00\",\r\n        \"BusinessObjectId\": \"\",\r\n        \"CalculationId\": {{CalculationId}},\r\n        \"CalculationStatus\": \"02\",\r\n        \"CaseId\": \"{{CaseId}}\",\r\n        \"CreateDate\": \"{{CreateDate}}\",\r\n        \"TaxAmount\": \"0.00\",\r\n        \"Times\": 1,\r\n        \"VersionSeq\": {{VersionSeq}},\r\n        \"CalculationItemList\": [\r\n            {\r\n                \"@type\": \"EClaimCalculationItem-EClaimCalculationItem\",\r\n                \"SequenceNumber\": 1,\r\n                \"ObjectId\": {{ObjectId}},\r\n                \"ReserveType\": \"01\",\r\n                \"CoverageCode\": \"MASTERFURNWTY0BASELAYERFURNITURETABLETOP\",\r\n                \"RequestedAmount\": 200,\r\n                \"RecognizedAmount\": 200,\r\n                \"PreviousRecognizedAmount\": 0,\r\n                \"TotalRecognizedAmount\": \"200.00\",\r\n                \"PreviousDepreciationAmount\": 0,\r\n                \"TotalDepreciationAmount\": 0,\r\n                \"PreviousDeductibleAmount\": 0,\r\n                \"TotalDeductibleAmount\": 0,\r\n                \"PreviousAdjustedAmount\": 0,\r\n                \"CalculatedAmount\": 0,\r\n                \"TaxAmount\": 0,\r\n                \"TotalAdjustedAmount\": 0,\r\n                \"ParameterData\": \"{}\",\r\n                \"AccidentLiabilityRatio\": 1\r\n            }\r\n        ]\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/atomic/v1/calculate/atomicApi",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"atomic",
+								"v1",
+								"calculate",
+								"atomicApi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculation load",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var requestBody = pm.request.body.raw;\r",
+									"var body_json = JSON.parse(requestBody);\r",
+									"var requestTaskId = body_json.TaskId;\r",
+									"console.log(\"requestTaskId:\", requestTaskId);\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"\r",
+									"pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase));\r",
+									"\r",
+									"pm.environment.set(\"CurrentCalculation\",JSON.stringify(jsonData.Model.CurrentCalculation));\r",
+									"\r",
+									"\r",
+									"pm.test(\"Document Load successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\",\r\n    \"OperationType\": \"3\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/calculation",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"calculation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculation submit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Claiculation Submit successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"OperationType\": \"2\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"ClaimCase\": {{ClaimCase}},\r\n    \"CurrentCalculation\": {{CurrentCalculation}}\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/calculation",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"calculation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "taskquery Settlement",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"var TaskId = jsonData.Model.TaskInfoList[0].TaskId\r",
+									"pm.environment.set(\"TaskId\",TaskId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"AccidentTimeFrom\": \"\",\r\n    \"AccidentTimeTo\": \"\",\r\n    \"NoticeTimeFrom\": \"\",\r\n    \"NoticeTimeTo\": \"\",\r\n    \"PolicyNo\": \"\",\r\n    \"ProductLineCode\": \"\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"ClaimantName\": \"\",\r\n    \"PolicyHolderName\": \"\",\r\n    \"TaskType\":\"\",\r\n    \"MultipleQuery\": \"\",\r\n    \"PageNo\":\"1\",\r\n    \"PageSize\":\"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/api/v1/queryTask",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"api",
+								"v1",
+								"queryTask"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TaskAssignment Settlement",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Task Assignment successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/taskAssignment",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"taskAssignment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Settlement-load",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//var requestBody = pm.request.body.raw;\r",
+									"//var body_json = JSON.parse(requestBody);\r",
+									"//var requestTaskId = body_json.TaskId;\r",
+									"//console.log(\"requestTaskId:\", requestTaskId);\r",
+									"\r",
+									"//var responseData = JSON.parse(responseBody);\r",
+									"\r",
+									"//delete responseData.Model['ProductName'];\r",
+									"//delete responseData.Model['PolicyNo'];\r",
+									"//delete responseData.Model['CaseId'];\r",
+									"//delete responseData.Model['CaseStatus'];\r",
+									"//delete responseData.Model['CalculationHistoryList'];\r",
+									"//delete responseData.Model['ClaimTaskHistoryList'];\r",
+									"\r",
+									"//responseData.Model['TaskId'] = requestTaskId;\r",
+									"//responseData.Model['@type'] = \"ClaimRequestForm-ClaimRequestForm\";\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase));\r",
+									"pm.environment.set(\"CreateDate\",jsonData.Model.CurrentSettlement.CreateDate);\r",
+									"pm.environment.set(\"EcsUpdateTime\",jsonData.Model.CurrentSettlement.EcsUpdateTime);\r",
+									"pm.environment.set(\"SettlementId\",jsonData.Model.CurrentSettlement.SettlementId);\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"var VersionSeq=jsonData.Model.CurrentSettlement.VersionSeq;\r",
+									"pm.environment.set(\"VersionSeq\",VersionSeq);\r",
+									"\r",
+									"\r",
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"pm.test(\"Settlement Load successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\",\n    \"OperationType\": \"3\",\n    \"ClaimNo\": \"{{ClaimNo}}\",\n    \"TaskId\": \"{{TaskId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/settlement",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"settlement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Settlement -submit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Settlement Submit successfully\", function () {\r",
+									"    pm.expect(jsonData.Status).to.eql('OK');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"CurrentSettlement\": {\r\n        \"@pk\": \"\",\r\n        \"@type\": \"EClaimSettlement-EClaimSettlement\",\r\n        \"BusinessObjectId\": \"\",\r\n        \"CaseId\": \"{{CaseId}}\",\r\n        \"CreateDate\": \"{{CreateDate}}\",\r\n        \"EcsUpdateTime\": \"{{EcsUpdateTime}}\",\r\n        \"SettleType\": \"01\",\r\n        \"SettlementId\": {{SettlementId}},\r\n        \"SettlementPayeeList\": [\r\n            {\r\n                \"@type\": \"EClaimSettlementPayee-EClaimSettlementPayee\",\r\n                \"PayModeCode\": \"04\",\r\n                \"SequenceNumber\": 1,\r\n                \"SettlementCurrency\": \"USD\",\r\n                \"SettlementItemList\": [\r\n                    {\r\n                        \"@type\": \"EClaimSettlementItem-EClaimSettlementItem\",\r\n                        \"CoverageCode\": \"MASTERFURNWTY0BASELAYERFURNITURETABLETOP\",\r\n                        \"EcsClaimSettlementAmount\": 200,\r\n                        \"EcsClaimTotalAmount\": 200,\r\n                        \"IndemnityAmount\": 200,\r\n                        \"ObjectId\": {{ObjectId}},\r\n                        \"PayeeSequenceNumber\": 1,\r\n                        \"ReserveType\": \"01\",\r\n                        \"SequenceNumber\": 1,\r\n                        \"SettlementAmount\": 200,\r\n                        \"PartialFinal\": \"01\"\r\n                    }\r\n                ],\r\n                \"SettlementTaxAmount\": \"200.00\",\r\n                \"PayeeExtendInfo\": {\r\n                    \"@type\": \"EClaimSettlementPayeeExtendInfo-EClaimSettlementPayeeExtendInfo\",\r\n                    \"DueDate\": \"\",\r\n                    \"IdentificationType\": \"\",\r\n                    \"IdentificationInfo\": \"\"\r\n                },\r\n                \"PayeeName\": \"Jane\",\r\n                \"BankAccountName\": \"Jane\",\r\n                \"BankName\": \"Bank\",\r\n                \"BankAccountNo\": \"4235345234\"\r\n            }\r\n        ],\r\n        \"SettlementStatus\": \"02\",\r\n        \"Times\": 1,\r\n        \"VersionSeq\": {{VersionSeq}}\r\n    },\r\n    \"ClaimCase\": {{ClaimCase}},\r\n    \"UpdateReserve\": \"1\",\r\n    \"OperationType\": \"2\"\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/business/v1/settlement",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"business",
+								"v1",
+								"settlement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query claim",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"var jsonData = pm.response.json();\r",
+									"console.info(jsonData)\r",
+									"//var TaskId = jsonData.Model.TaskId;\r",
+									"//var taskId = bar;\r",
+									"//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+									"pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+									"//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+									"//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+									"// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SortFieldsAndTypes\": {\r\n        \"AccidentTime\": \"desc\"\r\n    },\r\n    \"PageNo\": 1,\r\n    \"PageSize\": 10,\r\n    \"ClaimNo\": \"{{ClaimNo}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{server}}/easyclaim-core-v2/api/v1/queryClaim",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"easyclaim-core-v2",
+								"api",
+								"v1",
+								"queryClaim"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
