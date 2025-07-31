@@ -235,9 +235,18 @@ export default function CartPage() {
       .then((response) => {
         console.log('Complete policy generation response:', response);
 
-        // Prioritize issue response, then bind, then calculate
         const policyResponse = (response?.issueResponse ?? response?.bindResponse) ?? response?.calculateResponse;
         console.log('Policy data to display:', policyResponse);
+
+        if (policyResponse && policyResponse.PolicyNo) {
+          // Guardar la póliza en localStorage
+          const purchasedPolicies = JSON.parse(localStorage.getItem('purchasedPolicies') || '[]');
+          purchasedPolicies.push({
+            policyNo: policyResponse.PolicyNo,
+            date: policyResponse.EffectiveDate || new Date().toISOString(),
+          });
+          localStorage.setItem('purchasedPolicies', JSON.stringify(purchasedPolicies));
+        }
 
         setPolicyData(policyResponse);
         setCurrentStep('confirmation');

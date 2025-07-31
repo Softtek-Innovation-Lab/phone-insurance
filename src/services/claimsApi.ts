@@ -1,4 +1,5 @@
 import ky from 'ky';
+import { formatDateForApi } from '@/utils/constants';
 
 const API_URL = 'https://ebaogi-gi-sandbox-am.insuremo.com/api/platform';
 
@@ -60,6 +61,36 @@ export interface ClaimResponse {
         };
     };
 }
+
+// --- Helper for Call Center Auth ---
+const _getCallCenterToken = async () => {
+    let token = localStorage.getItem('call_center_api_token');
+    if (token) {
+        return token;
+    }
+    try {
+        // Usar un endpoint diferente para la autenticación del call center
+        const loginApi = ky.create();
+        const response: { access_token: string } = await loginApi.post('https://sandbox-am.insuremo.com/cas/ebao/v1/json/tickets', {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-ebao-tenant-code': 'softtek',
+            },
+            json: {
+                username: 'softtek_callcenter',
+                password: 'Softtek@2025',
+            }
+        }).json();
+        if (response.access_token) {
+            localStorage.setItem('call_center_api_token', response.access_token);
+            return response.access_token;
+        }
+        return null;
+    } catch (error) {
+        console.error("Call Center Login failed:", error);
+        return null;
+    }
+};
 
 // --- Servicio de API ---
 
@@ -148,7 +179,7 @@ export const claimsApi = {
     },
 
     async reportAccidentWithPolicy(policyNo: string, dateOfLoss: string) {
-        const now = new Date().toISOString();
+        const now = formatDateForApi(new Date());
         const payload = {
             "@type": "ClaimRequestForm-ClaimRequestForm",
             "ReportChannel": "2",
@@ -156,7 +187,7 @@ export const claimsApi = {
             "ClaimNo": "CTRAV_PROP_MKT202500000127",
             "ClaimCase": {
                 "@type": "ClaimCase-ClaimCase",
-                "AccidentTime": new Date(dateOfLoss).toISOString(),
+                "AccidentTime": formatDateForApi(dateOfLoss),
                 "PolicyNo": policyNo,
                 "NoticeTime": now,
                 "ProductCode": "X_EX_US_FURNWTY1",
@@ -168,6 +199,35 @@ export const claimsApi = {
             return response;
         } catch (error) {
             console.error(`Error reporting accident for policy ${policyNo}:`, error);
+            throw error;
+        }
+    },
+
+    async retrievePolicy(policyNo: string, accidentTime: string) {
+        const token = await _getCallCenterToken();
+        if (!token) {
+            throw new Error("Unable to get call center token");
+        }
+
+        const payload = {
+            "@type": "ClaimRequestForm-ClaimRequestForm",
+            "PolicyNo": policyNo,
+            "AccidentTime": formatDateForApi(accidentTime),
+            "IsManualPolicy": false // Corregido
+        };
+        try {
+            // Usamos la URL correcta y una llamada directa con el token del call center
+            const correctUrl = 'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/api/v1/retrievePolicy';
+            const response = await ky.post(correctUrl, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                json: payload
+            }).json();
+            return response;
+        } catch (error) {
+            console.error(`Error retrieving policy ${policyNo}:`, error);
             throw error;
         }
     },

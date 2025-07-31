@@ -13,6 +13,7 @@ interface ClaimsState {
     claims: any[];
     tasks: Task[];
     currentClaimData: any | null;
+    retrievedPolicy: any | null; // Nuevo estado para la póliza recuperada
     loading: boolean;
     error: string | null;
 }
@@ -21,6 +22,7 @@ const initialState: ClaimsState = {
     claims: [],
     tasks: [],
     currentClaimData: null,
+    retrievedPolicy: null, // Inicializar el nuevo estado
     loading: false,
     error: null,
 };
@@ -67,6 +69,14 @@ export const reportAccident = createAsyncThunk(
     async ({ policyNo, dateOfLoss }: { policyNo: string, dateOfLoss: string }) => {
         const response = await claimsApi.reportAccidentWithPolicy(policyNo, dateOfLoss);
         return response.Model; // Asumiendo que la respuesta contiene las coberturas
+    }
+);
+
+export const retrievePolicyDetails = createAsyncThunk(
+    'claims/retrievePolicyDetails',
+    async ({ policyNo, accidentTime }: { policyNo: string, accidentTime: string }) => {
+        const response = await claimsApi.retrievePolicy(policyNo, accidentTime);
+        return response.Model;
     }
 );
 
@@ -159,6 +169,19 @@ const claimsSlice = createSlice({
             .addCase(reportAccident.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to report accident';
+            })
+            // Retrieve Policy Details
+            .addCase(retrievePolicyDetails.pending, (state) => {
+                state.loading = true;
+                state.retrievedPolicy = null;
+            })
+            .addCase(retrievePolicyDetails.fulfilled, (state, action) => {
+                state.loading = false;
+                state.retrievedPolicy = action.payload;
+            })
+            .addCase(retrievePolicyDetails.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to retrieve policy';
             });
     },
 });
