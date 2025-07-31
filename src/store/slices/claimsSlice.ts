@@ -2,6 +2,10 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { claimsApi } from '@/services/claimsApi';
 
 // --- Interfaces ---
+interface ApiResponse<T> {
+    Model: T;
+}
+
 interface Task {
     TaskId: string;
     TaskType: string;
@@ -29,17 +33,17 @@ const initialState: ClaimsState = {
 
 // --- Thunks ---
 export const fetchAllClaims = createAsyncThunk('claims/fetchAllClaims', async () => {
-    const response = await claimsApi.queryClaim(); // Sin claimNo para obtener todos
+    const response: ApiResponse<{ data: any[] }> = await claimsApi.queryClaim(); // Sin claimNo para obtener todos
     return response.Model.data;
 });
 
 export const fetchClaimDetails = createAsyncThunk('claims/fetchClaimDetails', async (claimNo: string) => {
-    const response = await claimsApi.queryClaim(claimNo);
+    const response: ApiResponse<{ data: any }> = await claimsApi.queryClaim(claimNo);
     return response.Model.data;
 });
 
 export const fetchTasks = createAsyncThunk('claims/fetchTasks', async (claimNo: string) => {
-    const response = await claimsApi.queryTask(claimNo);
+    const response: ApiResponse<{ TaskInfoList: Task[] }> = await claimsApi.queryTask(claimNo);
     return response.Model.TaskInfoList;
 });
 
@@ -51,7 +55,7 @@ export const assignTask = createAsyncThunk('claims/assignTask', async ({ claimNo
 export const loadStepData = createAsyncThunk(
     'claims/loadStepData',
     async ({ step, claimNo, taskId }: { step: 'registration' | 'calculation' | 'settlement', claimNo: string, taskId: string }) => {
-        const response = await claimsApi.loadStepData(step, claimNo, taskId);
+        const response: ApiResponse<any> = await claimsApi.loadStepData(step, claimNo, taskId);
         return response.Model;
     }
 );
@@ -59,7 +63,7 @@ export const loadStepData = createAsyncThunk(
 export const submitStepData = createAsyncThunk(
     'claims/submitStepData',
     async ({ step, payload }: { step: 'registration' | 'calculation' | 'settlement', payload: any }) => {
-        const response = await claimsApi.submitStepData(step, payload);
+        const response: ApiResponse<any> = await claimsApi.submitStepData(step, payload);
         return response;
     }
 );
@@ -67,7 +71,7 @@ export const submitStepData = createAsyncThunk(
 export const reportAccident = createAsyncThunk(
     'claims/reportAccident',
     async ({ policyNo, dateOfLoss }: { policyNo: string, dateOfLoss: string }) => {
-        const response = await claimsApi.reportAccidentWithPolicy(policyNo, dateOfLoss);
+        const response: ApiResponse<any> = await claimsApi.reportAccidentWithPolicy(policyNo, dateOfLoss);
         return response.Model; // Asumiendo que la respuesta contiene las coberturas
     }
 );
@@ -75,7 +79,7 @@ export const reportAccident = createAsyncThunk(
 export const retrievePolicyDetails = createAsyncThunk(
     'claims/retrievePolicyDetails',
     async ({ policyNo, accidentTime }: { policyNo: string, accidentTime: string }) => {
-        const response = await claimsApi.retrievePolicy(policyNo, accidentTime);
+        const response: ApiResponse<any> = await claimsApi.retrievePolicy(policyNo, accidentTime);
         return response.Model;
     }
 );
