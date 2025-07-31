@@ -13,6 +13,7 @@ import { Trash2, ShoppingCart, Shield, CreditCard, MapPin, Phone, Mail, User, Pa
 import { generatePolicy } from "@/store/slices/policySlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
+import { useAuth } from "@/auth/AuthProvider";
 import { faker } from '@faker-js/faker';
 // Static content removed - not needed with the new multi-step design
 
@@ -73,19 +74,20 @@ interface CustomerInfo {
 export default function CartPage() {
   const { store, setStore, clearStore } = useGlobalStore();
   const { addNotification } = useNotification();
+  const { user } = useAuth();
   const [isGenerating, setIsGenerating] = useState(false);
   const [policyData, setPolicyData] = useState<PolicyResponse | null>(null);
   const [currentStep, setCurrentStep] = useState<'cart' | 'checkout' | 'confirmation'>('cart');
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: 'United States'
+    firstName: user?.name.split(' ')[0] || '',
+    lastName: user?.name.split(' ').slice(1).join(' ') || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    address: user?.address || '',
+    city: user?.city || '',
+    state: user?.state || '',
+    zipCode: user?.zipCode || '',
+    country: user?.country || 'United States'
   });
 
   const navigate = useNavigate();

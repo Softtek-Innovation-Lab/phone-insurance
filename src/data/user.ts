@@ -9,5 +9,11 @@ export const DUMMY_USER: User = {
     gender: "M",
     idNumber: "123456789",
     idType: "1",
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d'
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
+    phone: "123-456-7890",
+    address: "123 Main St",
+    city: "Anytown",
+    state: "CA",
+    zipCode: "12345",
+    country: "United States"
 };
