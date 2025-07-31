@@ -179,23 +179,35 @@ export const claimsApi = {
     },
 
     async reportAccidentWithPolicy(policyNo: string, dateOfLoss: string) {
-        const now = formatDateForApi(new Date());
+        const token = await _getCallCenterToken(); // Reutilizamos el token del call center
+        if (!token) {
+            throw new Error("Unable to get call center token");
+        }
+
         const payload = {
             "@type": "ClaimRequestForm-ClaimRequestForm",
+            "OperationType": "1",
             "ReportChannel": "2",
-            "OperationType": "3",
-            "ClaimNo": "CTRAV_PROP_MKT202500000127",
             "ClaimCase": {
                 "@type": "ClaimCase-ClaimCase",
-                "AccidentTime": formatDateForApi(dateOfLoss),
                 "PolicyNo": policyNo,
-                "NoticeTime": now,
-                "ProductCode": "X_EX_US_FURNWTY1",
-                "WithPolicy": "1",
-            }
+                "AccidentTime": formatDateForApi(dateOfLoss),
+            },
+            "IsManualPolicy": false
         };
+
         try {
-            const response = await api.post('easyclaim-core-v2/business/v1/fnol', { json: payload }).json();
+            const correctUrl = 'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/business/v1/fnol';
+            const response = await ky.post(correctUrl, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'x-mo-tenant-id': 'softtek',
+                    'x-mo-user-identity': 'softtek_callcenter',
+                    'x-mo-user-name': 'softtek_callcenter'
+                },
+                json: payload
+            }).json();
             return response;
         } catch (error) {
             console.error(`Error reporting accident for policy ${policyNo}:`, error);

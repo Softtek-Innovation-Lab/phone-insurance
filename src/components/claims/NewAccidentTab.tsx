@@ -7,6 +7,8 @@ import { Select, SelectItem } from "@heroui/select";
 import { AppDispatch, RootState } from "@/store";
 import { retrievePolicyDetails, reportAccident } from "@/store/slices/claimsSlice";
 import { useNotification } from "@/providers/NotificationProvider";
+import { PolicyDetails } from "./PolicyDetails";
+import { CoverageDetails } from "./CoverageDetails";
 
 export default function NewAccidentTab() {
     const [selectedPolicy, setSelectedPolicy] = useState("");
@@ -73,12 +75,15 @@ export default function NewAccidentTab() {
                 </div>
                 {error && <p className="text-danger mt-4">{error}</p>}
                 {retrievedPolicy && (
-                    <div className="mt-6 p-4 bg-gray-100 rounded">
-                        <h3 className="font-bold">Coverages Found:</h3>
-                        <pre className="text-xs overflow-auto">{JSON.stringify(retrievedPolicy.ClaimPolicyInsuredList, null, 2)}</pre>
-                        <Button onPress={handleReportAccident} color="success" className="mt-4" isLoading={loading}>
-                            Confirm and Report Accident
-                        </Button>
+                    <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
+                        <PolicyDetails policy={retrievedPolicy} />
+                        <CoverageDetails coverages={retrievedPolicy.ClaimPolicyInsuredList} />
+
+                        <div className="text-right mt-6">
+                            <Button onPress={handleReportAccident} color="success" isLoading={loading}>
+                                Confirm and Report Accident
+                            </Button>
+                        </div>
                     </div>
                 )}
             </CardBody>

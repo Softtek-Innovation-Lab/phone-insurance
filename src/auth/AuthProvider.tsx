@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { getToken, logout as logoutAction } from '@/store/slices/authSlice';
@@ -26,18 +26,12 @@ export const DUMMY_USER: User = {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null); // Sigue manejando el estado del usuario de la UI
     const dispatch = useDispatch<AppDispatch>();
     const authStatus = useSelector((state: RootState) => state.auth.status);
 
-    useEffect(() => {
-        // Sincronizar el estado del usuario de la UI con el estado de autenticación de la API
-        if (authStatus === 'succeeded') {
-            setUser(DUMMY_USER);
-        } else {
-            setUser(null);
-        }
-    }, [authStatus]);
+    // Derivar el estado del usuario directamente del store de Redux
+    // Esto elimina el retraso del useEffect y soluciona el problema de redirección
+    const user = authStatus === 'succeeded' ? DUMMY_USER : null;
 
     const login = async (email: string, password: string): Promise<boolean> => {
         if (email === DUMMY_USER.email && password === 'password123') {
@@ -57,6 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         dispatch(logoutAction());
     };
 
+    // El `user` en el array de dependencias ahora se actualiza instantáneamente con el store
     const value = useMemo(() => ({ user, login, logout }), [user]);
 
     return (
