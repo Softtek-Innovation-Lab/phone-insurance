@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '..';
 import { getToken } from './authSlice';
+import { User } from '@/types';
 
 interface PolicyState {
   policyData: any | null;
@@ -15,13 +16,13 @@ const initialState: PolicyState = {
   error: null,
 };
 
-const _parsePolicyData = (cart: any) => {
+const _parsePolicyData = (cart: any, user: User) => {
   const policyCustomer = {
-    CustomerName: "Richard Vives",
-    DateOfBirth: "1975-04-21",
-    GenderCode: "M",
-    IdNo: "123456789",
-    IdType: "1",
+    CustomerName: user.name,
+    DateOfBirth: user.dateOfBirth,
+    GenderCode: user.gender,
+    IdNo: user.idNumber,
+    IdType: user.idType,
     IsInsured: "N",
     IsOrgParty: "N",
     IsPolicyHolder: "Y",
@@ -45,18 +46,18 @@ const _parsePolicyData = (cart: any) => {
           {
             PolicyLimitDeductibleList: [
               {
-                LimitDeductibleValue: item.product.LimitDeductibleValue || 1000, 
+                LimitDeductibleValue: item.product.LimitDeductibleValue || 1000,
                 ProductElementCode: "PROP_FULL_DAMAGE_LIM",
                 ProductElementId: 789611476,
               },
             ],
             ProductElementCode: "TRAV_PROP_COV",
-            SumInsured: item.product.SumInsured || 1000, 
+            SumInsured: item.product.SumInsured || 1000,
             VersionSeq: 1,
           },
         ],
-        ProductElementCode: "TRAV_PROP_RISK", 
-        ProductElementId: 789611472, 
+        ProductElementCode: "TRAV_PROP_RISK",
+        ProductElementId: 789611472,
         RiskName: "ProductElement",
         VersionSeq: 1,
         PredefinedPremium: item.product.premium || 70,
@@ -67,7 +68,7 @@ const _parsePolicyData = (cart: any) => {
   const policyLobList = [
     {
       PolicyRiskList: policyRiskList,
-      ProductCode: "TRAV_PROP_MKT", 
+      ProductCode: "TRAV_PROP_MKT",
       ProductElementCode: "TRAV_PROP_MKT",
       ProductId: 789725307,
       TechProductCode: "TRAV_PROP_TEC",
@@ -84,8 +85,8 @@ const _parsePolicyData = (cart: any) => {
     POIRate: 1,
     PolicyCustomerList: [policyCustomer],
     PolicyLobList: policyLobList,
-    ProductCode: "TRAV_PROP_MKT", 
-    ProductId: 789725307, 
+    ProductCode: "TRAV_PROP_MKT",
+    ProductId: 789725307,
     ProductVersion: "1.0",
     ProposalDate: "2025-04-24",
     TechProductCode: "TRAV_PROP_TEC",
@@ -99,7 +100,11 @@ export const createOrSavePolicy = createAsyncThunk(
   async (cart: any, { getState }) => {
     const state = getState() as RootState;
     const token = state.auth.accessToken;
-    const policyData = _parsePolicyData(cart);
+    const user = state.auth.user; // Assuming user is in auth state
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+    const policyData = _parsePolicyData(cart, user);
     const response = await axios.post(
       'https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_createOrSave',
       policyData,

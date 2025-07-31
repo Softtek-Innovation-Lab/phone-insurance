@@ -1,14 +1,9 @@
-import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
+import { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { User } from '@/types';
+import { DUMMY_USER } from '@/data/user';
 import { AppDispatch, RootState } from '@/store';
 import { getToken, logout as logoutAction } from '@/store/slices/authSlice';
-
-interface User {
-    id: string;
-    name: string; sAndTypes
-    email: string;
-    password?: string
-}
 
 interface AuthContextType {
     user: User | null;
@@ -17,13 +12,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const DUMMY_USER: User = {
-    id: '1',
-    name: 'user',
-    email: 'user@softtek.com',
-    password: 'password123'
-};
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const dispatch = useDispatch<AppDispatch>();

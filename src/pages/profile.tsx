@@ -22,7 +22,7 @@ export default function ProfilePage() {
                 <div className="max-w-4xl mx-auto">
                     <Card className="mb-8">
                         <CardBody className="flex items-center gap-6 p-6">
-                            <Avatar src='https://i.pravatar.cc/150?u=,am' className="w-24 h-24 text-large" />
+                            <Avatar src={user.avatar} className="w-24 h-24 text-large" />
                             <div>
                                 <h1 className="text-3xl font-bold">{user.name}</h1>
                                 <p className="text-gray-500">{user.email}</p>

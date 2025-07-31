@@ -1,13 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { User } from '@/types';
+import { DUMMY_USER } from '@/data/user';
 
 interface AuthState {
+  user: User | null;
   accessToken: string | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: AuthState = {
+  user: localStorage.getItem('api_token') ? DUMMY_USER : null,
   accessToken: localStorage.getItem('api_token') || null,
   status: localStorage.getItem('api_token') ? 'succeeded' : 'idle', // <-- FIX
   error: null,
@@ -28,6 +32,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      state.user = null;
       state.accessToken = null;
       state.status = 'idle';
       localStorage.removeItem('api_token');
@@ -41,11 +46,13 @@ const authSlice = createSlice({
       .addCase(getToken.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.accessToken = action.payload.access_token;
+        state.user = DUMMY_USER;
         localStorage.setItem('api_token', action.payload.access_token);
       })
       .addCase(getToken.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Failed to get token';
+        state.user = null;
         localStorage.removeItem('api_token');
       });
   },
