@@ -24,7 +24,7 @@ const api = ky.create({
 // --- Interfaces para los datos ---
 
 interface ApiResponse<T> {
-  Model: T;
+    Model: T;
 }
 
 export interface NewClaimData {

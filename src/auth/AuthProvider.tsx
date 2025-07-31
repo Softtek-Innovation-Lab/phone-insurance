@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const user = authStatus === 'succeeded' ? DUMMY_USER : null;
 
     const login = async (email: string, password: string): Promise<boolean> => {
-        if (email === DUMMY_USER.email && password === 'password123') {
+        if (email === DUMMY_USER.email && password === DUMMY_USER.password) {
             try {
                 // Despachar la acción para obtener el token con las nuevas credenciales
                 await dispatch(getToken({ username: "martin.gimenezartero@softtek.com", password: "Tinchogi500--" })).unwrap();
