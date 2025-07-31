@@ -23,10 +23,6 @@ const api = ky.create({
 
 // --- Interfaces para los datos ---
 
-interface ApiResponse<T> {
-  Model: T;
-}
-
 export interface NewClaimData {
     // Basado en "open claim without policy"
     ReportChannel: string;
@@ -59,8 +55,10 @@ export interface NewClaimData {
 }
 
 export interface ClaimResponse {
-    ClaimCase: {
-        ClaimNo: string;
+    Model: {
+        ClaimCase: {
+            ClaimNo: string;
+        };
     };
 }
 
@@ -97,113 +95,152 @@ const _getCallCenterToken = async () => {
 // --- Servicio de API ---
 
 export const claimsApi = {
-    async openClaim(data: NewClaimData): Promise<ApiResponse<ClaimResponse>> {
+    async openClaim(data: NewClaimData): Promise<ClaimResponse> {
         try {
-            const response: ApiResponse<ClaimResponse> = await api.post('easyclaim-core-v2/business/v1/fnol', { json: data }).json();
+            const response: ClaimResponse = await api.post('easyclaim-core-v2/business/v1/fnol', { json: data }).json();
             return response;
         } catch (error) {
-            console.error("Error opening claim:", error);
+            console.error('Error opening claim:', error);
             throw error;
         }
     },
 
-    async queryClaim(claimNo?: string): Promise<ApiResponse<{ data: any[] }>> {
+    async queryClaim(claimNo?: string) { // claimNo es ahora opcional
         const payload = {
-            "PageNo": 1,
-            "PageSize": 10,
-            "Parameters": {
-                "ClaimNo": claimNo || ""
-            }
+            SortFieldsAndTypes: { AccidentTime: "desc" },
+            PageNo: 1,
+            PageSize: 10,
+            ClaimNo: claimNo || "", // Usar string vacío si no se provee claimNo
         };
-        const response: ApiResponse<{ data: any[] }> = await api.post('easyclaim-core-v2/business/v1/queryClaim', { json: payload }).json();
-        return response;
+        try {
+            const response = await api.post('easyclaim-core-v2/api/v1/queryClaim', { json: payload }).json();
+            return response;
+        } catch (error) {
+            console.error(`Error querying claim ${claimNo}:`, error);
+            throw error;
+        }
     },
 
-    async queryTask(claimNo: string): Promise<ApiResponse<{ TaskInfoList: any[] }>> {
+    async queryTask(claimNo: string) {
         const payload = {
-            "PageNo": 1,
-            "PageSize": 10,
-            "Parameters": {
-                "ClaimNo": claimNo
-            }
+            ClaimNo: claimNo,
+            PageNo: "1",
+            PageSize: "100",
         };
-        const response: ApiResponse<{ TaskInfoList: any[] }> = await api.post('easyclaim-core-v2/business/v1/queryTask', { json: payload }).json();
-        return response;
+        try {
+            const response = await api.post('easyclaim-core-v2/api/v1/queryTask', { json: payload }).json();
+            return response;
+        } catch (error) {
+            console.error(`Error querying tasks for claim ${claimNo}:`, error);
+            throw error;
+        }
     },
 
-    async assignTask(claimNo: string, taskId: string): Promise<void> {
+    async assignTask(claimNo: string, taskId: string) {
         const payload = {
-            "ClaimNo": claimNo,
-            "TaskId": taskId
+            ClaimNo: claimNo,
+            TaskId: taskId,
+            "@type": "ClaimRequestForm-ClaimRequestForm",
         };
-        await api.post('easyclaim-core-v2/business/v1/assignTask', { json: payload });
+        try {
+            const response = await api.post('easyclaim-core-v2/business/v1/taskAssignment', { json: payload }).json();
+            return response;
+        } catch (error) {
+            console.error(`Error assigning task ${taskId}:`, error);
+            throw error;
+        }
     },
 
-    async loadStepData(step: string, claimNo: string, taskId: string): Promise<ApiResponse<any>> {
+    async loadStepData(step: 'registration' | 'calculation' | 'settlement', claimNo: string, taskId: string) {
         const payload = {
-            "claimNo": claimNo,
-            "taskId": taskId
+            OperationType: "3", // 3 for load
+            ClaimNo: claimNo,
+            TaskId: taskId,
+            "@type": "ClaimRequestForm-ClaimRequestForm",
         };
-        const response: ApiResponse<any> = await api.post(`easyclaim-core-v2/business/v1/${step}/load`, { json: payload }).json();
-        return response;
+        try {
+            const response = await api.post(`easyclaim-core-v2/business/v1/${step}`, { json: payload }).json();
+            return response;
+        } catch (error) {
+            console.error(`Error loading data for ${step}:`, error);
+            throw error;
+        }
     },
 
-    async submitStepData(step: string, payload: any): Promise<ApiResponse<any>> {
-        const response: ApiResponse<any> = await api.post(`easyclaim-core-v2/business/v1/${step}/submit`, { json: payload }).json();
-        return response;
+    async submitStepData(step: 'registration' | 'calculation' | 'settlement', payload: any) {
+        try {
+            // The payload for submit should be constructed outside and passed in
+            const response = await api.post(`easyclaim-core-v2/business/v1/${step}`, { json: payload }).json();
+            return response;
+        } catch (error) {
+            console.error(`Error submitting data for ${step}:`, error);
+            throw error;
+        }
     },
 
-    async reportAccidentWithPolicy(policyNo: string, dateOfLoss: string): Promise<ApiResponse<any>> {
-        const token = await _getCallCenterToken();
-        if (!token) throw new Error("Could not authenticate call center");
+    async reportAccidentWithPolicy(policyNo: string, dateOfLoss: string) {
+        const token = await _getCallCenterToken(); // Reutilizamos el token del call center
+        if (!token) {
+            throw new Error("Unable to get call center token");
+        }
 
         const payload = {
-            "PolicyNo": policyNo,
-            "ReportTime": formatDateForApi(new Date()),
-            "AccidentTime": formatDateForApi(new Date(dateOfLoss)),
-            "LossCause": "C01", // Causa de ejemplo
-            "SubClaimList": [
-                {
-                    "SubClaimType": "SCT01", // Tipo de ejemplo
-                    "RiskCode": "TRAV_PROP_RISK"
-                }
-            ]
+            "@type": "ClaimRequestForm-ClaimRequestForm",
+            "OperationType": "1",
+            "ReportChannel": "2",
+            "ClaimCase": {
+                "@type": "ClaimCase-ClaimCase",
+                "PolicyNo": policyNo,
+                "AccidentTime": formatDateForApi(dateOfLoss),
+            },
+            "IsManualPolicy": false
         };
 
-        const response: ApiResponse<any> = await ky.post(
-            'https://ebaogi-gi-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_reportAccident',
-            {
+        try {
+            const correctUrl = 'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/business/v1/fnol';
+            const response = await ky.post(correctUrl, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'x-mo-tenant-id': 'softtek',
                     'x-mo-user-identity': 'softtek_callcenter',
                     'x-mo-user-name': 'softtek_callcenter'
                 },
                 json: payload
-            }
-        ).json();
-        return response;
+            }).json();
+            return response;
+        } catch (error) {
+            console.error(`Error reporting accident for policy ${policyNo}:`, error);
+            throw error;
+        }
     },
 
-    async retrievePolicy(policyNo: string, accidentTime: string): Promise<ApiResponse<any>> {
+    async retrievePolicy(policyNo: string, accidentTime: string) {
         const token = await _getCallCenterToken();
-        if (!token) throw new Error("Could not authenticate call center");
+        if (!token) {
+            throw new Error("Unable to get call center token");
+        }
 
         const payload = {
+            "@type": "ClaimRequestForm-ClaimRequestForm",
             "PolicyNo": policyNo,
-            "AccidentTime": formatDateForApi(new Date(accidentTime))
+            "AccidentTime": formatDateForApi(accidentTime),
+            "IsManualPolicy": false // Corregido
         };
-
-        const response: ApiResponse<any> = await ky.post(
-            'https://ebaogi-gi-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_retrievePolicy',
-            {
+        try {
+            // Usamos la URL correcta y una llamada directa con el token del call center
+            const correctUrl = 'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/api/v1/retrievePolicy';
+            const response = await ky.post(correctUrl, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 json: payload
-            }
-        ).json();
-        return response;
-    }
+            }).json();
+            return response;
+        } catch (error) {
+            console.error(`Error retrieving policy ${policyNo}:`, error);
+            throw error;
+        }
+    },
 };

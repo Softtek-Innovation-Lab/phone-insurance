@@ -1,3 +1,4 @@
+import { Card, CardBody } from "@heroui/card";
 import { Input } from "@heroui/input";
 
 export const PolicyDetails = ({ policy }) => {

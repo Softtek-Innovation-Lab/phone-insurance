@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAuth } from "@/auth/AuthProvider";
 import { DUMMY_USER } from "@/data/user";
 import { useNavigate } from "react-router-dom";
-import travelersLogo from "@/assets/generic-logo.webp";
+import travelersLogo from "@/assets/generic-logo.png";
 const loginBg = "https://yt3.googleusercontent.com/ytc/AIdro_lyqluIFafhhwC88lk9OE-9KApzRXb7IIgHQO4-GRm04qg=s900-c-k-c0x00ffffff-no-rj"; // Nueva imagen
 import DefaultLayout from "@/layouts/default"; // Importar el layout
 
