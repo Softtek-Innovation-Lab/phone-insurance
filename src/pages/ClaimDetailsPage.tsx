@@ -47,7 +47,7 @@ export default function ClaimDetailsPage() {
                 OperationType: "2", // 2 para submit
                 // ... fusionar con los datos del formulario
             };
-            dispatch(submitStepData({ step: currentStep, payload: finalPayload }));
+            dispatch(submitStepData({ step: currentStep as 'registration' | 'calculation' | 'settlement', payload: finalPayload }));
         }
     };
 

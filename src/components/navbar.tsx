@@ -2,9 +2,9 @@
 
 import { Link } from "react-router-dom";
 import { ShoppingCart, UserCircle } from "lucide-react";
-import travelersLogo from "@/assets/generic-logo.png"
-import { useGlobalStore } from "@/hooks/useGlobalStore";
+import travelersLogo from "@/assets/generic-logo.webp"
 import { useAuth } from "@/auth/AuthProvider";
+import { useGlobalStore } from "@/hooks/useGlobalStore";
 
 export const Navbar = () => {
   const { store } = useGlobalStore();

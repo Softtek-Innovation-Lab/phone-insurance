@@ -14,7 +14,6 @@ import { generatePolicy } from "@/store/slices/policySlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useAuth } from "@/auth/AuthProvider";
-import { faker } from '@faker-js/faker';
 // Static content removed - not needed with the new multi-step design
 
 // Mock cart item (initial data)
@@ -213,54 +212,42 @@ export default function CartPage() {
   const orderTotal = subtotal + processingFee;
 
   // Función para generar el comprobante
-  const generateReceipt = () => {
+  const generateReceipt = async () => {
     setIsGenerating(true);
 
-    // Generate fake customer data if not provided
-    if (!customerInfo.firstName || !customerInfo.lastName) {
-      const fakeCustomer = {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        email: faker.internet.email(),
-        phone: faker.phone.number(),
-        address: faker.location.streetAddress(),
-        city: faker.location.city(),
-        state: faker.location.state(),
-        zipCode: faker.location.zipCode(),
-        country: 'United States'
-      };
-      setCustomerInfo(fakeCustomer);
+    if (!user) {
+      addNotification("You must be logged in to complete the purchase.", "error");
+      setIsGenerating(false);
+      return;
     }
 
     console.log("Generating receipt...", cart);
-    generatePolicy(cart, dispatch)
-      .then((response) => {
-        console.log('Complete policy generation response:', response);
+    try {
+      const response = await generatePolicy(cart, dispatch);
+      console.log('Complete policy generation response:', response);
 
-        const policyResponse = (response?.issueResponse ?? response?.bindResponse) ?? response?.calculateResponse;
-        console.log('Policy data to display:', policyResponse);
+      const policyResponse = (response?.issueResponse ?? response?.bindResponse) ?? response?.calculateResponse;
+      console.log('Policy data to display:', policyResponse);
 
-        if (policyResponse && policyResponse.PolicyNo) {
-          // Guardar la póliza en localStorage
-          const purchasedPolicies = JSON.parse(localStorage.getItem('purchasedPolicies') || '[]');
-          purchasedPolicies.push({
-            policyNo: policyResponse.PolicyNo,
-            date: policyResponse.EffectiveDate || new Date().toISOString(),
-          });
-          localStorage.setItem('purchasedPolicies', JSON.stringify(purchasedPolicies));
-        }
+      if (policyResponse && policyResponse.PolicyNo) {
+        // Guardar la póliza en localStorage
+        const purchasedPolicies = JSON.parse(localStorage.getItem('purchasedPolicies') || '[]');
+        purchasedPolicies.push({
+          policyNo: policyResponse.PolicyNo,
+          date: policyResponse.EffectiveDate || new Date().toISOString(),
+        });
+        localStorage.setItem('purchasedPolicies', JSON.stringify(purchasedPolicies));
+      }
 
-        setPolicyData(policyResponse);
-        setCurrentStep('confirmation');
-        addNotification("Receipt generated successfully!", "success");
-      })
-      .catch((error) => {
-        addNotification("Error generating receipt. Please try again.", "error");
-        console.error("Error generating receipt:", error);
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
+      setPolicyData(policyResponse);
+      setCurrentStep('confirmation');
+      addNotification("Receipt generated successfully!", "success");
+    } catch (error) {
+      addNotification("Error generating receipt. Please try again.", "error");
+      console.error("Error generating receipt:", error);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   // Helper functions for the improved cart
@@ -557,8 +544,8 @@ export default function CartPage() {
   const renderConfirmationStep = () => {
     // Generate additional fake data for comprehensive receipt
     const currentDate = new Date().toLocaleDateString('en-US');
-    const birthDate = faker.date.birthdate({ min: 18, max: 65, mode: 'age' }).toLocaleDateString('en-US');
-    const customerId = faker.string.numeric(9);
+    const birthDate = new Date(new Date().setFullYear(new Date().getFullYear() - Math.floor(Math.random() * 48 + 18))).toLocaleDateString('en-US');
+    const customerId = Math.floor(Math.random() * 1000000000).toString();
     const issuer = "martin.gimenezartero@softtek.com";
     const productCode = "TRAV_PROP_MKT";
     const productVersion = "v1.0";
@@ -592,7 +579,7 @@ export default function CartPage() {
                 <div className="space-y-3">
                   <div>
                     <span className="font-medium">Policy Number:</span>
-                    <p className="text-gray-800">{policyData?.PolicyNo ?? `POTRAV_PROP_MKT${faker.string.numeric(8)}`}</p>
+                    <p className="text-gray-800">{policyData?.PolicyNo ?? `POTRAV_PROP_MKT${Math.floor(Math.random() * 100000000).toString()}`}</p>
                   </div>
                   <div>
                     <span className="font-medium">Holder:</span>

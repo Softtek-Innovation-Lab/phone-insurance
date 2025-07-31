@@ -57,7 +57,7 @@ export default function NewAccidentTab() {
                         required
                     >
                         {purchasedPolicies.map((p: any) => (
-                            <SelectItem key={p.policyNo} value={p.policyNo}>
+                            <SelectItem key={p.policyNo}>
                                 {p.policyNo}
                             </SelectItem>
                         ))}
