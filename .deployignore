@@ -1,0 +1,17 @@
+docs/
+*.pdf
+*.yaml
+node_modules/
+.git/
+*.log
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+coverage/
+.nyc_output/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx

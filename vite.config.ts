@@ -12,4 +12,18 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    // Optimizaciones para reducir el tamaño del bundle
+    minify: 'terser',
+
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@heroui/button', '@heroui/card', '@heroui/input'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+  },
 })
