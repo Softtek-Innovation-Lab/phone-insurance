@@ -66,10 +66,7 @@ export interface ClaimResponse {
 
 // --- Helper for Call Center Auth ---
 const _getCallCenterToken = async () => {
-    let token = localStorage.getItem('call_center_api_token');
-    if (token) {
-        return token;
-    }
+
     try {
         // Usar un endpoint diferente para la autenticación del call center
         const loginApi = ky.create();
@@ -158,24 +155,27 @@ export const claimsApi = {
         if (!token) throw new Error("Could not authenticate call center");
 
         const payload = {
-            "PolicyNo": policyNo,
-            "ReportTime": formatDateForApi(new Date()),
-            "AccidentTime": formatDateForApi(new Date(dateOfLoss)),
-            "LossCause": "C01", // Causa de ejemplo
-            "SubClaimList": [
-                {
-                    "SubClaimType": "SCT01", // Tipo de ejemplo
-                    "RiskCode": "TRAV_PROP_RISK"
-                }
-            ]
+            "@type": "ClaimRequestForm-ClaimRequestForm",
+            "OperationType": "1",
+            "ReportChannel": "2",
+            "ClaimCase": {
+                "@type": "ClaimCase-ClaimCase",
+                "PolicyNo": policyNo,
+                "AccidentTime": formatDateForApi(new Date(dateOfLoss))
+            },
+            "IsManualPolicy": false
         };
 
         const response: ApiResponse<any> = await ky.post(
-            'https://ebaogi-gi-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_reportAccident',
+            'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/business/v1/fnol',
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'x-mo-env': 'am_uat',
+                    'x-mo-module-permission-code': 'NEWEST_CLAIM_TASK',
+                    'x-mo-module-ui-url': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.8539853838967773#/taskQuery?apcforca=NEWEST_CLAIM_TASK',
+                    'x-mo-tenant-id': 'softtek',
                     'x-mo-user-identity': 'softtek_callcenter',
                     'x-mo-user-name': 'softtek_callcenter'
                 },
@@ -187,19 +187,28 @@ export const claimsApi = {
 
     async retrievePolicy(policyNo: string, accidentTime: string): Promise<ApiResponse<any>> {
         const token = await _getCallCenterToken();
+        console.log("Retrieve Policy called with token:", token);
         if (!token) throw new Error("Could not authenticate call center");
 
         const payload = {
+            "@type": "ClaimRequestForm-ClaimRequestForm",
             "PolicyNo": policyNo,
-            "AccidentTime": formatDateForApi(new Date(accidentTime))
+            "AccidentTime": formatDateForApi(new Date(accidentTime)),
+            "IsManualPolicy": false
         };
 
         const response: ApiResponse<any> = await ky.post(
-            'https://ebaogi-gi-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_retrievePolicy',
+            'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/api/v1/retrievePolicy',
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'x-mo-env': 'am_uat',
+                    'x-mo-module-permission-code': 'NEWEST_CLAIM_TASK',
+                    'x-mo-module-ui-url': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.8539853838967773#/taskQuery?apcforca=NEWEST_CLAIM_TASK',
+                    'x-mo-tenant-id': 'softtek',
+                    'x-mo-user-identity': 'softtek_callcenter',
+                    'x-mo-user-name': 'softtek_callcenter'
                 },
                 json: payload
             }

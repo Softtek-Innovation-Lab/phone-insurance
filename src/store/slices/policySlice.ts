@@ -22,7 +22,7 @@ const _parsePolicyData = (cart: any, user: User) => {
     DateOfBirth: user.dateOfBirth,
     GenderCode: user.gender,
     IdNo: user.idNumber,
-    IdType: "1", // Using the working format - numeric string instead of user.idType
+    IdType: "1",
     IsInsured: "N",
     IsOrgParty: "N",
     IsPolicyHolder: "Y",
@@ -58,7 +58,7 @@ const _parsePolicyData = (cart: any, user: User) => {
         ],
         ProductElementCode: "TRAV_PROP_RISK",
         ProductElementId: 789611472,
-        RiskName: "ProductElement",
+        RiskName: item.product.name || item.name || "ProductElement", // Usar el nombre del producto
         VersionSeq: 1,
         PredefinedPremium: item.product.premium || 70,
       });
