@@ -40,6 +40,8 @@ const _parsePolicyData = (cart: any, user: User) => {
   for (const item of cart) {
     const quantity = item.quantity || 1;
     for (let i = 0; i < quantity; i++) {
+      
+      console.log('riskname', item.name, item.product);
       //@ts-ignore
       policyRiskList.push({
         PolicyCoverageList: [
