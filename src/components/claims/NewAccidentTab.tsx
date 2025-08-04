@@ -4,6 +4,7 @@ import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
+import { CheckCircle } from "lucide-react";
 import { AppDispatch, RootState } from "@/store";
 import { retrievePolicyDetails, reportAccident } from "@/store/slices/claimsSlice";
 import { useNotification } from "@/providers/NotificationProvider";
@@ -15,7 +16,7 @@ export default function NewAccidentTab() {
     const [dateOfLoss, setDateOfLoss] = useState("");
     const [purchasedPolicies, setPurchasedPolicies] = useState([]);
     const dispatch = useDispatch<AppDispatch>();
-    const { loading, error, retrievedPolicy } = useSelector((state: RootState) => state.claims);
+    const { loading, error, retrievedPolicy, currentClaimData } = useSelector((state: RootState) => state.claims);
     const { addNotification } = useNotification();
 
     useEffect(() => {
@@ -37,7 +38,7 @@ export default function NewAccidentTab() {
             dispatch(reportAccident({ policyNo: selectedPolicy, dateOfLoss }))
                 .unwrap()
                 .then((response) => {
-                    addNotification(`Accident reported successfully! Claim number: ${response.ClaimCase.ClaimNo}`, "success");
+                    addNotification(`Accident reported successfully! Claim number: ${response.ClaimCase?.ClaimNo}`, "success");
                 })
                 .catch(() => {
                     addNotification("Failed to report accident.", "error");
@@ -49,6 +50,42 @@ export default function NewAccidentTab() {
         <Card>
             <CardBody className="p-6">
                 <h2 className="text-xl font-bold mb-4">Report a New Accident</h2>
+
+                {currentClaimData && (
+                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center space-x-2 mb-4">
+                            <CheckCircle className="w-6 h-6 text-green-600" />
+                            <h3 className="text-lg font-semibold text-green-800">Accident Reported Successfully!</h3>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <strong>Claim Number:</strong> {currentClaimData.ClaimCase?.ClaimNo}
+                            </div>
+                            <div>
+                                <strong>Task ID:</strong> {currentClaimData.TaskId}
+                            </div>
+                            <div>
+                                <strong>Product Name:</strong> {currentClaimData.ProductName}
+                            </div>
+                            <div>
+                                <strong>Policy Holder:</strong> {currentClaimData.ClaimCase?.PolicyHolderName}
+                            </div>
+                            <div>
+                                <strong>Policy Number:</strong> {currentClaimData.ClaimCase?.PolicyNo}
+                            </div>
+                            <div>
+                                <strong>Accident Time:</strong> {currentClaimData.ClaimCase?.AccidentTime}
+                            </div>
+                            <div>
+                                <strong>Notice Time:</strong> {currentClaimData.ClaimCase?.NoticeTime}
+                            </div>
+                            <div>
+                                <strong>Status:</strong> {currentClaimData.ClaimCase?.CaseStatus === "01" ? "Open" : currentClaimData.ClaimCase?.CaseStatus}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className="space-y-4">
                     <Select
                         label="Select a Policy"
