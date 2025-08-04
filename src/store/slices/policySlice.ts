@@ -22,7 +22,7 @@ const _parsePolicyData = (cart: any, user: User) => {
     DateOfBirth: user.dateOfBirth,
     GenderCode: user.gender,
     IdNo: user.idNumber,
-    IdType: user.idType,
+    IdType: "1", // Using the working format - numeric string instead of user.idType
     IsInsured: "N",
     IsOrgParty: "N",
     IsPolicyHolder: "Y",
