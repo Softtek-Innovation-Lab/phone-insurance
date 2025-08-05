@@ -43,3 +43,247 @@ Pasos a seguir:
             - PolicyNo (generado al momento de hacer la compra)
             - Date of loss
             DEVUELVE LAS COVERTURAS CON LA SUMA ASEGURADA
+
+
+
+
+a sido aprobado el siniestro. se 
+
+el desembolso esta listo para ser cobrado.
+
+
+proximos pasos:
+buscar el siniestro
+fetch("https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/api/v1/queryTask", {
+  "headers": {
+    "accept": "application/json",
+    "accept-language": "en-US,en;q=0.9",
+    "authorization": "Bearer wSWf4SpxSLyLw3rDSKzkzw",
+    "content-type": "application/json; charset=UTF-8",
+    "priority": "u=1, i",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Linux\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "x-mo-env": "am_uat",
+    "x-mo-module-permission-code": "NEWEST_CLAIM_TASK",
+    "x-mo-module-ui-url": "https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.311256392016209#/taskQuery?apcforca=NEWEST_CLAIM_TASK",
+    "x-mo-tenant-id": "softtek",
+    "x-mo-user-identity": "softtek_callcenter",
+    "x-mo-user-name": "softtek_callcenter"
+  },
+  "referrer": "https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.311256392016209",
+  "body": "{\"SortFieldsAndTypes\":{\"TaskOwner\":\"asc\",\"DueDate\":\"asc\",\"CreateTime\":\"asc\"},\"PageNo\":1,\"PageSize\":10,\"QueryType\":\"01\",\"MultipleQuery\":\"CTRAV_PROP_MKT202500000145\"}",
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "include"
+});
+
+
+comentarios de richards... : reamark// observacion del usuario
+
+
+fetch("https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/business/v1/fnol", {
+  "headers": {
+    "accept": "application/json",
+    "accept-language": "en-US,en;q=0.9",
+    "authorization": "Bearer wSWf4SpxSLyLw3rDSKzkzw",
+    "content-type": "application/json; charset=UTF-8",
+    "priority": "u=1, i",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Linux\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "x-mo-env": "am_uat",
+    "x-mo-module-permission-code": "NEWEST_CLAIM_TASK",
+    "x-mo-module-ui-url": "https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.311256392016209#/task/notice?ClaimNo=CTRAV_PROP_MKT202500000145&TaskId=a27eca32-7161-11f0-acd4-126be2bd3d21",
+    "x-mo-tenant-id": "softtek",
+    "x-mo-user-identity": "softtek_callcenter",
+    "x-mo-user-name": "softtek_callcenter",
+    "Referer": "https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.311256392016209"
+  },
+  "body": "{\"@type\":\"ClaimRequestForm-ClaimRequestForm\",\"ReportChannel\":\"2\",\"OperationType\":\"2\",\"ClaimNo\":\"CTRAV_PROP_MKT202500000145\",\"TaskId\":\"a27eca32-7161-11f0-acd4-126be2bd3d21\",\"ClaimCase\":{\"@pk\":11179029858,\"@type\":\"ClaimCase-ClaimCase\",\"AccidentTime\":\"2025-08-03T21:00:00\",\"BusinessObjectId\":371651130,\"CaseId\":\"11179029858,B434831727D4FBF105199818C7D4AA28\",\"CaseStatus\":\"01\",\"ClaimNo\":\"CTRAV_PROP_MKT202500000145\",\"ClmPolicyId\":11179029861,\"EcsInsertTime\":\"2025-08-04T15:34:20\",\"EcsIsFromApp\":\"N\",\"EcsProductLineCode\":\"02\",\"EcsProductVersion\":\"1.0\",\"EcsUpdateTime\":\"2025-08-04T15:34:20\",\"FnolNo\":\"CTRAV_PROP_MKT202500000145\",\"FnolStatus\":\"01\",\"NoticeTime\":\"2025-08-04T15:34:20\",\"PolicyNo\":\"POTRAV_PROP_MKT00000118\",\"PolicyOrgCode\":\"softtek\",\"ProductCode\":\"TRAV_PROP_MKT\",\"RecordType\":\"1\",\"VersionSeq\":2,\"WithPolicy\":\"1\",\"PolicyHolderName\":\"Michael Thompson\",\"SettlementTimes\":0,\"LossCause\":\"01\",\"EcsHasOtherPolicies\":\"1\",\"ClaimObjectList\":[{\"@type\":\"ClaimObject-ClaimObject\",\"SequenceNo\":1,\"Property\":{\"@type\":\"EClaimProperty-EClaimProperty\"},\"DamageType\":\"02\",\"RiskName\":11179411007,\"SubClaimType\":\"02\",\"DamageObject\":\"100\"}],\"ClaimPartyList\":[{\"@type\":\"ClaimParty-ClaimParty\",\"IndOrg\":\"01\",\"PartyName\":\"asdasd\",\"IdType\":\"01\",\"SequenceNo\":1}],\"FnolRemark\":\"\"}}",
+  "method": "POST"
+});
+
+
+una vez en submi ten modal task trasnfer poner work on 
+
+fetch("https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/business/v1/taskAssignment", {
+  "headers": {
+    "accept": "application/json",
+    "accept-language": "en-US,en;q=0.9",
+    "authorization": "Bearer wSWf4SpxSLyLw3rDSKzkzw",
+    "content-type": "application/json; charset=UTF-8",
+    "priority": "u=1, i",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Linux\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "x-mo-env": "am_uat",
+    "x-mo-module-permission-code": "NEWEST_CLAIM_TASK",
+    "x-mo-module-ui-url": "https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.311256392016209#/task/notice?ClaimNo=CTRAV_PROP_MKT202500000145&TaskId=a27eca32-7161-11f0-acd4-126be2bd3d21",
+    "x-mo-tenant-id": "softtek",
+    "x-mo-user-identity": "softtek_callcenter",
+    "x-mo-user-name": "softtek_callcenter"
+  },
+  "referrer": "https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.311256392016209",
+  "body": "{\"@type\":\"ClaimRequestForm-ClaimRequestForm\",\"TaskId\":\"ffd8bb68-7163-11f0-acd4-126be2bd3d21\",\"ClaimNo\":\"CTRAV_PROP_MKT202500000145\"}",
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "include"
+});
+
+
+despues de eso antes aparecia fnol ahora resitration
+Task Type
+Registration
+
+
+abajo en reamark//los datos del registro ya fueron registrados
+
+fetch("https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/business/v1/registration", {
+  "headers": {
+    "accept": "application/json",
+    "accept-language": "en-US,en;q=0.9",
+    "authorization": "Bearer wSWf4SpxSLyLw3rDSKzkzw",
+    "content-type": "application/json; charset=UTF-8",
+    "priority": "u=1, i",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Linux\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "x-mo-env": "am_uat",
+    "x-mo-module-permission-code": "NEWEST_CLAIM_TASK",
+    "x-mo-module-ui-url": "https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.311256392016209#/task/register?ClaimNo=CTRAV_PROP_MKT202500000145&TaskId=ffd8bb68-7163-11f0-acd4-126be2bd3d21",
+    "x-mo-tenant-id": "softtek",
+    "x-mo-user-identity": "softtek_callcenter",
+    "x-mo-user-name": "softtek_callcenter",
+    "Referer": "https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.311256392016209"
+  },
+  "body": "{\"@type\":\"ClaimRequestForm-ClaimRequestForm\",\"ClaimNo\":\"CTRAV_PROP_MKT202500000145\",\"ClaimCase\":{\"@pk\":11179029858,\"@type\":\"ClaimCase-ClaimCase\",\"AccidentTime\":\"2025-08-03T21:00:00\",\"BusinessObjectId\":371651130,\"CaseId\":\"11179029858,B434831727D4FBF105199818C7D4AA28\",\"CaseMode\":\"01\",\"CaseStatus\":\"02\",\"ClaimNo\":\"CTRAV_PROP_MKT202500000145\",\"ClaimObjectList\":[{\"@pk\":11179430368,\"@type\":\"ClaimObject-ClaimObject\",\"BusinessObjectId\":371652248,\"ClaimItemList\":[{\"@pk\":11179430386,\"@type\":\"ClaimItem-ClaimItem\",\"BusinessObjectId\":371652401,\"ClaimReserveList\":[{\"@pk\":11179430388,\"@type\":\"ClaimReserve-ClaimReserve\",\"BusinessObjectId\":371652749,\"OutstandingAmount\":750,\"ReserveId\":11179430388,\"ReserveType\":\"01\",\"SettleAmount\":0,\"EcsRemark\":\"\"}],\"CoverageCode\":\"TRAV_PROP_COV\",\"CoverageName\":\"TravelerPropertiesCoverage\",\"ItemId\":11179430386,\"ProductCode\":\"TRAV_PROP_MKT\",\"SumInsured\":1500}],\"DamageType\":\"02\",\"ObjectId\":11179430368,\"Property\":{\"@pk\":11179430369,\"@type\":\"EClaimProperty-EClaimProperty\",\"BusinessObjectId\":1100007207466,\"PropertyId\":11179430369},\"RiskName\":\"11179411007\",\"SequenceNo\":1,\"StatusCode\":\"02\",\"SubClaimType\":\"02\",\"DamageObject\":\"100\"}],\"ClaimPartyList\":[{\"@pk\":11179430370,\"@type\":\"ClaimParty-ClaimParty\",\"BusinessObjectId\":371652675,\"ClmPartyId\":11179430370,\"IdType\":\"01\",\"IndOrg\":\"01\",\"PartyName\":\"asdasd\",\"PartyRole\":\"12\",\"SequenceNo\":1}],\"ClmPolicyId\":11179029861,\"EcsHasOtherPolicies\":\"1\",\"EcsInsertTime\":\"2025-08-04T15:34:20\",\"EcsIsFromApp\":\"N\",\"EcsProductLineCode\":\"02\",\"EcsProductVersion\":\"1.0\",\"EcsUpdateTime\":\"2025-08-04T15:52:03\",\"FnolNo\":\"CTRAV_PROP_MKT202500000145\",\"FnolRemark\":\"\",\"FnolStatus\":\"03\",\"LossCause\":\"01\",\"NoticeTime\":\"2025-08-04T15:34:20\",\"PolicyNo\":\"POTRAV_PROP_MKT00000118\",\"PolicyOrgCode\":\"softtek\",\"ProcessDefId\":913857443,\"ProductCode\":\"TRAV_PROP_MKT\",\"RecordType\":\"1\",\"VersionSeq\":5,\"WithPolicy\":\"1\",\"PolicyHolderName\":\"Michael Thompson\",\"SettlementTimes\":0,\"RegistrationRemark\":\"los datos del registro ya fueron registrados\\r\"},\"OperationType\":\"2\",\"UpdateReserve\":\"1\",\"TaskId\":\"ffd8bb68-7163-11f0-acd4-126be2bd3d21\"}",
+  "method": "POST"
+});
+
+task transfer ahora no me deja markar xq call center no esta habiñotado para hacerlo.
+cambiar de usuario
+
+softtek_serviceprovider
+Softtek@2025
+
+ahora en claim task tab dar en edit...
+
+notar que Task Type esta en
+Investigation
+
+
+Sub-Claim Information desplegar eso y mas abajo esta "Investigation Information"
+
+Subclaim		Risk Name	Subclaim Type	Damage Object	Claim Owner	Claimant Name
+001		
+Laptop Insurance
+FP-Property
+100
+Sub-Claim Information
+Close
+Subclaim
+001
+Risk Name
+Laptop Insurance
+Subclaim Type
+FP-Property
+Damage Object
+100
+Owner Name
+Total Loss
+Please Select
+Damage Description
+0/3000
+Claim Owner
+Please Select
+Claimant Name
+Please Select
+Investigation Information
+Investigator Name
+investigatorName
+Investigator Contact
+investContact
+Investigator Arrival Date
+04/08/2025 00:00:00
+Investigation Address
+awdawd
+Investigation Description
+0/2000
+Total 1 Items
+
+5
+Remark
+
+
+
+propuesta: cada vez que se apreta el boton se puede avanzar con el boton
+
+loguearme con 
+softtek_operations
+
+ir a claimtask buscar el siniestro ej CTRAV_PROP_MKT202500000145
+
+Task Type
+Appraisal
+
+se ingresaron los datos del appraisal (evaluacion)
+
+dar en submit.. luego workon
+
+Document Information
+Document Qualified
+
+Yes
+
+Task Type
+Calculation
+
+agregamos Claim Calculation 
+-            Adjusted Amount ponemos 0 
+Requested Amount (menos que )	Recognized Amount (la mitad)
+
+remark. se han ingresado los datos del calculo
+
+
+
+loguear luego con
+softtek_operationsmanager
+Softtek@2025
+
+Task Type
+Calculation Approval
+
+
+aprobar decision.. 
+
+reamrk. se aprobaron 
+
+
+loguearme con softtek_operations
+Task Type
+Settlement
+buscar usuario con Party Role Claimant
+
+
+una vez aprobado el pago se cierra el siniestro.. y se haria el deposito...
+
+loguearme con
+
+softtek_operationsmanager
+
+Task Type
+Settlement Approval
+remark. se ha aprobado el deposito
