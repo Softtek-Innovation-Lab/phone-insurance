@@ -10,20 +10,31 @@ import { retrievePolicyDetails, reportAccident } from "@/store/slices/claimsSlic
 import { useNotification } from "@/providers/NotificationProvider";
 import { PolicyDetails } from "./PolicyDetails";
 import { CoverageDetails } from "./CoverageDetails";
+import { useDisclosure } from "@heroui/use-disclosure";
+import ProcessGuideModal from "./ProcessGuideModal";
+
+interface PurchasedPolicy {
+    policyNo: string;
+    productName: string;
+    // Add other policy properties here if needed
+}
 
 export default function NewAccidentTab() {
     const [selectedPolicy, setSelectedPolicy] = useState("");
     const [dateOfLoss, setDateOfLoss] = useState("");
-    const [purchasedPolicies, setPurchasedPolicies] = useState([]);
+    const [purchasedPolicies, setPurchasedPolicies] = useState<PurchasedPolicy[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error, retrievedPolicy, currentClaimData } = useSelector((state: RootState) => state.claims);
     const { addNotification } = useNotification();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
         // Cargar las pólizas desde localStorage al montar el componente
         const policies = JSON.parse(localStorage.getItem('purchasedPolicies') || '[]');
         setPurchasedPolicies(policies);
     }, []);
+
+    const selectedPolicyData = purchasedPolicies.find(p => p.policyNo === selectedPolicy);
 
     const handleRetrievePolicy = () => {
         if (selectedPolicy && dateOfLoss) {
@@ -49,7 +60,12 @@ export default function NewAccidentTab() {
     return (
         <Card>
             <CardBody className="p-6">
-                <h2 className="text-xl font-bold mb-4">Report a New Accident</h2>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-bold">Report a New Accident</h2>
+                    <Button color="primary" onPress={onOpen} disabled={!currentClaimData}>
+                        Proceed with the process
+                    </Button>
+                </div>
 
                 {currentClaimData && (
                     <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -86,11 +102,24 @@ export default function NewAccidentTab() {
                     </div>
                 )}
 
+                <ProcessGuideModal
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    policyNumber={selectedPolicy}
+                    productName={selectedPolicyData?.productName || ''}
+                    claimNo={currentClaimData?.ClaimCase?.ClaimNo}
+                    taskId={currentClaimData?.TaskId}
+                />
+
                 <div className="space-y-4">
                     <Select
                         label="Select a Policy"
                         selectedKeys={selectedPolicy ? [selectedPolicy] : []}
-                        onSelectionChange={(keys) => setSelectedPolicy(Array.from(keys)[0] as string)}
+                        onSelectionChange={(keys) => {
+                            const policyNo = Array.from(keys)[0] as string;
+                            setSelectedPolicy(policyNo);
+                            setDateOfLoss(new Date().toISOString().split('T')[0])
+                        }}
                         required
                     >
                         {purchasedPolicies.map((p: any) => (
