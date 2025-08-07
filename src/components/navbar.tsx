@@ -5,8 +5,11 @@ import { ShoppingCart, UserCircle } from "lucide-react";
 import travelersLogo from "@/assets/generic-logo.png"
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import { useAuth } from "@/auth/AuthProvider";
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const Navbar = () => {
+  const { t } = useTranslation();
   const { store } = useGlobalStore();
   const { user, logout } = useAuth();
   const cartItemCount = store?.cart?.length ?? 0;
@@ -26,10 +29,10 @@ export const Navbar = () => {
           <nav aria-label="Top navigation">
             <ul className="hidden lg:flex items-center gap-6 text-xs font-medium text-gray-400 uppercase cursor-not-allowed">
               <li>
-                <span className="pointer-events-none">Contact Us</span>
+                <span className="pointer-events-none">{t('contactUs')}</span>
               </li>
               <li>
-                <span className="pointer-events-none">Find a Broker</span>
+                <span className="pointer-events-none">{t('findBroker')}</span>
               </li>
             </ul>
           </nav>
@@ -40,7 +43,6 @@ export const Navbar = () => {
           <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-10">
             {/* Main Navigation Links */}
             <nav className="flex justify-center gap-8" aria-label="Main navigation">
-
               {/* Active Links: Get Insurance and Cart */}
               <a
                 href="#get-insurance"
@@ -58,38 +60,37 @@ export const Navbar = () => {
                   }
                 }}
               >
-                Get Insurance
+                {t('getInsuranceNav')}
               </a>
               <Link
                 to="/cart"
                 className="text-base font-medium text-gray-700 hover:text-red-600"
               >
-                Cart
+                {t('cart.nav')}
               </Link>
               {/* Disabled Links */}
               <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
-                Industry Solutions
+                {t('industrySolutions')}
               </span>
               <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
-                Products & Services
+                {t('productsAndServices')}
               </span>
               <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
-                Why Travelers
+                {t('whyTravelers')}
               </span>
               <span className="text-base font-medium text-gray-400 cursor-not-allowed pointer-events-none">
-                Brokers
+                {t('brokers')}
               </span>
               <Link
                 to="/claims-centre"
                 className="text-base font-medium text-gray-700 hover:text-red-600"
               >
-                Claims Centre
+                {t('claimsCentre')}
               </Link>
-
-
             </nav>
 
             <div className="ml-4 hidden lg:flex items-center gap-4">
+              <LanguageSwitcher />
               {/* Cart Icon with Counter */}
               <Link
                 to="/cart"
@@ -115,7 +116,7 @@ export const Navbar = () => {
                     onClick={logout}
                     className="text-sm font-medium text-red-600 hover:underline"
                   >
-                    Logout
+                    {t('logout')}
                   </button>
                 </div>
               ) : (
@@ -125,11 +126,10 @@ export const Navbar = () => {
                   aria-label="Login"
                 >
                   <UserCircle className="h-5 w-5" />
-                  <span className="ml-1 text-sm font-medium">Login</span>
+                  <span className="ml-1 text-sm font-medium">{t('login')}</span>
                 </Link>
               )}
             </div>
-
             {/* Mobile Menu Toggle */}
             <button
               className="lg:hidden flex items-center p-2 text-gray-700 hover:text-red-600"

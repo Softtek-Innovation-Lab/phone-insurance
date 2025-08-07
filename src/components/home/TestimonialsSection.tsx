@@ -1,5 +1,6 @@
 import { Card, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
+import { useTranslation } from 'react-i18next';
 
 interface Testimonial {
     id: number;
@@ -11,62 +12,63 @@ interface Testimonial {
     avatar: string;
 }
 
-const testimonials: Testimonial[] = [
-    {
-        id: 1,
-        name: "Sarah Johnson",
-        role: "Marketing Manager",
-        company: "TechStart Inc.",
-        content: "My laptop was damaged in a coffee spill incident. The claim process was incredibly smooth and I had a replacement within 48 hours. Outstanding service!",
-        rating: 5,
-        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612345?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-    },
-    {
-        id: 2,
-        name: "Mike Chen",
-        role: "Freelance Designer",
-        company: "Self-employed",
-        content: "As a freelancer, my devices are my livelihood. This insurance gives me peace of mind knowing I'm protected against theft and damage. Highly recommended!",
-        rating: 5,
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-    },
-    {
-        id: 3,
-        name: "Emily Rodriguez",
-        role: "Student",
-        company: "State University",
-        content: "Perfect for students! The affordable premiums and comprehensive coverage saved me when my phone was stolen on campus. Quick processing and great support.",
-        rating: 5,
-        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-    }
-];
+export function TestimonialsSection() {
+    const { t } = useTranslation();
+    const testimonials: Testimonial[] = [
+        {
+            id: 1,
+            name: t('testimonial1Name'),
+            role: "Marketing Manager",
+            company: "TechStart Inc.",
+            content: t('testimonial1Text'),
+            rating: 5,
+            avatar: "https://images.unsplash.com/photo-1494790108755-2616b612345?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        },
+        {
+            id: 2,
+            name: t('testimonial2Name'),
+            role: "Freelance Designer",
+            company: "Self-employed",
+            content: t('testimonial2Text'),
+            rating: 5,
+            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        },
+        {
+            id: 3,
+            name: t('testimonial3Name'),
+            role: "Student",
+            company: "State University",
+            content: t('testimonial3Text'),
+            rating: 5,
+            avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        }
+    ];
 
-const StarRating = ({ rating }: { rating: number }) => {
-    return (
-        <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                    key={star}
-                    className={`text-lg ${star <= rating ? "text-yellow-400" : "text-gray-300"
-                        }`}
-                >
-                    ⭐
-                </span>
-            ))}
-        </div>
-    );
-};
+    const StarRating = ({ rating }: { rating: number }) => {
+        return (
+            <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                        key={star}
+                        className={`text-lg ${star <= rating ? "text-yellow-400" : "text-gray-300"
+                            }`}
+                    >
+                        ⭐
+                    </span>
+                ))}
+            </div>
+        );
+    };
 
-export const TestimonialsSection = () => {
     return (
         <section className="py-16 bg-white dark:bg-gray-800">
             <div className="max-w-6xl mx-auto px-4">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                        What Our Customers Say
+                        {t('testimonialsTitle')}
                     </h2>
                     <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                        Don't just take our word for it. Here's what real customers have to say about our device insurance.
+                        {t('testimonialsSubtitle')}
                     </p>
                 </div>
 
@@ -113,10 +115,10 @@ export const TestimonialsSection = () => {
                         </div>
                         <div>
                             <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                                4.9/5 Average Rating
+                                4.9/5 {t('averageRating')}
                             </div>
                             <div className="text-sm text-gray-600 dark:text-gray-400">
-                                Based on 2,847+ verified reviews
+                                {t('basedOnReviews', { count: 2847 })}
                             </div>
                         </div>
                     </div>

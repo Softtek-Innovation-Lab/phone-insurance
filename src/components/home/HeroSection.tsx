@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useTranslation } from 'react-i18next';
 
 import cameraImage from '@/assets/camera-nikon.webp';
 import laptopImage from '@/assets/laptop.webp';
@@ -6,6 +7,8 @@ import phoneImage from '@/assets/phone.webp';
 import { products } from "@/data/products";
 
 export default function HeroSection() {
+    const { t } = useTranslation();
+
     return (
         <section className="relative py-16 mb-12 bg-hero-index text-white">
 
@@ -17,17 +20,17 @@ export default function HeroSection() {
                         <span className="ml-2 text-yellow-400">⭐⭐⭐⭐☆</span>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight animate-slide-up">
-                        Your Trusted Partner <br /> for Electronic Device Insurance
+                        {t('heroTitle')}
                     </h1>
                     <p className="text-lg md:text-xl text-gray-200 mb-6 animate-slide-up animation-delay-200">
-                        Reliable coverage for all your devices, backed by decades of expertise.
+                        {t('heroSubtitle')}
                     </p>
                     <div className="flex justify-center md:justify-start space-x-4 mb-6 animate-slide-up animation-delay-400">
                         <Button
                             variant="default"
                             className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
                         >
-                            Get Individual Quotes
+                            {t('getStarted')}
                         </Button>
                         <Button
                             variant="destructive"

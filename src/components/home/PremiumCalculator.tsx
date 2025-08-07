@@ -3,6 +3,7 @@ import { Card, CardBody } from "@heroui/card";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Button } from "@heroui/button";
+import { useTranslation } from 'react-i18next';
 
 interface CalculatorState {
     deviceValue: number;
@@ -27,6 +28,8 @@ const coverageLevels = [
 ];
 
 export const PremiumCalculator = () => {
+    const { t } = useTranslation();
+
     const [calculator, setCalculator] = useState<CalculatorState>({
         deviceValue: 800,
         deviceType: "smartphone",
@@ -63,10 +66,10 @@ export const PremiumCalculator = () => {
             <div className="max-w-4xl mx-auto px-4">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                        Premium Calculator
+                        {t('premiumCalculatorTitle')}
                     </h2>
                     <p className="text-lg text-gray-600 dark:text-gray-300">
-                        Get an instant estimate for your device insurance premium
+                        {t('premiumCalculatorSubtitle')}
                     </p>
                 </div>
 
@@ -76,7 +79,7 @@ export const PremiumCalculator = () => {
                         <CardBody className="space-y-6">
                             <div>
                                 <label htmlFor="device-value" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Device Value ($)
+                                    {t('deviceValueLabel')}
                                 </label>
                                 <Input
                                     id="device-value"
@@ -85,13 +88,13 @@ export const PremiumCalculator = () => {
                                     onChange={(e) => updateCalculator('deviceValue', Number(e.target.value))}
                                     min={100}
                                     max={5000}
-                                    placeholder="Enter device value"
+                                    placeholder={t('enterDeviceValue')}
                                 />
                             </div>
 
                             <div>
                                 <label htmlFor="device-type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Device Type
+                                    {t('deviceTypeLabel')}
                                 </label>
                                 <Select
                                     id="device-type"
@@ -108,7 +111,7 @@ export const PremiumCalculator = () => {
 
                             <div>
                                 <label htmlFor="coverage-level" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Coverage Level
+                                    {t('coverageLevelLabel')}
                                 </label>
                                 <Select
                                     id="coverage-level"
@@ -128,7 +131,7 @@ export const PremiumCalculator = () => {
 
                             <div>
                                 <label htmlFor="deductible-range" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Deductible Amount: ${calculator.deductible}
+                                    {t('deductibleLabel', { amount: calculator.deductible })}
                                 </label>
                                 <input
                                     id="deductible-range"
@@ -152,28 +155,28 @@ export const PremiumCalculator = () => {
                     <Card className="p-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
                         <CardBody className="text-center space-y-6">
                             <div>
-                                <h3 className="text-2xl font-bold mb-2">Estimated Premium</h3>
+                                <h3 className="text-2xl font-bold mb-2">{t('estimatedPremium')}</h3>
                                 <div className="text-5xl font-bold text-yellow-300">
                                     ${estimatedPremium}
                                 </div>
-                                <p className="text-blue-100 mt-2">per year</p>
+                                <p className="text-blue-100 mt-2">{t('perYear')}</p>
                             </div>
 
                             <div className="space-y-3 text-left bg-white/10 rounded-lg p-4">
                                 <div className="flex justify-between">
-                                    <span>Device Value:</span>
+                                    <span>{t('deviceValue')}:</span>
                                     <span>${calculator.deviceValue}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span>Coverage:</span>
+                                    <span>{t('coverage')}:</span>
                                     <span>{selectedCoverage?.label}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span>Deductible:</span>
+                                    <span>{t('deductible')}:</span>
                                     <span>${calculator.deductible}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span>Monthly:</span>
+                                    <span>{t('monthly')}:</span>
                                     <span>${Math.round(estimatedPremium / 12)}</span>
                                 </div>
                             </div>
@@ -183,11 +186,11 @@ export const PremiumCalculator = () => {
                                 size="lg"
                                 className="w-full font-semibold"
                             >
-                                Get This Quote
+                                {t('getThisQuote')}
                             </Button>
 
                             <p className="text-xs text-blue-100">
-                                * This is an estimate. Final premium may vary based on additional factors.
+                                * {t('estimateDisclaimer')}
                             </p>
                         </CardBody>
                     </Card>

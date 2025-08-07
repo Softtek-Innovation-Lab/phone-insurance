@@ -7,8 +7,10 @@ import { Tabs, Tab } from "@heroui/tabs";
 import ProfileDetailsTab from "@/components/profile/ProfileDetailsTab";
 import ClaimsTab from "@/components/profile/ClaimsTab";
 import { User, FileText } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 export default function ProfilePage() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [selectedTab, setSelectedTab] = useState("details");
 
@@ -29,16 +31,15 @@ export default function ProfilePage() {
                             </div>
                         </CardBody>
                     </Card>
-
                     <Tabs
-                        aria-label="User Profile Tabs"
+                        aria-label={t('profileTabsAria')}
                         selectedKey={selectedTab}
                         onSelectionChange={(key) => setSelectedTab(key as string)}
                     >
                         <Tab key="details" title={
                             <div className="flex items-center space-x-2">
                                 <User />
-                                <span>Profile Details</span>
+                                <span>{t('profileDetailsTab')}</span>
                             </div>
                         }>
                             <ProfileDetailsTab />
@@ -46,7 +47,7 @@ export default function ProfilePage() {
                         <Tab key="claims" title={
                             <div className="flex items-center space-x-2">
                                 <FileText />
-                                <span>My Claims</span>
+                                <span>{t('myClaimsTab')}</span>
                             </div>
                         }>
                             <ClaimsTab />

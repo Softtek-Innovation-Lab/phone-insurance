@@ -15,6 +15,8 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useAuth } from "@/auth/AuthProvider";
 import { faker } from '@faker-js/faker';
+import { useTranslation } from 'react-i18next';
+
 // Static content removed - not needed with the new multi-step design
 
 // Mock cart item (initial data)
@@ -72,6 +74,7 @@ interface CustomerInfo {
 }
 
 export default function CartPage() {
+  const { t } = useTranslation();
   const { store, setStore, clearStore } = useGlobalStore();
   const { addNotification } = useNotification();
   const { user } = useAuth();
@@ -203,7 +206,7 @@ export default function CartPage() {
     console.log("🛒 Updated cart after filter:", updatedCart);
     console.log("🆔 Remaining IDs after removal:", updatedCart.map(item => `"${item.id}"`));
     setStore({ cart: updatedCart });
-    addNotification("Product removed from cart", "info");
+    addNotification(t('notification.productRemoved'), "info");
     console.log("🗑️ === REMOVE ITEM END ===");
   };
 
@@ -252,10 +255,10 @@ export default function CartPage() {
 
         setPolicyData(policyResponse);
         setCurrentStep('confirmation');
-        addNotification("Receipt generated successfully!", "success");
+        addNotification(t('notification.receiptGenerated'), "success");
       })
       .catch((error) => {
-        addNotification("Error generating receipt. Please try again.", "error");
+        addNotification(t('notification.errorGeneratingReceipt'), "error");
         console.error("Error generating receipt:", error);
       })
       .finally(() => {
@@ -269,10 +272,10 @@ export default function CartPage() {
       return (
         <div className="text-center py-16">
           <div className="text-6xl mb-4">🛒</div>
-          <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
-          <p className="text-gray-600 mb-6">Add some insurance products to get started</p>
+          <h2 className="text-2xl font-bold mb-2">{t('cart.emptyCartTitle')}</h2>
+          <p className="text-gray-600 mb-6">{t('cart.emptyCartMessage')}</p>
           <Button color="primary" onPress={() => navigate("/")}>
-            Browse Products
+            {t('cart.browseProducts')}
           </Button>
         </div>
       );
@@ -303,7 +306,7 @@ export default function CartPage() {
                       <p className="text-gray-600">{item.manufacturer} - {item.model}</p>
                       <div className="flex items-center mt-2">
                         <Shield className="w-4 h-4 text-green-500 mr-1" />
-                        <span className="text-sm text-green-600">Coverage: ${item.coverageAmount}</span>
+                        <span className="text-sm text-green-600">{t('cart.coverage')}: ${item.coverageAmount}</span>
                       </div>
                     </div>
                   </div>
@@ -312,19 +315,19 @@ export default function CartPage() {
                   <div className="space-y-2 text-sm">
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <span className="font-medium">Serial:</span>
+                        <span className="font-medium">{t('cart.serial')}:</span>
                         <p className="text-gray-600">{item.serialNumber}</p>
                       </div>
                       <div>
-                        <span className="font-medium">State:</span>
+                        <span className="font-medium">{t('cart.state')}:</span>
                         <p className="text-gray-600">{item.state}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Term:</span>
+                        <span className="font-medium">{t('cart.term')}:</span>
                         <p className="text-gray-600">{item.policyTerm}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Deductible:</span>
+                        <span className="font-medium">{t('cart.deductible')}:</span>
                         <p className="text-gray-600">{item.deductible}</p>
                       </div>
                     </div>
@@ -333,7 +336,7 @@ export default function CartPage() {
                   {/* Risk & Price */}
                   <div className="text-center">
                     <div className="mb-2">
-                      <span className="text-sm font-medium">Risk Factor:</span>
+                      <span className="text-sm font-medium">{t('cart.riskFactor')}:</span>
                       <div className={`inline-block ml-2 px-2 py-1 rounded-full text-xs font-medium ${item.riskFactor === 'low' ? 'bg-green-100 text-green-800' :
                         item.riskFactor === 'medium' ? 'bg-yellow-100 text-yellow-800' :
                           item.riskFactor === 'medium-high' ? 'bg-orange-100 text-orange-800' :
@@ -343,7 +346,7 @@ export default function CartPage() {
                       </div>
                     </div>
                     <div className="text-2xl font-bold text-primary">${item.unitPrice.toFixed(2)}</div>
-                    <div className="text-sm text-gray-500">per year</div>
+                    <div className="text-sm text-gray-500">{t('cart.perYear')}</div>
                   </div>
 
                   {/* Actions */}
@@ -376,7 +379,7 @@ export default function CartPage() {
                       onPress={() => removeItem(item.id)}
                       startContent={<Trash2 size={16} />}
                     >
-                      Remove
+                      {t('cart.remove')}
                     </Button>
                   </div>
                 </div>
@@ -388,7 +391,7 @@ export default function CartPage() {
         {/* Cart Actions */}
         <div className="flex justify-between items-center py-4">
           <Button variant="light" onPress={() => navigate("/")}>
-            Continue Shopping
+            {t('cart.continueShopping')}
           </Button>
           <div className="flex space-x-4">
             <Button
@@ -396,17 +399,17 @@ export default function CartPage() {
               color="danger"
               onPress={() => {
                 clearStore();
-                addNotification("Cart cleared", "info");
+                addNotification(t('notification.cartCleared'), "info");
               }}
             >
-              Clear Cart
+              {t('cart.clearCart')}
             </Button>
             <Button
               color="primary"
               size="lg"
               onPress={() => setCurrentStep('checkout')}
             >
-              Proceed to Checkout (${orderTotal.toFixed(2)})
+              {t('cart.proceedToCheckout')} (${orderTotal.toFixed(2)})
             </Button>
           </div>
         </div>
@@ -422,23 +425,23 @@ export default function CartPage() {
           <CardBody className="p-6">
             <h3 className="text-xl font-bold mb-4 flex items-center">
               <User className="mr-2" />
-              Customer Information
+              {t('checkout.customerInformation')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
-                label="First Name"
+                label={t('checkout.firstName')}
                 value={customerInfo.firstName}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, firstName: e.target.value })}
                 required
               />
               <Input
-                label="Last Name"
+                label={t('checkout.lastName')}
                 value={customerInfo.lastName}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, lastName: e.target.value })}
                 required
               />
               <Input
-                label="Email"
+                label={t('checkout.email')}
                 type="email"
                 value={customerInfo.email}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
@@ -446,7 +449,7 @@ export default function CartPage() {
                 required
               />
               <Input
-                label="Phone"
+                label={t('checkout.phone')}
                 type="tel"
                 value={customerInfo.phone}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
@@ -454,7 +457,7 @@ export default function CartPage() {
                 required
               />
               <Input
-                label="Address"
+                label={t('checkout.address')}
                 value={customerInfo.address}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, address: e.target.value })}
                 startContent={<MapPin size={18} />}
@@ -462,25 +465,25 @@ export default function CartPage() {
                 required
               />
               <Input
-                label="City"
+                label={t('checkout.city')}
                 value={customerInfo.city}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, city: e.target.value })}
                 required
               />
               <Input
-                label="State"
+                label={t('checkout.state')}
                 value={customerInfo.state}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, state: e.target.value })}
                 required
               />
               <Input
-                label="ZIP Code"
+                label={t('checkout.zipCode')}
                 value={customerInfo.zipCode}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, zipCode: e.target.value })}
                 required
               />
               <Input
-                label="Country"
+                label={t('checkout.country')}
                 value={customerInfo.country}
                 onChange={(e) => setCustomerInfo({ ...customerInfo, country: e.target.value })}
                 required
@@ -494,7 +497,7 @@ export default function CartPage() {
           <CardBody className="p-6">
             <h3 className="text-xl font-bold mb-4 flex items-center">
               <Package className="mr-2" />
-              Order Summary
+              {t('checkout.orderSummary')}
             </h3>
 
             <div className="space-y-4">
@@ -516,15 +519,15 @@ export default function CartPage() {
 
             <div className="mt-6 space-y-2">
               <div className="flex justify-between">
-                <span>Subtotal</span>
+                <span>{t('checkout.subtotal')}</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Processing Fee</span>
+                <span>{t('checkout.processingFee')}</span>
                 <span>${processingFee.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold pt-2 border-t">
-                <span>Total</span>
+                <span>{t('checkout.total')}</span>
                 <span>${orderTotal.toFixed(2)}</span>
               </div>
             </div>
@@ -538,14 +541,14 @@ export default function CartPage() {
                 isLoading={isGenerating}
                 startContent={!isGenerating && <CreditCard size={18} />}
               >
-                {isGenerating ? "Processing..." : "Complete Purchase"}
+                {isGenerating ? t('checkout.processing') : t('checkout.completePurchase')}
               </Button>
               <Button
                 variant="light"
                 className="w-full"
                 onPress={() => setCurrentStep('cart')}
               >
-                Back to Cart
+                {t('checkout.backToCart')}
               </Button>
             </div>
           </CardBody>
@@ -572,8 +575,8 @@ export default function CartPage() {
         {/* Success Header */}
         <div className="text-center space-y-4">
           <div className="text-6xl text-green-500 mb-4">✅</div>
-          <h2 className="text-3xl font-bold text-green-600">Thank you for your purchase!</h2>
-          <p className="text-lg text-gray-600">Your insurance is now active</p>
+          <h2 className="text-3xl font-bold text-green-600">{t('confirmation.thankYou')}</h2>
+          <p className="text-lg text-gray-600">{t('confirmation.insuranceActive')}</p>
         </div>
 
         {/* Complete Receipt */}
@@ -581,73 +584,73 @@ export default function CartPage() {
           <CardBody className="p-8">
             {/* Receipt Header */}
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold mb-2">Purchase Receipt</h1>
+              <h1 className="text-2xl font-bold mb-2">{t('confirmation.receiptTitle')}</h1>
               <p className="text-gray-600">{currentDate}</p>
             </div>
 
             {/* Policy Summary */}
             <div className="mb-8">
-              <h2 className="text-xl font-bold mb-4 text-primary">Policy Summary</h2>
+              <h2 className="text-xl font-bold mb-4 text-primary">{t('confirmation.policySummary')}</h2>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="space-y-3">
                   <div>
-                    <span className="font-medium">Policy Number:</span>
+                    <span className="font-medium">{t('confirmation.policyNumber')}:</span>
                     <p className="text-gray-800">{policyData?.PolicyNo ?? `POTRAV_PROP_MKT${faker.string.numeric(8)}`}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Holder:</span>
-                    <p className="text-gray-800">{customerInfo.firstName} {customerInfo.lastName} (Birth: {birthDate})</p>
+                    <span className="font-medium">{t('confirmation.holder')}:</span>
+                    <p className="text-gray-800">{customerInfo.firstName} {customerInfo.lastName} ({t('confirmation.birthDate')}: {birthDate})</p>
                   </div>
                   <div>
-                    <span className="font-medium">Customer ID:</span>
+                    <span className="font-medium">{t('confirmation.customerId')}:</span>
                     <p className="text-gray-800">{customerId}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Effective Date:</span>
+                    <span className="font-medium">{t('confirmation.effectiveDate')}:</span>
                     <p className="text-gray-800">{policyData?.EffectiveDate ?? new Date().toLocaleDateString('en-US')}</p>
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <span className="font-medium">Expiration Date:</span>
+                    <span className="font-medium">{t('confirmation.expirationDate')}:</span>
                     <p className="text-gray-800">{policyData?.ExpiryDate ?? new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toLocaleDateString('en-US')}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Gross Premium:</span>
+                    <span className="font-medium">{t('confirmation.grossPremium')}:</span>
                     <p className="text-gray-800">${grossPremium.toFixed(2)}</p>
                   </div>
                   <div>
-                    <span className="font-medium">VAT ({vatRate}%):</span>
+                    <span className="font-medium">{t('confirmation.vatRate')} ({vatRate}%):</span>
                     <p className="text-gray-800">${vat.toFixed(2)}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Total Premium:</span>
+                    <span className="font-medium">{t('confirmation.totalPremium')}:</span>
                     <p className="text-gray-800 font-bold text-lg">${totalPremium.toFixed(2)}</p>
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <span className="font-medium">Issue Date:</span>
+                    <span className="font-medium">{t('confirmation.issueDate')}:</span>
                     <p className="text-gray-800">{new Date(Date.now() - 24 * 60 * 60 * 1000).toLocaleDateString('en-US')}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Issuer:</span>
+                    <span className="font-medium">{t('confirmation.issuer')}:</span>
                     <p className="text-gray-800">{issuer}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Product:</span>
+                    <span className="font-medium">{t('confirmation.product')}:</span>
                     <p className="text-gray-800">{productCode} ({productVersion})</p>
                   </div>
                   <div>
-                    <span className="font-medium">Status:</span>
-                    <p className="text-green-600 font-medium">Active</p>
+                    <span className="font-medium">{t('confirmation.status')}:</span>
+                    <p className="text-green-600 font-medium">{t('confirmation.active')}</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-4">
                 <div>
-                  <span className="font-medium">Contact:</span>
+                  <span className="font-medium">{t('confirmation.contact')}:</span>
                   <p className="text-gray-800">{customerInfo.email}</p>
                 </div>
               </div>
@@ -657,7 +660,7 @@ export default function CartPage() {
 
             {/* Purchase Summary */}
             <div className="mb-8">
-              <h2 className="text-xl font-bold mb-4 text-primary">Purchase Summary:</h2>
+              <h2 className="text-xl font-bold mb-4 text-primary">{t('confirmation.purchaseSummary')}:</h2>
               <div className="space-y-4">
                 {cart.map((item) => (
                   <div key={`receipt-${item.id}`} className="flex justify-between items-center py-3 border-b border-gray-100">
@@ -672,13 +675,13 @@ export default function CartPage() {
                         <p className="text-sm text-gray-600">{item.manufacturer} {item.model}</p>
                         <div className="flex items-center mt-1">
                           <Shield className="w-4 h-4 text-green-500 mr-1" />
-                          <span className="text-sm text-green-600">Coverage: ${item.coverageAmount}</span>
+                          <span className="text-sm text-green-600">{t('confirmation.coverage')}: ${item.coverageAmount}</span>
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="font-bold">${(item.unitPrice * item.quantity).toFixed(2)}</p>
-                      <p className="text-sm text-gray-600">${item.unitPrice.toFixed(2)} each</p>
+                      <p className="text-sm text-gray-600">${item.unitPrice.toFixed(2)} {t('confirmation.each')}</p>
                     </div>
                   </div>
                 ))}
@@ -687,16 +690,16 @@ export default function CartPage() {
               {/* Totals */}
               <div className="mt-6 space-y-3">
                 <div className="flex justify-between text-lg">
-                  <span>Subtotal</span>
+                  <span>{t('confirmation.subtotal')}</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Processing Fee (USD)</span>
+                  <span>{t('confirmation.processingFee')} ({t('confirmation.usd')})</span>
                   <span>${processingFee.toFixed(2)}</span>
                 </div>
                 <Divider />
                 <div className="flex justify-between text-xl font-bold text-primary">
-                  <span>Order Total (USD)</span>
+                  <span>{t('confirmation.orderTotal')} ({t('confirmation.usd')})</span>
                   <span>${orderTotal.toFixed(2)}</span>
                 </div>
               </div>
@@ -704,17 +707,17 @@ export default function CartPage() {
 
             {/* Customer Information */}
             <div className="mb-6">
-              <h3 className="text-lg font-bold mb-3">Customer Information</h3>
+              <h3 className="text-lg font-bold mb-3">{t('confirmation.customerInformation')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p><strong>Name:</strong> {customerInfo.firstName} {customerInfo.lastName}</p>
-                  <p><strong>Email:</strong> {customerInfo.email}</p>
-                  <p><strong>Phone:</strong> {customerInfo.phone}</p>
+                  <p><strong>{t('confirmation.name')}:</strong> {customerInfo.firstName} {customerInfo.lastName}</p>
+                  <p><strong>{t('confirmation.email')}:</strong> {customerInfo.email}</p>
+                  <p><strong>{t('confirmation.phone')}:</strong> {customerInfo.phone}</p>
                 </div>
                 <div>
-                  <p><strong>Address:</strong> {customerInfo.address}</p>
-                  <p><strong>City:</strong> {customerInfo.city}, {customerInfo.state} {customerInfo.zipCode}</p>
-                  <p><strong>Country:</strong> {customerInfo.country}</p>
+                  <p><strong>{t('confirmation.address')}:</strong> {customerInfo.address}</p>
+                  <p><strong>{t('confirmation.city')}:</strong> {customerInfo.city}, {customerInfo.state} {customerInfo.zipCode}</p>
+                  <p><strong>{t('confirmation.country')}:</strong> {customerInfo.country}</p>
                 </div>
               </div>
             </div>
@@ -722,15 +725,15 @@ export default function CartPage() {
             {/* Policy Details */}
             {policyData && (
               <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                <h3 className="text-lg font-bold mb-3 text-blue-800">Additional Policy Information</h3>
+                <h3 className="text-lg font-bold mb-3 text-blue-800">{t('confirmation.additionalPolicyInfo')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p><strong>Policy Status Code:</strong> {policyData.PolicyStatus}</p>
-                    <p><strong>Organization Code:</strong> {policyData.OrgCode}</p>
+                    <p><strong>{t('confirmation.policyStatusCode')}:</strong> {policyData.PolicyStatus}</p>
+                    <p><strong>{t('confirmation.organizationCode')}:</strong> {policyData.OrgCode}</p>
                   </div>
                   <div>
-                    <p><strong>Issue User:</strong> {policyData.IssueUserRealName}</p>
-                    <p><strong>VAT Rate:</strong> {policyData.VatRate}%</p>
+                    <p><strong>{t('confirmation.issueUser')}:</strong> {policyData.IssueUserRealName}</p>
+                    <p><strong>{t('confirmation.vatRate')}:</strong> {policyData.VatRate}%</p>
                   </div>
                 </div>
               </div>
@@ -738,9 +741,9 @@ export default function CartPage() {
 
             {/* Footer */}
             <div className="text-center text-gray-600 text-sm mt-8 pt-6 border-t">
-              <p>Questions about your policy? Contact us at support@phoneinsurance.com</p>
-              <p>Policy documents will be sent to your email within 24 hours.</p>
-              <p className="mt-2 font-medium">Thank you for choosing our insurance services!</p>
+              <p>{t('confirmation.policyQuestions')}</p>
+              <p>{t('confirmation.policyDocuments')}</p>
+              <p className="mt-2 font-medium">{t('confirmation.thankYouForChoosing')}</p>
             </div>
           </CardBody>
         </Card>
@@ -752,14 +755,14 @@ export default function CartPage() {
             size="lg"
             onPress={() => navigate("/")}
           >
-            Continue Shopping
+            {t('confirmation.continueShopping')}
           </Button>
           <Button
             variant="bordered"
             size="lg"
             onPress={() => window.print()}
           >
-            Print Receipt
+            {t('confirmation.printReceipt')}
           </Button>
           <Button
             variant="light"
@@ -767,10 +770,10 @@ export default function CartPage() {
             onPress={() => {
               clearStore();
               setCurrentStep('cart');
-              addNotification("Starting new order", "info");
+              addNotification(t('notification.startingNewOrder'), "info");
             }}
           >
-            New Order
+            {t('confirmation.newOrder')}
           </Button>
           <Button
             variant="bordered"
@@ -778,7 +781,7 @@ export default function CartPage() {
             onPress={() => window.open("https://softtek-sandbox-am.insuremo.com/ui/admin/#/", "_blank")}
             className="border-blue-500 text-blue-600 hover:bg-blue-50"
           >
-            View in InsureMo
+            {t('confirmation.viewInInsureMo')}
           </Button>
         </div>
       </div>
@@ -793,9 +796,9 @@ export default function CartPage() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
               <ShoppingCart className="text-primary" />
-              {currentStep === 'cart' && 'Shopping Cart'}
-              {currentStep === 'checkout' && 'Checkout'}
-              {currentStep === 'confirmation' && 'Order Confirmation'}
+              {currentStep === 'cart' && t('cart.title')}
+              {currentStep === 'checkout' && t('checkout.title')}
+              {currentStep === 'confirmation' && t('confirmation.title')}
             </h1>
 
             {/* Step Indicator */}
@@ -806,7 +809,7 @@ export default function CartPage() {
                     }`}>
                     1
                   </div>
-                  <span className="ml-2 font-medium">Cart</span>
+                  <span className="ml-2 font-medium">{t('cart.step')}</span>
                 </div>
 
                 <div className={`w-16 h-1 ${currentStep !== 'cart' ? 'bg-primary' : 'bg-gray-300'}`}></div>
@@ -817,7 +820,7 @@ export default function CartPage() {
                     }`}>
                     2
                   </div>
-                  <span className="ml-2 font-medium">Checkout</span>
+                  <span className="ml-2 font-medium">{t('checkout.step')}</span>
                 </div>
 
                 <div className={`w-16 h-1 ${currentStep === 'confirmation' ? 'bg-primary' : 'bg-gray-300'}`}></div>
@@ -827,7 +830,7 @@ export default function CartPage() {
                     }`}>
                     3
                   </div>
-                  <span className="ml-2 font-medium">Confirmation</span>
+                  <span className="ml-2 font-medium">{t('confirmation.step')}</span>
                 </div>
               </div>
             </div>

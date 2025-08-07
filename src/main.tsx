@@ -5,6 +5,7 @@ import "@/styles/globals.css";
 import App from "./App.tsx";
 import { Provider } from "./provider.tsx";
 import { AuthProvider } from "./auth/AuthProvider.tsx";
+import './i18n';
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
