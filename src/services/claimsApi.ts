@@ -261,7 +261,9 @@ export const claimsApi = {
                 "LossCause": "01",
                 "FnolRemark": data.accidentDescription || "",
             }
-        }; return ky.post(
+        };
+
+        const fnolResponse = await ky.post(
             'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/business/v1/fnol',
             {
                 headers: {
@@ -280,6 +282,99 @@ export const claimsApi = {
                 json: payload
             }
         ).json();
+
+        // Después del FNOL exitoso, obtener el TaskId del siguiente paso
+
+        // 1. Obtener pending tasks
+        const pendingTasksResponse = await ky.post(
+            'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/taskAssignApproach/v1/getPendingTaskCreatedByOperation',
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'accept': 'application/json',
+                    'accept-language': 'en-US,en;q=0.9,es;q=0.8',
+                    'x-mo-env': 'am_uat',
+                    'x-mo-module-permission-code': 'NEWEST_CLAIM_TASK',
+                    'x-mo-module-ui-url': `https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.30910960076122096#/task/notice?ClaimNo=${claimNo}&TaskId=${taskId}`,
+                    'x-mo-tenant-id': 'softtek',
+                    'x-mo-user-identity': 'softtek_callcenter',
+                    'x-mo-user-name': 'softtek_callcenter',
+                    'Referer': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.30910960076122096'
+                },
+                json: {
+                    "currentTaskId": taskId,
+                    "isGetAuthUser": "Y"
+                }
+            }
+        ).json() as any;
+
+        // Obtener el CaseId del pending task
+        const pendingTask = pendingTasksResponse.Model?.PendingTasks?.[0];
+        if (!pendingTask) {
+            console.warn("No pending tasks found, skipping task assignment");
+            return fnolResponse;
+        }
+
+        const pendingCaseId = pendingTask.CaseId;
+
+        // 2. Obtener el TaskId específico para el task assignment
+        const transferTasksResponse = await ky.post(
+            `https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/api/v1/loadTransferPendingTasks?caseId=${pendingCaseId}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'accept': 'application/json',
+                    'accept-language': 'en-US,en;q=0.9,es;q=0.8',
+                    'x-mo-env': 'am_uat',
+                    'x-mo-module-permission-code': 'NEWEST_CLAIM_TASK',
+                    'x-mo-module-ui-url': `https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.30910960076122096#/task/notice?ClaimNo=${claimNo}&TaskId=${taskId}`,
+                    'x-mo-tenant-id': 'softtek',
+                    'x-mo-user-identity': 'softtek_callcenter',
+                    'x-mo-user-name': 'softtek_callcenter',
+                    'Referer': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.30910960076122096'
+                }
+            }
+        ).json() as any;
+
+        // Obtener el TaskId del primer task en la lista
+        const nextTask = transferTasksResponse.Model?.TaskList?.[0];
+        if (!nextTask) {
+            console.warn("No transfer tasks found, skipping task assignment");
+            return fnolResponse;
+        }
+
+        const nextTaskId = nextTask.TaskId;
+
+        // 3. Hacer el task assignment con el TaskId correcto
+        const taskAssignmentPayload = {
+            "@type": "ClaimRequestForm-ClaimRequestForm",
+            "TaskId": nextTaskId,
+            "ClaimNo": claimNo
+        };
+
+        await ky.post(
+            'https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/business/v1/taskAssignment',
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'accept': 'application/json',
+                    'accept-language': 'en-US,en;q=0.9,es;q=0.8',
+                    'x-mo-env': 'am_uat',
+                    'x-mo-module-permission-code': 'NEWEST_CLAIM_TASK',
+                    'x-mo-module-ui-url': `https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.2564593501463439#/task/notice?ClaimNo=${claimNo}&TaskId=${taskId}`,
+                    'x-mo-tenant-id': 'softtek',
+                    'x-mo-user-identity': 'softtek_callcenter',
+                    'x-mo-user-name': 'softtek_callcenter',
+                    'Referer': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.2564593501463439'
+                },
+                json: taskAssignmentPayload
+            }
+        );
+
+        return fnolResponse;
     },
 
     async openClaim(data: NewClaimData): Promise<ApiResponse<ClaimResponse>> {
