@@ -24,7 +24,7 @@ interface FNOLFormProps {
     onDataChange: (data: FNOLData) => void;
 }
 
-export default function FNOLForm({ policyNumber, productName, claimNo, taskId, onDataChange }: FNOLFormProps) {
+export default function FNOLForm({ policyNumber, productName, claimNo, taskId: _taskId, onDataChange }: FNOLFormProps) {
     const [formData, setFormData] = useState<FNOLData>({
         dateOfLoss: new Date().toISOString().slice(0, 16),
         reportDate: new Date().toISOString().slice(0, 16),
