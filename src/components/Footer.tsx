@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
     const [email, setEmail] = useState('');
     const footerRef = useRef(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         // Set up Intersection Observer for animation
@@ -48,12 +50,13 @@ const Footer = () => {
                     {/* Company Info */}
                     <div className="footer-column">
                         <div className="mb-4">
-                            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Device Insurance</h2>
+                            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{t('footer.companyDescription')}</h2>
                             <p className="text-gray-600 dark:text-gray-300 text-sm">
-                                Protecting your electronic devices with comprehensive coverage since 1975.
+                                {t('footer.companyDescription')}
                             </p>
                         </div>
                         <div className="flex space-x-4 mt-6">
+                            {/* Social icons remain unchanged */}
                             <a href="#" className="social-icon" aria-label="Facebook">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
@@ -83,46 +86,46 @@ const Footer = () => {
 
                     {/* Quick Links */}
                     <div className="footer-column">
-                        <h3 className="footer-title">Products</h3>
+                        <h3 className="footer-title">{t('footer.products')}</h3>
                         <ul className="footer-links">
-                            <li><a href="#">Phone Insurance</a></li>
-                            <li><a href="#">Laptop Insurance</a></li>
-                            <li><a href="#">Tablet Insurance</a></li>
-                            <li><a href="#">Camera Insurance</a></li>
-                            <li><a href="#">Wearables Insurance</a></li>
+                            <li><a href="#">{t('footer.phoneInsurance')}</a></li>
+                            <li><a href="#">{t('footer.laptopInsurance')}</a></li>
+                            <li><a href="#">{t('footer.tabletInsurance')}</a></li>
+                            <li><a href="#">{t('footer.cameraInsurance')}</a></li>
+                            <li><a href="#">{t('footer.wearablesInsurance')}</a></li>
                         </ul>
                     </div>
 
                     {/* Company */}
                     <div className="footer-column">
-                        <h3 className="footer-title">Company</h3>
+                        <h3 className="footer-title">{t('footer.company')}</h3>
                         <ul className="footer-links">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Press</a></li>
-                            <li><a href="#">Partners</a></li>
+                            <li><a href="#">{t('footer.aboutUs')}</a></li>
+                            <li><a href="#">{t('footer.careers')}</a></li>
+                            <li><a href="#">{t('footer.blog')}</a></li>
+                            <li><a href="#">{t('footer.press')}</a></li>
+                            <li><a href="#">{t('footer.partners')}</a></li>
                         </ul>
                     </div>
 
                     {/* Newsletter */}
                     <div className="footer-column">
-                        <h3 className="footer-title">Stay Updated</h3>
+                        <h3 className="footer-title">{t('footer.stayUpdated')}</h3>
                         <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                            Subscribe to our newsletter for the latest updates and offers.
+                            {t('footer.subscribeNewsletter')}
                         </p>
                         <form onSubmit={handleSubscribe} className="newsletter-form">
                             <div className="flex flex-col space-y-2">
                                 <Input
                                     type="email"
-                                    placeholder="Your email address"
+                                    placeholder={t('footer.yourEmail')}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
                                     className="bg-white dark:bg-gray-800"
                                 />
                                 <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white">
-                                    Subscribe
+                                    {t('footer.subscribe')}
                                 </Button>
                             </div>
                         </form>
@@ -133,17 +136,17 @@ const Footer = () => {
                 <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
                     <div className="flex flex-col md:flex-row justify-between items-center">
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-4 md:mb-0">
-                            © {new Date().getFullYear()} Device Insurance. All rights reserved.
+                            {t('footer.copyright', { year: new Date().getFullYear() })}
                         </div>
                         <div className="flex space-x-6">
                             <a className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                Privacy Policy
+                                {t('footer.privacyPolicy')}
                             </a>
                             <a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                Terms of Service
+                                {t('footer.termsOfService')}
                             </a>
                             <a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                Cookie Policy
+                                {t('footer.cookiePolicy')}
                             </a>
                         </div>
                     </div>

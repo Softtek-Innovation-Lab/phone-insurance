@@ -12,6 +12,7 @@ import { PolicyDetails } from "./PolicyDetails";
 import { CoverageDetails } from "./CoverageDetails";
 import { useDisclosure } from "@heroui/use-disclosure";
 import ProcessGuideModal from "./ProcessGuideModal";
+import { useTranslation } from "react-i18next";
 
 interface PurchasedPolicy {
     policyNo: string;
@@ -20,6 +21,7 @@ interface PurchasedPolicy {
 }
 
 export default function NewAccidentTab() {
+    const { t } = useTranslation();
     const [selectedPolicy, setSelectedPolicy] = useState("");
     const [dateOfLoss, setDateOfLoss] = useState("");
     const [purchasedPolicies, setPurchasedPolicies] = useState<PurchasedPolicy[]>([]);
@@ -40,7 +42,7 @@ export default function NewAccidentTab() {
         if (selectedPolicy && dateOfLoss) {
             dispatch(retrievePolicyDetails({ policyNo: selectedPolicy, accidentTime: dateOfLoss }));
         } else {
-            addNotification("Please select a policy and a date of loss.", "warning");
+            addNotification(t('newAccident.notification.selectPolicyAndDate'), "warning");
         }
     };
 
@@ -49,10 +51,10 @@ export default function NewAccidentTab() {
             dispatch(reportAccident({ policyNo: selectedPolicy, dateOfLoss }))
                 .unwrap()
                 .then((response) => {
-                    addNotification(`Accident reported successfully! Claim number: ${response.ClaimCase?.ClaimNo}`, "success");
+                    addNotification(t('newAccident.notification.reportSuccess', { claimNo: response.ClaimCase?.ClaimNo }), "success");
                 })
                 .catch(() => {
-                    addNotification("Failed to report accident.", "error");
+                    addNotification(t('newAccident.notification.reportFailed'), "error");
                 });
         }
     };
@@ -61,9 +63,9 @@ export default function NewAccidentTab() {
         <Card>
             <CardBody className="p-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold">Report a New Accident</h2>
+                    <h2 className="text-xl font-bold">{t('newAccident.title')}</h2>
                     <Button color="primary" onPress={onOpen} disabled={!currentClaimData}>
-                        Proceed with the process
+                        {t('newAccident.proceed')}
                     </Button>
                 </div>
 
@@ -71,32 +73,32 @@ export default function NewAccidentTab() {
                     <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                         <div className="flex items-center space-x-2 mb-4">
                             <CheckCircle className="w-6 h-6 text-green-600" />
-                            <h3 className="text-lg font-semibold text-green-800">Accident Reported Successfully!</h3>
+                            <h3 className="text-lg font-semibold text-green-800">{t('newAccident.successTitle')}</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
-                                <strong>Claim Number:</strong> {currentClaimData.ClaimCase?.ClaimNo}
+                                <strong>{t('newAccident.claimNumber')}</strong> {currentClaimData.ClaimCase?.ClaimNo}
                             </div>
                             <div>
-                                <strong>Task ID:</strong> {currentClaimData.TaskId}
+                                <strong>{t('newAccident.taskId')}</strong> {currentClaimData.TaskId}
                             </div>
                             <div>
-                                <strong>Product Name:</strong> {currentClaimData.ProductName}
+                                <strong>{t('newAccident.productName')}</strong> {currentClaimData.ProductName}
                             </div>
                             <div>
-                                <strong>Policy Holder:</strong> {currentClaimData.ClaimCase?.PolicyHolderName}
+                                <strong>{t('newAccident.policyHolder')}</strong> {currentClaimData.ClaimCase?.PolicyHolderName}
                             </div>
                             <div>
-                                <strong>Policy Number:</strong> {currentClaimData.ClaimCase?.PolicyNo}
+                                <strong>{t('newAccident.policyNumber')}</strong> {currentClaimData.ClaimCase?.PolicyNo}
                             </div>
                             <div>
-                                <strong>Accident Time:</strong> {currentClaimData.ClaimCase?.AccidentTime}
+                                <strong>{t('newAccident.accidentTime')}</strong> {currentClaimData.ClaimCase?.AccidentTime}
                             </div>
                             <div>
-                                <strong>Notice Time:</strong> {currentClaimData.ClaimCase?.NoticeTime}
+                                <strong>{t('newAccident.noticeTime')}</strong> {currentClaimData.ClaimCase?.NoticeTime}
                             </div>
                             <div>
-                                <strong>Status:</strong> {currentClaimData.ClaimCase?.CaseStatus === "01" ? "Open" : currentClaimData.ClaimCase?.CaseStatus}
+                                <strong>{t('newAccident.status')}</strong> {currentClaimData.ClaimCase?.CaseStatus === "01" ? t('newAccident.statusOpen') : currentClaimData.ClaimCase?.CaseStatus}
                             </div>
                         </div>
                     </div>
@@ -113,7 +115,7 @@ export default function NewAccidentTab() {
 
                 <div className="space-y-4">
                     <Select
-                        label="Select a Policy"
+                        label={t('newAccident.selectPolicy')}
                         selectedKeys={selectedPolicy ? [selectedPolicy] : []}
                         onSelectionChange={(keys) => {
                             const policyNo = Array.from(keys)[0] as string;
@@ -129,14 +131,14 @@ export default function NewAccidentTab() {
                         ))}
                     </Select>
                     <Input
-                        label="Date of Loss"
+                        label={t('newAccident.dateOfLoss')}
                         type="date"
                         value={dateOfLoss}
                         onValueChange={setDateOfLoss}
                         required
                     />
                     <Button onPress={handleRetrievePolicy} color="primary" isLoading={loading && !retrievedPolicy}>
-                        Search Policy
+                        {t('newAccident.searchPolicy')}
                     </Button>
                 </div>
                 {error && <p className="text-danger mt-4">{error}</p>}
@@ -147,7 +149,7 @@ export default function NewAccidentTab() {
 
                         <div className="text-right mt-6">
                             <Button onPress={handleReportAccident} color="success" isLoading={loading}>
-                                Confirm and Report Accident
+                                {t('newAccident.confirmAndReport')}
                             </Button>
                         </div>
                     </div>
