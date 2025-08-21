@@ -229,7 +229,9 @@ i18n
                             selectPolicyAndDate: 'Please select a policy and a date of loss.',
                             reportSuccess: 'Accident reported successfully! Claim number: {{claimNo}}',
                             reportFailed: 'Failed to report accident.',
-                        }
+                            completeAllFields: 'Please complete all required fields',
+                        },
+                        reportInformation: 'Report Information'
                     },
 
                     // Policy Details
@@ -448,7 +450,9 @@ i18n
                             selectPolicyAndDate: 'Por favor, seleccione una póliza y una fecha del siniestro.',
                             reportSuccess: '¡Siniestro reportado con éxito! Número de siniestro: {{claimNo}}',
                             reportFailed: 'Error al reportar el siniestro.',
-                        }
+                            completeAllFields: 'Por favor complete todos los campos requeridos',
+                        },
+                        reportInformation: 'Información del Reporte'
                     }
                 }
             }

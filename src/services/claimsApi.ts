@@ -258,7 +258,7 @@ export const claimsApi = {
                 "PolicyHolderName": policyHolderName,
                 "SettlementTimes": 0,
                 "EcsHasOtherPolicies": data.otherPolicies === 'yes' ? '1' : '0',
-                "LossCause": "01",
+                "LossCause":  data.causeOfLoss,
                 "FnolRemark": data.accidentDescription || "",
             }
         };
@@ -433,7 +433,7 @@ export const claimsApi = {
         return response;
     },
 
-    async reportAccidentWithPolicy(policyNo: string, dateOfLoss: string): Promise<ApiResponse<any>> {
+    async reportAccidentWithPolicy(policyNo: string, dateOfLoss: string, causeOfLoss?: string): Promise<ApiResponse<any>> {
         const token = await getCallCenterToken();
         if (!token) throw new Error("Could not authenticate call center");
 
@@ -444,7 +444,8 @@ export const claimsApi = {
             "ClaimCase": {
                 "@type": "ClaimCase-ClaimCase",
                 "PolicyNo": policyNo,
-                "AccidentTime": formatDateForApi(new Date(dateOfLoss))
+                "AccidentTime": formatDateForApi(new Date(dateOfLoss)),
+                ...(causeOfLoss && { "LossCause": causeOfLoss })
             },
             "IsManualPolicy": false
         };

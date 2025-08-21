@@ -70,8 +70,14 @@ export const submitStepData = createAsyncThunk(
 
 export const reportAccident = createAsyncThunk(
     'claims/reportAccident',
-    async ({ policyNo, dateOfLoss }: { policyNo: string, dateOfLoss: string }) => {
-        const response: ApiResponse<any> = await claimsApi.reportAccidentWithPolicy(policyNo, dateOfLoss);
+    async ({ policyNo, dateOfLoss, reportDate, causeOfLoss, fnolRemark }: { 
+        policyNo: string, 
+        dateOfLoss: string,
+        reportDate?: string,
+        causeOfLoss?: string,
+        fnolRemark?: string
+    }) => {
+        const response: ApiResponse<any> = await claimsApi.reportAccidentWithPolicy(policyNo, dateOfLoss, causeOfLoss);
         return response.Model; // Asumiendo que la respuesta contiene las coberturas
     }
 );

@@ -13,6 +13,8 @@ import { CoverageDetails } from "./CoverageDetails";
 import { useDisclosure } from "@heroui/use-disclosure";
 import ProcessGuideModal from "./ProcessGuideModal";
 import { useTranslation } from "react-i18next";
+import { processFNOL } from "@/services/claimService";
+import { formatDateForApi } from "@/utils/constants";
 
 interface PurchasedPolicy {
     policyNo: string;
@@ -24,6 +26,9 @@ export default function NewAccidentTab() {
     const { t } = useTranslation();
     const [selectedPolicy, setSelectedPolicy] = useState("");
     const [dateOfLoss, setDateOfLoss] = useState("");
+    const [reportDate, setReportDate] = useState("");
+    const [causeOfLoss, setCauseOfLoss] = useState("");
+    const [fnolRemark, setFnolRemark] = useState("");
     const [purchasedPolicies, setPurchasedPolicies] = useState<PurchasedPolicy[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error, retrievedPolicy, currentClaimData } = useSelector((state: RootState) => state.claims);
@@ -34,6 +39,9 @@ export default function NewAccidentTab() {
         // Cargar las pólizas desde localStorage al montar el componente
         const policies = JSON.parse(localStorage.getItem('purchasedPolicies') || '[]');
         setPurchasedPolicies(policies);
+
+        // Establecer fecha de reporte por defecto (fecha actual)
+        setReportDate(new Date().toISOString().split('T')[0]);
     }, []);
 
     const selectedPolicyData = purchasedPolicies.find(p => p.policyNo === selectedPolicy);
@@ -46,16 +54,43 @@ export default function NewAccidentTab() {
         }
     };
 
-    const handleReportAccident = () => {
-        if (selectedPolicy && dateOfLoss) {
-            dispatch(reportAccident({ policyNo: selectedPolicy, dateOfLoss }))
-                .unwrap()
-                .then((response) => {
-                    addNotification(t('newAccident.notification.reportSuccess', { claimNo: response.ClaimCase?.ClaimNo }), "success");
-                })
-                .catch(() => {
-                    addNotification(t('newAccident.notification.reportFailed'), "error");
-                });
+    const handleReportAccident = async () => {
+        if (selectedPolicy && dateOfLoss && reportDate && causeOfLoss) {
+            const reportData = {
+                policyNo: selectedPolicy,
+                dateOfLoss,
+                reportDate,
+                causeOfLoss,
+                fnolRemark: fnolRemark || ""
+            };
+
+            try {
+                const response = await dispatch(reportAccident(reportData)).unwrap();
+                addNotification(t('newAccident.notification.reportSuccess', { claimNo: response.ClaimCase?.ClaimNo }), "success");
+
+                // Ejecutar directamente processFNOL en lugar de abrir el modal
+                const fnolData = {
+                    dateOfLoss: formatDateForApi(new Date(dateOfLoss)),
+                    reportDate: formatDateForApi(new Date(reportDate)),
+                    causeOfLoss: causeOfLoss,
+                    catastropheCode: "",
+                    contactPerson: "",
+                    contactNumber: "",
+                    contactEmail: "",
+                    otherPolicies: "no",
+                    accidentAddress: "",
+                    accidentDescription: fnolRemark || ""
+                };
+
+                await processFNOL(selectedPolicy, fnolData, response.ClaimCase?.ClaimNo, response.TaskId);
+                addNotification("Proceso FNOL ejecutado exitosamente", "success");
+
+            } catch (error) {
+                addNotification(t('newAccident.notification.reportFailed'), "error");
+                console.error("Error en el proceso de reporte:", error);
+            }
+        } else {
+            addNotification(t('newAccident.notification.completeAllFields'), "warning");
         }
     };
 
@@ -122,7 +157,7 @@ export default function NewAccidentTab() {
                             const currentDate = new Date().toISOString().split('T')[0];
                             setSelectedPolicy(policyNo);
                             setDateOfLoss(currentDate);
-                            
+
                             if (policyNo && currentDate) {
                                 dispatch(retrievePolicyDetails({ policyNo, accidentTime: currentDate }));
                             }
@@ -141,7 +176,7 @@ export default function NewAccidentTab() {
                         value={dateOfLoss}
                         onValueChange={(newDate) => {
                             setDateOfLoss(newDate);
-                            
+
                             // Búsqueda automática cuando se cambia la fecha si ya hay una póliza seleccionada
                             if (selectedPolicy && newDate) {
                                 dispatch(retrievePolicyDetails({ policyNo: selectedPolicy, accidentTime: newDate }));
@@ -153,6 +188,42 @@ export default function NewAccidentTab() {
                         {t('newAccident.searchPolicy')}
                     </Button>
                 </div>
+
+                {/* Campos adicionales para el reporte */}
+                {retrievedPolicy && (
+                    <div className="mt-6 p-4 bg-blue-50 rounded-lg border space-y-4">
+                        <h3 className="text-lg font-semibold text-blue-800">{t('newAccident.reportInformation')}</h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Input
+                                label="Report Date"
+                                type="date"
+                                value={reportDate}
+                                onValueChange={setReportDate}
+                                required
+                            />
+
+                            <Select
+                                label="Cause of Loss"
+                                selectedKeys={causeOfLoss ? [causeOfLoss] : []}
+                                onSelectionChange={(keys) => setCauseOfLoss(Array.from(keys)[0] as string)}
+                                required
+                            >
+                                <SelectItem key="01">Explosion</SelectItem>
+                                <SelectItem key="02">Fire</SelectItem>
+                                <SelectItem key="03">Flood</SelectItem>
+                            </Select>
+                        </div>
+
+                        <Input
+                            label="FNOL Remark (Opcional)"
+                            placeholder="Descripción adicional del incidente..."
+                            value={fnolRemark}
+                            onValueChange={setFnolRemark}
+                        />
+                    </div>
+                )}
+
                 {error && <p className="text-danger mt-4">{error}</p>}
                 {retrievedPolicy && (
                     <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
