@@ -119,8 +119,13 @@ export default function NewAccidentTab() {
                         selectedKeys={selectedPolicy ? [selectedPolicy] : []}
                         onSelectionChange={(keys) => {
                             const policyNo = Array.from(keys)[0] as string;
+                            const currentDate = new Date().toISOString().split('T')[0];
                             setSelectedPolicy(policyNo);
-                            setDateOfLoss(new Date().toISOString().split('T')[0])
+                            setDateOfLoss(currentDate);
+                            
+                            if (policyNo && currentDate) {
+                                dispatch(retrievePolicyDetails({ policyNo, accidentTime: currentDate }));
+                            }
                         }}
                         required
                     >
@@ -134,7 +139,14 @@ export default function NewAccidentTab() {
                         label={t('newAccident.dateOfLoss')}
                         type="date"
                         value={dateOfLoss}
-                        onValueChange={setDateOfLoss}
+                        onValueChange={(newDate) => {
+                            setDateOfLoss(newDate);
+                            
+                            // Búsqueda automática cuando se cambia la fecha si ya hay una póliza seleccionada
+                            if (selectedPolicy && newDate) {
+                                dispatch(retrievePolicyDetails({ policyNo: selectedPolicy, accidentTime: newDate }));
+                            }
+                        }}
                         required
                     />
                     <Button onPress={handleRetrievePolicy} color="primary" isLoading={loading && !retrievedPolicy}>
