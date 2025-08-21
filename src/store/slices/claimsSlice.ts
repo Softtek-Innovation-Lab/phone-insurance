@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { claimsApi } from '@/services/claimsApi';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // --- Interfaces ---
 interface ApiResponse<T> {
@@ -70,7 +70,7 @@ export const submitStepData = createAsyncThunk(
 
 export const reportAccident = createAsyncThunk(
     'claims/reportAccident',
-    async ({ policyNo, dateOfLoss, reportDate, causeOfLoss, fnolRemark }: { 
+    async ({ policyNo, dateOfLoss, causeOfLoss }: { 
         policyNo: string, 
         dateOfLoss: string,
         reportDate?: string,
