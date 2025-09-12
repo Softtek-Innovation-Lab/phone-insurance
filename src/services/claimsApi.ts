@@ -149,7 +149,7 @@ export const getCallCenterToken = async () => {
                 'x-ebao-tenant-code': 'softtek',
             },
             json: {
-                username: 'softtek_callcenter',
+                username: 'softtek_callcenterop',
                 password: 'Softtek@2025',
             }
         }).json();
@@ -258,7 +258,7 @@ export const claimsApi = {
                 "PolicyHolderName": policyHolderName,
                 "SettlementTimes": 0,
                 "EcsHasOtherPolicies": data.otherPolicies === 'yes' ? '1' : '0',
-                "LossCause":  data.causeOfLoss,
+                "LossCause": data.causeOfLoss,
                 "FnolRemark": data.accidentDescription || "",
             }
         };
