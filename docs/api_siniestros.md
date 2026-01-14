@@ -48,4 +48,3 @@ Respuesta: confirmación de pago y cierre del caso.
 15. Consulta Final del Reclamo
 Datos de entrada: número de reclamo.
 Respuesta: estado final, comprobante de pago si aplica.
-2

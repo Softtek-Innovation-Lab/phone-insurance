@@ -11,6 +11,7 @@ import ipod from '@/assets/products/ipod.webp'
 import eReader from '@/assets/products/ereader.webp'
 import appleWatch from '@/assets/products/applewatch.webp'
 import smartwatch from '@/assets/products/watch.webp'
+import homeInsurance from '@/assets/products/home.webp'
 
 export const products = [
     {
@@ -180,5 +181,20 @@ export const products = [
         LimitDeductibleValue: 700,
         ProductElementCode: "TRAV_PROP_RISK_SMARTWATCH",
         ProductElementId: 789611484,
+    },
+    {
+        name: "Home Insurance",
+        image: homeInsurance,
+        category: "Home",
+        ProductCode: "HOMEOWNER_MKT",
+        ProductId: 906147921,
+        TechProductCode: "HOME_STK",
+        TechProductId: 906147910,
+        SumInsured: 50000,
+        PredefinedPremium: 500,
+        LimitDeductibleValue: 50000,
+        ProductElementCode: "HOMEOWNER_MKT",
+        ProductElementId: 906147922,
+        isHomeInsurance: true, // Flag para identificar seguros de hogar
     },
 ];

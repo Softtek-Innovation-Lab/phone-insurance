@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import CartPage from "@/pages/cart";
 import IndexPage from "@/pages/index";
 import InsurancePage from "./pages/insurance";
+import HomeInsurancePage from "./pages/home-insurance";
 import LoginPage from "./pages/login";
 import ProfilePage from "./pages/profile";
 import ProtectedRoute from "./auth/ProtectedRoute";
@@ -15,6 +16,7 @@ function App() {
     <Routes>
       <Route element={<IndexPage />} path="/" />
       <Route element={<InsurancePage />} path="/get-insurance/:productId" />
+      <Route element={<HomeInsurancePage />} path="/home-insurance" />
       <Route element={<CartPage />} path="/cart" />
       <Route element={<LoginPage />} path="/login" />
       <Route element={<ProtectedRoute />}>

@@ -18,6 +18,7 @@ const ProductsSection = () => {
         { name: "Computers", icon: "💻" },
         { name: "Tablets", icon: "📟" },
         { name: "Wearables", icon: "⌚" },
+        { name: "Home", icon: "🏠" },
         { name: "Other", icon: "📷" },
     ];
 
@@ -65,7 +66,12 @@ const ProductsSection = () => {
     }, []);
 
     const handleGetInsurance = (product: (typeof products)[0]) => {
-        navigate(`/get-insurance/${product.ProductId}`, { state: { product } })
+        // Redirigir a la página específica de seguros de hogar
+        if (product.isHomeInsurance) {
+            navigate('/home-insurance', { state: { product } });
+        } else {
+            navigate(`/get-insurance/${product.ProductId}`, { state: { product } });
+        }
     };
 
     const handleSearch = (query: string) => {
