@@ -89,9 +89,12 @@ export const Navbar = () => {
                   <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
                     {t('industrySolutions')}
                   </span>
-                  <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
+                  <Link
+                    to="/products-services"
+                    className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
+                  >
                     {t('productsAndServices')}
-                  </span>
+                  </Link>
                   <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
                     {t('whyTravelers')}
                   </span>
@@ -199,6 +202,13 @@ export const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t('claimsCentre')}
+                </Link>
+                <Link
+                  to="/products-services"
+                  className="block text-base font-medium text-gray-900 hover:text-red-600 transition-colors py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {t('productsAndServices')}
                 </Link>
                 
                 {/* User Section for Mobile */}

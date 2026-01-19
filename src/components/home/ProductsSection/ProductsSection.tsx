@@ -18,13 +18,13 @@ const ProductsSection = () => {
         { name: "Computers", icon: "💻" },
         { name: "Tablets", icon: "📟" },
         { name: "Wearables", icon: "⌚" },
-        { name: "Home", icon: "🏠" },
         { name: "Other", icon: "📷" },
     ];
 
     // Filter products based on category and search query
     useEffect(() => {
-        let filtered = products;
+        // Filtrar productos excluyendo Home Insurance
+        let filtered = products.filter(product => !product.isHomeInsurance);
 
         // Filter by category
         if (activeCategory !== 'All') {
