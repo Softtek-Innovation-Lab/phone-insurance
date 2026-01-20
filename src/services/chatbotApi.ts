@@ -10,28 +10,6 @@ interface LoginResponse {
     token_type: string;
 }
 
-interface AssistantMessage {
-    content: string;
-    role: string;
-    type: string;
-    tool_name: string | null;
-    token_usage: any;
-    id: string;
-    session_id: string;
-    user_id: string;
-    timestamp: string;
-    message_order: number;
-    files: any[];
-}
-
-interface ChatResponse {
-    user_message: any;
-    assistant_message: AssistantMessage;
-    session_id: string;
-    created_new_session: boolean;
-    session_tokens: any;
-}
-
 export const chatbotService = {
     /**
      * Login to get the Bearer token for chatbot API

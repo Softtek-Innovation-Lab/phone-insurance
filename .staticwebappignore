@@ -1,12 +1,21 @@
+# Azure Static Web Apps Ignore File
+# Solo deployar la carpeta dist/ y archivos de configuración necesarios
+
 # Dependencies
 node_modules/
 .pnp
 .pnp.js
 
-# Lock files (no se necesitan en deployment)
+# Lock files
 yarn.lock
 pnpm-lock.yaml
 package-lock.json
+
+# Source files (ya están compilados en dist/)
+src/
+
+# Public assets (ya están copiados en dist/)
+public/
 
 # Testing
 coverage/
@@ -20,7 +29,6 @@ __tests__/
 # Documentation
 docs/
 *.pdf
-*.yaml
 *.md
 !README.md
 
@@ -30,17 +38,10 @@ docs/
 .gitattributes
 
 # Environment files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env*
 
 # Logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # IDE
 .vscode/
@@ -53,9 +54,7 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Build artifacts (solo si no los necesitas)
-src/
-public/
+# Build config files (no se necesitan en runtime)
 *.config.js
 *.config.ts
 tsconfig*.json
@@ -63,12 +62,16 @@ tsconfig*.json
 .prettierrc*
 .editorconfig
 
-# Otros archivos de desarrollo
+# Development files
 Makefile
 compress-images.mjs
 vercel.json
 .npmrc
 components.json
 .deployignore
+.staticwebappignore
 .eslintignore
 LICENSE
+
+# Workflow files
+.github/
