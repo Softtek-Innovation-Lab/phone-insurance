@@ -29,6 +29,15 @@ export const Chatbot = () => {
     }, [messages]);
 
     useEffect(() => {
+        // Auto-open chatbot after 1 second delay
+        const timer = setTimeout(() => {
+            setIsOpen(true);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    useEffect(() => {
         // Initialize chatbot session when opened
         if (isOpen && messages.length === 0) {
             setMessages([
@@ -53,29 +62,41 @@ export const Chatbot = () => {
         };
 
         setMessages(prev => [...prev, userMessage]);
+        const currentInput = inputValue;
         setInputValue('');
         setIsLoading(true);
 
+        // Create a placeholder message for the assistant that will be updated in real-time
+        const assistantMessageId = (Date.now() + 1).toString();
+        const assistantMessage: Message = {
+            id: assistantMessageId,
+            role: 'assistant',
+            content: '',
+            timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, assistantMessage]);
+
         try {
-            const response = await chatbotService.sendPrompt(inputValue);
-            
-            const assistantMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                role: 'assistant',
-                content: response,
-                timestamp: new Date()
-            };
-
-            setMessages(prev => [...prev, assistantMessage]);
+            // Use the streaming version with a callback to update the message in real-time
+            await chatbotService.sendPrompt(currentInput, (chunk) => {
+                setMessages(prev => 
+                    prev.map(msg => 
+                        msg.id === assistantMessageId
+                            ? { ...msg, content: msg.content + chunk }
+                            : msg
+                    )
+                );
+            });
         } catch (error) {
-            const errorMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                role: 'assistant',
-                content: 'Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta nuevamente.',
-                timestamp: new Date()
-            };
-
-            setMessages(prev => [...prev, errorMessage]);
+            // Update the assistant message with an error
+            setMessages(prev => 
+                prev.map(msg => 
+                    msg.id === assistantMessageId
+                        ? { ...msg, content: 'Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta nuevamente.' }
+                        : msg
+                )
+            );
         } finally {
             setIsLoading(false);
         }
