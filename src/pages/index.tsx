@@ -4,6 +4,7 @@ import { StatsSection } from "@/components/home/StatsSection";
 import { PremiumCalculator } from "@/components/home/PremiumCalculator";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { FAQSection } from "@/components/home/FAQSection";
+import { Chatbot } from "@/components/Chatbot";
 import DefaultLayout from "@/layouts/default";
 
 const LandingPage = () => {
@@ -17,6 +18,7 @@ const LandingPage = () => {
         <PremiumCalculator />
         <TestimonialsSection />
         <FAQSection />
+        <Chatbot />
       </div >
     </DefaultLayout>
   );

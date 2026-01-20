@@ -272,10 +272,10 @@ export default function CartPage() {
       return (
         <div className="text-center py-16">
           <div className="text-6xl mb-4">🛒</div>
-          <h2 className="text-2xl font-bold mb-2">{t('cart.emptyCartTitle')}</h2>
-          <p className="text-gray-600 mb-6">{t('cart.emptyCartMessage')}</p>
+          <h2 className="text-2xl font-bold mb-2">{t('Empty Cart')}</h2>
+          <p className="text-gray-600 mb-6">{t('This cart is empty, please browse products')}</p>
           <Button color="primary" onPress={() => navigate("/")}>
-            {t('cart.browseProducts')}
+            {t('Browse Products')}
           </Button>
         </div>
       );
