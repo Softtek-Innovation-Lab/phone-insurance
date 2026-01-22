@@ -10,6 +10,16 @@ interface LoginResponse {
     token_type: string;
 }
 
+export interface SuggestedPrompt {
+    text: string;
+    prompt: string;
+}
+
+interface AgentResponse {
+    suggested_prompts: SuggestedPrompt[];
+    // Add other fields as needed
+}
+
 export const chatbotService = {
     /**
      * Login to get the Bearer token for chatbot API
@@ -190,6 +200,38 @@ export const chatbotService = {
             throw error;
         } finally {
             reader.releaseLock();
+        }
+    },
+
+    /**
+     * Get suggested prompts for the agent
+     */
+    async getSuggestedPrompts(): Promise<SuggestedPrompt[]> {
+        try {
+            // Ensure we have a token
+            let token = localStorage.getItem('chatbot_token');
+            if (!token) {
+                token = await this.login();
+                if (!token) {
+                    throw new Error('Failed to authenticate');
+                }
+            }
+
+            const response = await axios.get<AgentResponse>(
+                `${CHATBOT_API_URL}/agents/${AGENT_ID}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            return response.data.suggested_prompts || [];
+        } catch (error: any) {
+            console.error('Error fetching suggested prompts:', error);
+            // Return empty array on error to avoid breaking the UI
+            return [];
         }
     }
 };

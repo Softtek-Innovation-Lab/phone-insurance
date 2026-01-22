@@ -3,7 +3,7 @@ import { Button } from '@heroui/button';
 import { Input } from '@heroui/input';
 import { Card, CardBody, CardHeader, CardFooter } from '@heroui/card';
 import { Spinner } from '@heroui/spinner';
-import { chatbotService } from '@/services/chatbotApi';
+import { chatbotService, SuggestedPrompt } from '@/services/chatbotApi';
 import { MessageCircle, X, Send } from 'lucide-react';
 
 interface Message {
@@ -18,6 +18,7 @@ export const Chatbot = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [suggestedPrompts, setSuggestedPrompts] = useState<SuggestedPrompt[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
@@ -44,12 +45,29 @@ export const Chatbot = () => {
                 {
                     id: '1',
                     role: 'assistant',
-                    content: '¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?',
+                    content: '¡Hola! Soy tu asesor de seguros. ¿En qué puedo ayudarte hoy?',
                     timestamp: new Date()
                 }
             ]);
         }
     }, [isOpen]);
+
+    useEffect(() => {
+        // Fetch suggested prompts when chatbot opens
+        if (isOpen && suggestedPrompts.length === 0) {
+            const fetchSuggestedPrompts = async () => {
+                try {
+                    const prompts = await chatbotService.getSuggestedPrompts();
+                    setSuggestedPrompts(prompts);
+                } catch (error) {
+                    console.error('Error loading suggested prompts:', error);
+                    // Set empty array on error to prevent app crash
+                    setSuggestedPrompts([]);
+                }
+            };
+            fetchSuggestedPrompts();
+        }
+    }, [isOpen, suggestedPrompts.length]);
 
     const handleSendMessage = async () => {
         if (!inputValue.trim() || isLoading) return;
@@ -93,7 +111,7 @@ export const Chatbot = () => {
             setMessages(prev => 
                 prev.map(msg => 
                     msg.id === assistantMessageId
-                        ? { ...msg, content: 'Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta nuevamente.' }
+                        ? { ...msg, content: 'Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta nuevamente mas tarde.' }
                         : msg
                 )
             );
@@ -106,6 +124,54 @@ export const Chatbot = () => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSendMessage();
+        }
+    };
+
+    const handleSuggestedPromptClick = async (prompt: string) => {
+        if (isLoading) return;
+        
+        // Create user message
+        const userMessage: Message = {
+            id: Date.now().toString(),
+            role: 'user',
+            content: prompt,
+            timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, userMessage]);
+        setIsLoading(true);
+
+        // Create a placeholder message for the assistant
+        const assistantMessageId = (Date.now() + 1).toString();
+        const assistantMessage: Message = {
+            id: assistantMessageId,
+            role: 'assistant',
+            content: '',
+            timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, assistantMessage]);
+
+        try {
+            await chatbotService.sendPrompt(prompt, (chunk) => {
+                setMessages(prev => 
+                    prev.map(msg => 
+                        msg.id === assistantMessageId
+                            ? { ...msg, content: msg.content + chunk }
+                            : msg
+                    )
+                );
+            });
+        } catch (error) {
+            setMessages(prev => 
+                prev.map(msg => 
+                    msg.id === assistantMessageId
+                        ? { ...msg, content: 'Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta nuevamente mas tarde.' }
+                        : msg
+                )
+            );
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -133,7 +199,7 @@ export const Chatbot = () => {
                         <div className="flex items-center gap-2">
                             <MessageCircle size={24} />
                             <div>
-                                <h3 className="font-semibold text-lg">Asistente Virtual</h3>
+                                <h3 className="font-semibold text-lg">Kover</h3>
                                 <p className="text-xs opacity-90">Siempre disponible para ayudarte</p>
                             </div>
                         </div>
@@ -186,7 +252,26 @@ export const Chatbot = () => {
                     </CardBody>
 
                     {/* Input */}
-                    <CardFooter className="p-4 border-t border-gray-200 dark:border-gray-700">
+                    <CardFooter className="p-4 border-t border-gray-200 dark:border-gray-700 flex-col gap-3">
+                        {/* Suggested Prompts */}
+                        {suggestedPrompts.length > 0 && (
+                            <div className="flex flex-wrap gap-2 w-full">
+                                {suggestedPrompts.slice(0, 2).map((promptObj, index) => (
+                                    <Button
+                                        key={index}
+                                        size="sm"
+                                        variant="bordered"
+                                        className="flex-1 text-xs h-auto py-2 px-3 whitespace-normal min-h-[2.5rem]"
+                                        onPress={() => handleSuggestedPromptClick(promptObj.text)}
+                                        disabled={isLoading}
+                                    >
+                                        <span className="line-clamp-2">{promptObj.text}</span>
+                                    </Button>
+                                ))}
+                            </div>
+                        )}
+                        
+                        {/* Input Field */}
                         <div className="flex gap-2 w-full">
                             <Input
                                 value={inputValue}
