@@ -203,5 +203,7 @@ export interface HomeInsuranceQuoteResponse {
   data?: any;
   error?: string;
   policyId?: string;
+  policyNumber?: string;
+  proposalNo?: string;
   totalPremium?: number;
 }

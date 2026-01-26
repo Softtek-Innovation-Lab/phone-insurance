@@ -5,15 +5,28 @@ import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createHomeInsurancePolicy } from "@/services/homeInsuranceService";
+import { processHomeInsuranceApplication } from "@/services/homeInsuranceService";
 import type { HomeInsuranceFormData } from "@/types/homeInsurance";
 import { useNotification } from "@/providers/NotificationProvider";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
+import { useDisclosure } from "@heroui/use-disclosure";
 
 export default function HomeInsurancePage() {
   const navigate = useNavigate();
   const { addNotification } = useNotification();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isPaymentOpen, onOpen: onPaymentOpen, onClose: onPaymentClose } = useDisclosure();
+  const [calculationData, setCalculationData] = useState<any>(null);
+  const [paymentData, setPaymentData] = useState<any>(null);
+  const [confirmResolve, setConfirmResolve] = useState<((value: boolean) => void) | null>(null);
+  const [paymentResolve, setPaymentResolve] = useState<((value: boolean) => void) | null>(null);
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCVV, setCardCVV] = useState('');
+  const [cardName, setCardName] = useState('');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   
   // Datos del formulario
   const [formData, setFormData] = useState<Partial<HomeInsuranceFormData>>({
@@ -40,6 +53,81 @@ export default function HomeInsurancePage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Función de confirmación que muestra el modal
+  const handleCalculationConfirmation = async (calcData: any): Promise<boolean> => {
+    return new Promise((resolve) => {
+      setCalculationData(calcData);
+      setConfirmResolve(() => resolve);
+      onOpen();
+    });
+  };
+
+  // Handler para confirmar la póliza
+  const handleConfirm = () => {
+    if (confirmResolve) {
+      confirmResolve(true);
+      setConfirmResolve(null);
+    }
+    onClose();
+  };
+
+  // Handler para cancelar la póliza
+  const handleCancel = () => {
+    if (confirmResolve) {
+      confirmResolve(false);
+      setConfirmResolve(null);
+    }
+    onClose();
+    setLoading(false);
+  };
+
+  // Función de pago que muestra el modal de pago
+  const handlePaymentConfirmation = async (payData: any): Promise<boolean> => {
+    return new Promise((resolve) => {
+      setPaymentData(payData);
+      setPaymentResolve(() => resolve);
+      onPaymentOpen();
+    });
+  };
+
+  // Handler para confirmar el pago
+  const handlePaymentConfirm = async () => {
+    if (!cardNumber || !cardExpiry || !cardCVV || !cardName) {
+      addNotification("Please fill all card details", "error");
+      return;
+    }
+
+    setIsProcessingPayment(true);
+    
+    // Simular procesamiento de pago
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setIsProcessingPayment(false);
+    
+    if (paymentResolve) {
+      paymentResolve(true);
+      setPaymentResolve(null);
+    }
+    
+    // Limpiar datos de tarjeta
+    setCardNumber('');
+    setCardExpiry('');
+    setCardCVV('');
+    setCardName('');
+    
+    onPaymentClose();
+  };
+
+  // Handler para cancelar el pago
+  const handlePaymentCancel = () => {
+    if (paymentResolve) {
+      paymentResolve(false);
+      setPaymentResolve(null);
+    }
+    onPaymentClose();
+    setLoading(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -51,7 +139,7 @@ export default function HomeInsurancePage() {
     setLoading(true);
     
     try {
-      // Obtener datos del usuario (puedes mejorar esto con un contexto de usuario)
+      // Obtener datos del usuario
       const customerData = {
         name: "Test User",
         dateOfBirth: "1990-01-01T00:00:00",
@@ -66,13 +154,16 @@ export default function HomeInsurancePage() {
         gender: "M",
       };
 
-      const response = await createHomeInsurancePolicy(
+      // Usar el nuevo proceso completo con confirmación y pago
+      const response = await processHomeInsuranceApplication(
         formData as HomeInsuranceFormData,
-        customerData
+        customerData,
+        handleCalculationConfirmation,
+        handlePaymentConfirmation
       );
 
       if (response.success) {
-        addNotification("Home insurance policy created successfully!", "success");
+        addNotification(`Policy issued successfully! Policy Number: ${response.policyNumber}`, "success");
         navigate("/profile");
       } else {
         addNotification(response.error || "Error creating policy", "error");
@@ -489,6 +580,172 @@ export default function HomeInsurancePage() {
             </form>
           </Card>
         </div>
+
+        {/* Confirmation Modal */}
+        <Modal isOpen={isOpen} onClose={handleCancel} size="2xl">
+          <ModalContent>
+            <ModalHeader className="flex flex-col gap-1">
+              Premium Calculation
+            </ModalHeader>
+            <ModalBody>
+              {calculationData && (
+                <div className="space-y-4">
+                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <h3 className="text-xl font-bold text-green-700 dark:text-green-400">
+                      Proposal No: {calculationData.ProposalNo}
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Total Premium</p>
+                      <p className="text-2xl font-bold">${calculationData.TotalPremium?.toFixed(2)}</p>
+                    </div>
+                    <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Due Premium</p>
+                      <p className="text-2xl font-bold">${calculationData.DuePremium?.toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Gross Premium</p>
+                      <p className="font-semibold">${calculationData.GrossPremium?.toFixed(2)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Before VAT</p>
+                      <p className="font-semibold">${calculationData.BeforeVatPremium?.toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">VAT</p>
+                      <p className="font-semibold">${calculationData.Vat?.toFixed(2)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Commission</p>
+                      <p className="font-semibold">${calculationData.Commission?.toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                    <p className="text-sm text-blue-700 dark:text-blue-400">
+                      <strong>Policy Period:</strong> {new Date(calculationData.EffectiveDate).toLocaleDateString()} to {new Date(calculationData.ExpiryDate).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Do you want to proceed with this policy? Clicking "Accept" will bind and issue the policy.
+                  </p>
+                </div>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button variant="light" onPress={handleCancel}>
+                Cancel
+              </Button>
+              <Button color="primary" onPress={handleConfirm}>
+                Accept & Issue Policy
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* Payment Modal */}
+        <Modal isOpen={isPaymentOpen} onClose={handlePaymentCancel} size="2xl" isDismissable={false}>
+          <ModalContent>
+            <ModalHeader className="flex flex-col gap-1">
+              💳 Payment Information
+            </ModalHeader>
+            <ModalBody>
+              {paymentData && (
+                <div className="space-y-4">
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                    <h3 className="text-lg font-bold text-blue-700 dark:text-blue-400 mb-2">
+                      Order Summary
+                    </h3>
+                    <div className="space-y-1">
+                      <p className="text-sm">
+                        <strong>Total Premium:</strong> ${paymentData.TotalPremium?.toFixed(2)}
+                      </p>
+                      <p className="text-sm">
+                        <strong>Due Amount:</strong> ${paymentData.DuePremium?.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-md">Enter Card Details</h4>
+                    
+                    <Input
+                      label="Cardholder Name"
+                      placeholder="John Doe"
+                      value={cardName}
+                      onValueChange={setCardName}
+                      isRequired
+                    />
+
+                    <Input
+                      label="Card Number"
+                      placeholder="1234 5678 9012 3456"
+                      value={cardNumber}
+                      onValueChange={(value) => {
+                        // Format card number with spaces
+                        const formatted = value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
+                        setCardNumber(formatted);
+                      }}
+                      maxLength={19}
+                      isRequired
+                    />
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <Input
+                        label="Expiry Date"
+                        placeholder="MM/YY"
+                        value={cardExpiry}
+                        onValueChange={(value) => {
+                          // Format expiry date
+                          const formatted = value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1/$2');
+                          setCardExpiry(formatted);
+                        }}
+                        maxLength={5}
+                        isRequired
+                      />
+                      <Input
+                        label="CVV"
+                        placeholder="123"
+                        type="password"
+                        value={cardCVV}
+                        onValueChange={setCardCVV}
+                        maxLength={4}
+                        isRequired
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
+                    <p className="text-xs text-yellow-800 dark:text-yellow-400">
+                      🔒 This is a simulated payment. No real transaction will be processed.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button variant="light" onPress={handlePaymentCancel} isDisabled={isProcessingPayment}>
+                Cancel
+              </Button>
+              <Button 
+                color="primary" 
+                onPress={handlePaymentConfirm}
+                isLoading={isProcessingPayment}
+              >
+                {isProcessingPayment ? "Processing..." : "Pay Now"}
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </section>
     </DefaultLayout>
   );

@@ -416,9 +416,180 @@ export async function issueHomeInsurancePolicy(
     return {
       success: true,
       data,
+      policyNumber: data.PolicyNo,
     };
   } catch (error) {
     console.error('Error en issueHomeInsurancePolicy:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Error desconocido',
+    };
+  }
+}
+
+/**
+ * Proceso completo de creación de póliza con confirmación del usuario
+ * Pasos:
+ * 1. Login y obtener token
+ * 2. Crear propuesta (createOrSave) -> obtener ProposalNo
+ * 3. Calcular prima (calculate) -> mostrar al usuario
+ * 4. Usuario confirma
+ * 5. Bind (generar opción de compra)
+ * 6. Simulación de pago con tarjeta
+ * 7. Issue (generar número de póliza)
+ */
+export async function processHomeInsuranceApplication(
+  formData: HomeInsuranceFormData,
+  customerData: any,
+  onCalculated?: (calculationData: any) => Promise<boolean>, // Callback para confirmación del cálculo
+  onPayment?: (boundData: any) => Promise<boolean> // Callback para simulación de pago
+): Promise<HomeInsuranceQuoteResponse> {
+  try {
+    // Paso 1 y 2: Login automático incluido en authenticate()
+    console.log('Step 1-2: Authenticating...');
+    const accessToken = await authenticate();
+
+    // Paso 3: Crear propuesta
+    console.log('Step 3: Creating proposal...');
+    const payload = mapFormDataToAPIPayload(formData, customerData);
+    
+    const createResponse = await fetch(
+      `${INSUREMO_API_BASE_URL}/api-orchestration/v1/flow/easypa_createOrSave`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': '*/*',
+          'authorization': `Bearer ${accessToken}`,
+          'x-mo-tenant-id': TENANT_CODE,
+          'x-mo-env': 'kylin_dev',
+          'response-type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (!createResponse.ok) {
+      throw new Error('Error creating proposal');
+    }
+
+    const proposalData = await createResponse.json();
+    const proposalNo = proposalData.ProposalNo;
+    
+    console.log('Proposal created:', proposalNo);
+
+    // Paso 4: Calcular prima
+    console.log('Step 4: Calculating premium...');
+    const calculateResponse = await fetch(
+      `${INSUREMO_API_BASE_URL}/api-orchestration/v1/flow/easypa_calculate`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'authorization': `Bearer ${accessToken}`,
+          'x-mo-tenant-id': TENANT_CODE,
+          'x-mo-env': 'kylin_dev',
+        },
+        body: JSON.stringify(proposalData),
+      }
+    );
+
+    if (!calculateResponse.ok) {
+      throw new Error('Error calculating premium');
+    }
+
+    const calculatedData = await calculateResponse.json();
+    
+    console.log('Premium calculated:', calculatedData.TotalPremium);
+
+    // Si hay callback de confirmación, esperar respuesta del usuario
+    if (onCalculated) {
+      const userConfirmed = await onCalculated(calculatedData);
+      
+      if (!userConfirmed) {
+        return {
+          success: false,
+          error: 'User cancelled the application',
+        };
+      }
+    }
+
+    // Paso 5: Bind (enlazar póliza)
+    console.log('Step 5: Binding policy...');
+    const bindResponse = await fetch(
+      `${INSUREMO_API_BASE_URL}/api-orchestration/v1/flow/easypa_bind`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': '*/*',
+          'authorization': `Bearer ${accessToken}`,
+          'x-mo-tenant-id': TENANT_CODE,
+          'x-mo-env': 'kylin_dev',
+          'response-type': 'application/json',
+        },
+        body: JSON.stringify(calculatedData),
+      }
+    );
+
+    if (!bindResponse.ok) {
+      throw new Error('Error binding policy');
+    }
+
+    const boundData = await bindResponse.json();
+    
+    console.log('Policy bound successfully');
+
+    // Paso 6: Simulación de pago con tarjeta
+    if (onPayment) {
+      console.log('Step 6: Processing payment...');
+      const paymentConfirmed = await onPayment(boundData);
+      
+      if (!paymentConfirmed) {
+        return {
+          success: false,
+          error: 'Payment cancelled or failed',
+        };
+      }
+      console.log('Payment confirmed successfully');
+    }
+
+    // Paso 7: Issue (emitir póliza)
+    console.log('Step 7: Issuing policy...');
+    const issueResponse = await fetch(
+      `${INSUREMO_API_BASE_URL}/api-orchestration/v1/flow/easypa_issue`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': '*/*',
+          'authorization': `Bearer ${accessToken}`,
+          'x-mo-tenant-id': TENANT_CODE,
+          'x-mo-env': 'kylin_dev',
+          'response-type': 'application/json',
+        },
+        body: JSON.stringify(boundData),
+      }
+    );
+
+    if (!issueResponse.ok) {
+      throw new Error('Error issuing policy');
+    }
+
+    const issuedData = await issueResponse.json();
+    
+    console.log('Policy issued successfully:', issuedData.PolicyNo);
+
+    return {
+      success: true,
+      data: issuedData,
+      policyNumber: issuedData.PolicyNo,
+      proposalNo: proposalNo,
+      totalPremium: calculatedData.TotalPremium,
+    };
+  } catch (error) {
+    console.error('Error in processHomeInsuranceApplication:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error desconocido',
