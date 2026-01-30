@@ -14,7 +14,7 @@ const AGENT_CODE = 'PTY10000095006013';
 
 // Credenciales de API
 const API_USERNAME = 'softtek.api.test';
-const API_ENCRYPTED_PASSWORD = '*mo_encrypted_rsa*w77o4Zh20gt3N0MwcLOoWqTX8U3buR+P0r0IbuTQ4dRyl49hZpbvKhEpX/L1Cx99nlA+UN8zuwiQSfabt5ZC0NsuiS+hjpgiJ0VKs4iyMoruVn6ZXrDnyhnzNs+3NZBVgm3coHZMs3cSe+vTpxY8c90MYiYBQw01FSnlm+EkIkVynPS/Y+Q3AqidjvHMk/ZT0h+tmeP/DE1W5hyrta5x31xhS3bOyozGBCdIKXPeF632/8DRn4io7dXwLWmnOuXyzhVDArY9jtNQvHTEzDRr/7CsKKezkh9vg7ye4DrifkKvh/vdqptIKV2QEn+agzSs9lS2wUdYA13swYK+71aykg==';
+const API_ENCRYPTED_PASSWORD = '*mo_encrypted_rsa*wPrnrKJv8DryAiH59R/xJ1+ryhdDuyZvN+wFsxgsbSqbxrGTB7JWMbe8VAQ6mnCqgyaSl95Kz383Xn2SBlb/uSY9BN7V3xUxzXct1o0tCNuz449b4tyqqDhNtwWo8ZYrBafxjEGyngFd9bfDlGjmkfMKIUU9g3dbPgrIUzyozV6NlxGoWX/D7oTQGIe0bfJiVPQUxjDRnwjlsoML/LKZ+JRTrbK6wjp+PaFXSRivSGsMd5YK4F7lbwhC0IGYsSK7p+OzHvJh016HsFuYGe3M6L1iJMgVEeqkr8F4QkstA+hFuRvpaD/yVEtU0b4TAHGJg21h9yUGBrkvWmpbu4bE0A==';
 
 // IDs de productos para seguros de hogar
 const HOME_INSURANCE_PRODUCT = {
@@ -544,7 +544,15 @@ export async function processHomeInsuranceApplication(
     // Paso 6: Simulación de pago con tarjeta
     if (onPayment) {
       console.log('Step 6: Processing payment...');
-      const paymentConfirmed = await onPayment(boundData);
+      // Pasar boundData con los valores de prima del calculatedData
+      const paymentConfirmed = await onPayment({
+        ...boundData,
+        TotalPremium: calculatedData.TotalPremium,
+        DuePremium: calculatedData.DuePremium,
+        GrossPremium: calculatedData.GrossPremium,
+        BeforeVatPremium: calculatedData.BeforeVatPremium,
+        Vat: calculatedData.Vat,
+      });
       
       if (!paymentConfirmed) {
         return {
