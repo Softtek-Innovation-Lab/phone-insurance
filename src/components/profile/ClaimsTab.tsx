@@ -40,15 +40,31 @@ export default function ClaimsTab() {
                             <TableColumn>Product</TableColumn>
                             <TableColumn>Status</TableColumn>
                             <TableColumn>Amount</TableColumn>
+                            <TableColumn>Actions</TableColumn>
                         </TableHeader>
                         <TableBody>
                             {claims.map((claim: any) => (
-                                <TableRow key={claim.ClaimNo} onClick={() => navigate(`/claim/${claim.ClaimNo}`)} className="cursor-pointer hover:bg-gray-100">
-                                    <TableCell>{claim.ClaimNo}</TableCell>
-                                    <TableCell>{new Date(claim.AccidentTime).toLocaleDateString()}</TableCell>
-                                    <TableCell>{claim.ClaimObjectList[0]?.DamageObject}</TableCell>
-                                    <TableCell>{claim.CaseStatus}</TableCell>
-                                    <TableCell>{"$0.00"/* Lógica para obtener el monto */}</TableCell>
+                                <TableRow key={claim.ClaimNo}>
+                                    <TableCell>{claim.ClaimNo || 'N/A'}</TableCell>
+                                    <TableCell>
+                                        {claim.AccidentTime 
+                                            ? new Date(claim.AccidentTime).toLocaleDateString() 
+                                            : 'N/A'}
+                                    </TableCell>
+                                    <TableCell>
+                                        {claim.ClaimObjectList?.[0]?.DamageObject || 'N/A'}
+                                    </TableCell>
+                                    <TableCell>{claim.CaseStatus || 'N/A'}</TableCell>
+                                    <TableCell>$0.00</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            size="sm"
+                                            variant="light"
+                                            onPress={() => navigate(`/claim/${claim.ClaimNo}`)}
+                                        >
+                                            View Details
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

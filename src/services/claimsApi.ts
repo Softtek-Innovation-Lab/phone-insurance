@@ -3,6 +3,12 @@ import { formatDateForApi } from '@/utils/constants';
 import { FNOLData } from '@/components/claims/FNOLForm';
 
 const API_URL = 'https://ebaogi-gi-sandbox-am.insuremo.com/api/platform';
+const INSUREMO_BASE_URL = 'https://sandbox-am.insuremo.com';
+const TENANT_CODE = 'softtek';
+
+// Credenciales de API para autenticación Insuremo
+const API_USERNAME = 'softtek.api.test';
+const API_ENCRYPTED_PASSWORD = '*mo_encrypted_rsa*wPrnrKJv8DryAiH59R/xJ1+ryhdDuyZvN+wFsxgsbSqbxrGTB7JWMbe8VAQ6mnCqgyaSl95Kz383Xn2SBlb/uSY9BN7V3xUxzXct1o0tCNuz449b4tyqqDhNtwWo8ZYrBafxjEGyngFd9bfDlGjmkfMKIUU9g3dbPgrIUzyozV6NlxGoWX/D7oTQGIe0bfJiVPQUxjDRnwjlsoML/LKZ+JRTrbK6wjp+PaFXSRivSGsMd5YK4F7lbwhC0IGYsSK7p+OzHvJh016HsFuYGe3M6L1iJMgVEeqkr8F4QkstA+hFuRvpaD/yVEtU0b4TAHGJg21h9yUGBrkvWmpbu4bE0A==';
 
 // --- Instancia de KY con interceptor para Auth ---
 const api = ky.create({
@@ -139,7 +145,6 @@ export interface ClaimResponse {
 
 // --- Helper for Call Center Auth ---
 export const getCallCenterToken = async () => {
-
     try {
         // Usar un endpoint diferente para la autenticación del call center
         const loginApi = ky.create();
@@ -162,6 +167,75 @@ export const getCallCenterToken = async () => {
         console.error("Call Center Login failed:", error);
         return null;
     }
+};
+
+// --- Helper for Insuremo API Auth (login + exchange) ---
+interface InsuremoAuthResponse {
+    data: {
+        exchange_code: string;
+    };
+}
+
+interface InsuremoTokenResponse {
+    data: {
+        access_token: string;
+    };
+}
+
+async function login(): Promise<string> {
+    const response = await fetch(
+        `${INSUREMO_BASE_URL}/cas/v2/login?client_id=key&response_type=code&tenant_code=${TENANT_CODE}&redirect_uri=${INSUREMO_BASE_URL}&tenant_uri=https://${TENANT_CODE}-sandbox-am.insuremo.com/ui/admin/%23/&format=json`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json',
+            },
+            body: JSON.stringify({
+                username: API_USERNAME,
+                tenant_code: TENANT_CODE,
+                user_source_id: 'mo',
+                enc_password: API_ENCRYPTED_PASSWORD,
+                verification_type: '',
+                verification: '',
+                tenant_uri: `https://${TENANT_CODE}-sandbox-am.insuremo.com/ui/admin/#/`,
+            }),
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error('Error en autenticación');
+    }
+
+    const data: InsuremoAuthResponse = await response.json();
+    return data.data.exchange_code;
+}
+
+async function getAccessToken(exchangeCode: string): Promise<string> {
+    const response = await fetch(
+        `${INSUREMO_BASE_URL}/cas/oauth2.0/v2/consume?exchange_code=${exchangeCode}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json',
+                'x-mo-tenant-id': TENANT_CODE,
+            },
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error('Error obteniendo access token');
+    }
+
+    const data: InsuremoTokenResponse = await response.json();
+    return data.data.access_token;
+}
+
+export const authenticateInsuremo = async (): Promise<string> => {
+    const exchangeCode = await login();
+    const accessToken = await getAccessToken(exchangeCode);
+    return accessToken;
 };
 
 // --- Servicio de API ---
@@ -387,15 +461,40 @@ export const claimsApi = {
         }
     },
 
-    async queryClaim(claimNo?: string): Promise<ApiResponse<{ data: any[] }>> {
+    async queryClaim(userIdNumber?: string): Promise<ApiResponse<{ ClaimList: any[], PageNo: number, PageSize: number, Total: number }>> {
+        // Usar autenticación Insuremo (login + exchange) igual que easypa_createOrSave
+        const accessToken = await authenticateInsuremo();
+        
         const payload = {
+            "SortFieldsAndTypes": {
+                "AccidentTime": "desc"
+            },
             "PageNo": 1,
             "PageSize": 10,
-            "Parameters": {
-                "ClaimNo": claimNo || ""
-            }
+            "MultipleQuery": userIdNumber
         };
-        const response: ApiResponse<{ data: any[] }> = await api.post('easyclaim-core-v2/business/v1/queryClaim', { json: payload }).json();
+        
+        const response = await ky.post(
+            `https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/api/v1/queryClaim`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    'accept': '*/*',
+                    'accept-language': 'es-419,es;q=0.9,en;q=0.8',
+                    'referer': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.2714630512301402',
+                    'response-type': 'application/json',
+                    'x-mo-env': 'am_uat',
+                    'x-mo-tenant-id': TENANT_CODE,
+                    'x-mo-module-permission-code': 'NEWEST_CLAIM_QUERY',
+                    'x-mo-module-ui-url': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.27146305123014025#/claimQuery?apcforca=NEWEST_CLAIM_QUERY',
+                    'x-mo-user-identity': 'softtek.api.test',
+                    'x-mo-user-name': 'softtek.api.test',
+                },
+                json: payload
+            }
+        ).json() as any;
+        
         return response;
     },
 

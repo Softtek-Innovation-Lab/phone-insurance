@@ -1,9 +1,9 @@
 import { useState } from "react";
 import DefaultLayout from "@/layouts/default";
-import { Card, CardBody } from "@heroui/card";
 import { Tabs, Tab } from "@heroui/tabs";
 import { Shield, PlusCircle } from "lucide-react";
 import NewAccidentTab from "@/components/claims/NewAccidentTab";
+import ClaimsTab from "@/components/profile/ClaimsTab";
 import { useTranslation } from 'react-i18next';
 
 export default function ClaimsCentrePage() {
@@ -34,8 +34,7 @@ export default function ClaimsCentrePage() {
                                 <span>{t('myClaimsTab')}</span>
                             </div>
                         }>
-                            {/* Aquí se podría reutilizar el componente ClaimsTab o uno similar */}
-                            <Card><CardBody><p>{t('myClaimsSectionPlaceholder')}</p></CardBody></Card>
+                            <ClaimsTab />
                         </Tab>
                     </Tabs>
                 </div>

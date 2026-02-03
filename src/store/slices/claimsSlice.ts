@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // --- Interfaces ---
 interface ApiResponse<T> {
     Model: T;
+    Status?: string;
 }
 
 interface Task {
@@ -32,14 +33,41 @@ const initialState: ClaimsState = {
 };
 
 // --- Thunks ---
-export const fetchAllClaims = createAsyncThunk('claims/fetchAllClaims', async () => {
-    const response: ApiResponse<{ data: any[] }> = await claimsApi.queryClaim(); // Sin claimNo para obtener todos
-    return response.Model.data;
+export const fetchAllClaims = createAsyncThunk('claims/fetchAllClaims', async (_, { rejectWithValue }) => {
+    try {
+        // Obtener el ID del usuario desde localStorage o contexto
+        // Por ahora usamos el DUMMY_USER idNumber
+        const userIdNumber = "A123456789"; // Idealmente esto vendría del estado de auth
+        
+        const response: ApiResponse<{ ClaimList: any[], PageNo: number, PageSize: number, Total: number }> = await claimsApi.queryClaim(userIdNumber);
+        
+        if (response.Status === 'OK' && response.Model.ClaimList) {
+            return response.Model.ClaimList;
+        }
+        
+        return [];
+    } catch (error) {
+        return rejectWithValue('Failed to fetch claims');
+    }
 });
 
-export const fetchClaimDetails = createAsyncThunk('claims/fetchClaimDetails', async (claimNo: string) => {
-    const response: ApiResponse<{ data: any }> = await claimsApi.queryClaim(claimNo);
-    return response.Model.data;
+export const fetchClaimDetails = createAsyncThunk('claims/fetchClaimDetails', async (claimNo: string, { rejectWithValue }) => {
+    try {
+        // Para obtener detalles de un claim específico, necesitamos usar otra función o filtrar
+        // Por ahora, devolvemos un objeto vacío ya que esta función necesita ser revisada
+        const userIdNumber = "A123456789";
+        const response: ApiResponse<{ ClaimList: any[], PageNo: number, PageSize: number, Total: number }> = await claimsApi.queryClaim(userIdNumber);
+        
+        if (response.Status === 'OK' && response.Model.ClaimList) {
+            // Filtrar por el claimNo específico
+            const claim = response.Model.ClaimList.find((c: any) => c.ClaimNo === claimNo);
+            return claim ? [claim] : [];
+        }
+        
+        return [];
+    } catch (error) {
+        return rejectWithValue('Failed to fetch claim details');
+    }
 });
 
 export const fetchTasks = createAsyncThunk('claims/fetchTasks', async (claimNo: string) => {
