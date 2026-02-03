@@ -383,6 +383,29 @@ export async function bindHomeInsurancePolicy(
 }
 
 /**
+ * Limpiar boundData antes de enviar a easypa_issue
+ * - Si existe PolicyObject, desenvuelve su contenido al nivel raíz
+ * - Remueve UnderwritingResult
+ */
+function cleanBoundDataForIssue(boundData: any): any {
+  let cleanedData: any;
+  
+  // Si boundData tiene PolicyObject, desenvuelve su contenido
+  if (boundData.PolicyObject) {
+    cleanedData = { ...boundData.PolicyObject };
+  } else {
+    cleanedData = { ...boundData };
+  }
+  
+  // Remover UnderwritingResult si existe
+  if ('UnderwritingResult' in cleanedData) {
+    delete cleanedData.UnderwritingResult;
+  }
+  
+  return cleanedData;
+}
+
+/**
  * Emitir póliza (issue)
  */
 export async function issueHomeInsurancePolicy(
@@ -390,6 +413,9 @@ export async function issueHomeInsurancePolicy(
 ): Promise<HomeInsuranceQuoteResponse> {
   try {
     const accessToken = await authenticate();
+
+    // Limpiar boundData antes de enviarlo
+    const cleanedPolicyData = cleanBoundDataForIssue(policyData);
 
     const response = await fetch(
       `${INSUREMO_API_BASE_URL}/api-orchestration/v1/flow/easypa_issue`,
@@ -403,7 +429,7 @@ export async function issueHomeInsurancePolicy(
           'x-mo-env': 'kylin_dev',
           'response-type': 'application/json',
         },
-        body: JSON.stringify(policyData),
+        body: JSON.stringify(cleanedPolicyData),
       }
     );
 
@@ -565,6 +591,10 @@ export async function processHomeInsuranceApplication(
 
     // Paso 7: Issue (emitir póliza)
     console.log('Step 7: Issuing policy...');
+    
+    // Limpiar boundData antes de enviarlo a easypa_issue
+    const cleanedBoundData = cleanBoundDataForIssue(boundData);
+    
     const issueResponse = await fetch(
       `${INSUREMO_API_BASE_URL}/api-orchestration/v1/flow/easypa_issue`,
       {
@@ -577,7 +607,7 @@ export async function processHomeInsuranceApplication(
           'x-mo-env': 'kylin_dev',
           'response-type': 'application/json',
         },
-        body: JSON.stringify(boundData),
+        body: JSON.stringify(cleanedBoundData),
       }
     );
 
