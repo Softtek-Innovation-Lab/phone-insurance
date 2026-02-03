@@ -4,6 +4,7 @@ import CartPage from "@/pages/cart";
 import IndexPage from "@/pages/index";
 import InsurancePage from "./pages/insurance";
 import HomeInsurancePage from "./pages/home-insurance";
+import HomeInsuranceReceiptPage from "./pages/home-insurance-receipt";
 import ProductsServicesPage from "./pages/products-services";
 import LoginPage from "./pages/login";
 import ProfilePage from "./pages/profile";
@@ -18,6 +19,7 @@ function App() {
       <Route element={<IndexPage />} path="/" />
       <Route element={<InsurancePage />} path="/get-insurance/:productId" />
       <Route element={<HomeInsurancePage />} path="/home-insurance" />
+      <Route element={<HomeInsuranceReceiptPage />} path="/home-insurance-receipt" />
       <Route element={<ProductsServicesPage />} path="/products-services" />
       <Route element={<CartPage />} path="/cart" />
       <Route element={<LoginPage />} path="/login" />

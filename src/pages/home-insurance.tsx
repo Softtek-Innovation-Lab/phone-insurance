@@ -164,7 +164,19 @@ export default function HomeInsurancePage() {
 
       if (response.success) {
         addNotification(`Policy issued successfully! Policy Number: ${response.policyNumber}`, "success");
-        navigate("/profile");
+        
+        // Navegar a la página de recibo con los datos completos
+        navigate("/home-insurance-receipt", {
+          state: {
+            policyNumber: response.policyNumber,
+            proposalNo: response.proposalNo,
+            totalPremium: response.totalPremium,
+            issuedData: response.data,
+            calculatedData: response.data, // Los datos calculados ya están incluidos en response.data
+            formData: formData,
+            customerData: customerData,
+          }
+        });
       } else {
         addNotification(response.error || "Error creating policy", "error");
       }

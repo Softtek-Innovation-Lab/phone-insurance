@@ -619,9 +619,19 @@ export async function processHomeInsuranceApplication(
     
     console.log('Policy issued successfully:', issuedData.PolicyNo);
 
+    // Retornar con los datos completos incluyendo calculatedData
     return {
       success: true,
-      data: issuedData,
+      data: {
+        ...issuedData,
+        // Incluir los datos de cálculo para mostrar en el recibo
+        GrossPremium: calculatedData.GrossPremium,
+        BeforeVatPremium: calculatedData.BeforeVatPremium,
+        Vat: calculatedData.Vat,
+        TotalPremium: calculatedData.TotalPremium,
+        DuePremium: calculatedData.DuePremium,
+        Commission: calculatedData.Commission,
+      },
       policyNumber: issuedData.PolicyNo,
       proposalNo: proposalNo,
       totalPremium: calculatedData.TotalPremium,
