@@ -255,6 +255,10 @@ export default function CartPage() {
 
         setPolicyData(policyResponse);
         setCurrentStep('confirmation');
+        
+        // Limpiar el carrito después de generar exitosamente la póliza
+        setStore({ cart: [] });
+        
         addNotification(t('notification.receiptGenerated'), "success");
       })
       .catch((error) => {
