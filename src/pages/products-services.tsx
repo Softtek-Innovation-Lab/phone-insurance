@@ -72,16 +72,16 @@ const ProductsServicesPage = () => {
                 <div className="max-w-6xl mx-auto px-4">
                     <div className="text-center mb-12 product-title">
                         <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
-                            Productos y Servicios
+                            Products & Services
                         </h1>
                         <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg">
-                            Descubre nuestros productos de seguro para el hogar. Protección integral para tu casa y tus bienes.
+                            Discover our home insurance products. Comprehensive protection for your home and belongings.
                         </p>
                     </div>
 
                     <div className="mb-10 max-w-2xl mx-auto">
                         <SearchBar
-                            placeholder="Buscar productos..."
+                            placeholder="Search products..."
                             onSearch={handleSearch}
                         />
                     </div>
@@ -89,7 +89,7 @@ const ProductsServicesPage = () => {
                     {visibleProducts.length === 0 ? (
                         <div className="text-center py-12">
                             <p className="text-gray-500 dark:text-gray-400 text-lg">
-                                No se encontraron productos que coincidan con tu búsqueda.
+                                No products found matching your search.
                             </p>
                         </div>
                     ) : (

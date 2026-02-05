@@ -81,26 +81,26 @@ export const Navbar = () => {
                     {t('getInsuranceNav')}
                   </a>
                   <Link
-                    to="/claims-centre"
-                    className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
-                  >
-                    {t('claimsCentre')}
-                  </Link>
-                  <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
-                    {t('industrySolutions')}
-                  </span>
-                  <Link
                     to="/products-services"
                     className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
                   >
                     {t('productsAndServices')}
                   </Link>
                   <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
+                    {t('industrySolutions')}
+                  </span>
+                  <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
                     {t('whyTravelers')}
                   </span>
                   <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
                     {t('brokers')}
                   </span>
+                  <Link
+                    to="/claims-centre"
+                    className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
+                  >
+                    {t('claimsCentre')}
+                  </Link>
                 </div>
               </nav>
 

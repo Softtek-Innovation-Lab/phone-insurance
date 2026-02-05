@@ -85,7 +85,7 @@ const ProductsSection = () => {
             <div className="max-w-6xl mx-auto px-4">
                 <div className="text-center mb-12 product-title">
                     <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
-                        Our Insurance Products
+                        Our most popular insurance products
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                         Comprehensive coverage for all your electronic devices, with flexible plans tailored to your needs.
