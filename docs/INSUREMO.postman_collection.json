@@ -1,0 +1,1863 @@
+{
+  "info": {
+    "_postman_id": "ad686958-4e96-4027-9447-a7342bd8826a",
+    "name": "INSUREMO",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49506680",
+    "_collection_link": "https://go.postman.co/collection/49506680-ad686958-4e96-4027-9447-a7342bd8826a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "claim-common process",
+      "item": [
+        {
+          "name": "fnol",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "//var TaskId = jsonData.Model.TaskId;\r",
+                  "//var taskId = bar;\r",
+                  "//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+                  "pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+                  "//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+                  "//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+                  "// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ReportChannel\": \"2\",\r\n    \"OperationType\": \"2\",\r\n    \"ClaimCase\": {\r\n        \"@type\": \"ClaimCase-ClaimCase\",\r\n        \"AccidentTime\": \"2024-10-23T10:20:26\",\r\n        \"CaseStatus\": \"01\",\r\n        \"EcsIsFromApp\": \"N\",\r\n        \"EcsProductLineCode\": \"06\",\r\n        \"EcsProductVersion\": \"20241001_V01\",\r\n        \"FnolStatus\": \"01\",\r\n        \"NoticeTime\": \"2024-10-23T15:05:34\",\r\n        \"PolicyNo\": \"POX_EX_US_FURNWTY100000005\",\r\n        \"PolicyOrgCode\": \"77710\",\r\n        \"ProductCode\": \"X_EX_US_FURNWTY1\",\r\n        \"RecordType\": \"1\",\r\n        \"VersionSeq\": 2,\r\n        \"WithPolicy\": \"1\",\r\n        \"PolicyHolderName\": \"Jane Smith\",\r\n        \"SettlementTimes\": 0,\r\n        \"LossCause\": \"23\",\r\n        \"EcsHasOtherPolicies\": \"0\",\r\n        \"ClaimObjectList\": [\r\n            {\r\n                \"@type\": \"ClaimObject-ClaimObject\",\r\n                \"SequenceNo\": 1,\r\n                \"Property\": {\r\n                    \"@type\": \"EClaimProperty-EClaimProperty\"\r\n                },\r\n                \"DamageType\": \"02\",\r\n                \"RiskName\": 10868330056,\r\n                \"SubClaimType\": \"02\",\r\n                \"DamageObject\": \"Table\"\r\n            }\r\n        ],\r\n        \"FnolRemark\": \"\"\r\n    }\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/fnol",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "fnol"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "taskquery registration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "var TaskId = jsonData.Model.TaskInfoList[0].TaskId\r",
+                  "pm.environment.set(\"TaskId\",TaskId);\r",
+                  "pm.environment.set(\"CaseId\", jsonData.Model.TaskInfoList[0].CaseId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"AccidentTimeFrom\": \"\",\r\n    \"AccidentTimeTo\": \"\",\r\n    \"NoticeTimeFrom\": \"\",\r\n    \"NoticeTimeTo\": \"\",\r\n    \"PolicyNo\": \"\",\r\n    \"ProductLineCode\": \"\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"ClaimantName\": \"\",\r\n    \"PolicyHolderName\": \"\",\r\n    \"TaskType\":\"\",\r\n    \"MultipleQuery\": \"\",\r\n    \"PageNo\":\"1\",\r\n    \"PageSize\":\"100\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/api/v1/queryTask",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "api",
+                "v1",
+                "queryTask"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TaskAssignment registration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task Assignment successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/taskAssignment",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "taskAssignment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "load registration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"'jsonData.Model.ClaimCase.ClaimNo'\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "//var TaskId = jsonData.Model.TaskId;\r",
+                  "//var taskId = bar;\r",
+                  "\r",
+                  "\r",
+                  "//pm.response.text(jsonData.Model.ClaimCase.ClaimNo)\r",
+                  "\r",
+                  "pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase));\r",
+                  "pm.environment.set(\"AccidentTime\",jsonData.Model.ClaimCase.AccidentTime);\r",
+                  "pm.environment.set(\"ObjectId\",jsonData.Model.ClaimCase.ClaimObjectList[0].ObjectId);\r",
+                  "pm.environment.set(\"PropertyId\",jsonData.Model.ClaimCase.ClaimObjectList[0].Property.PropertyId);\r",
+                  "pm.environment.set(\"ClmPolicyId\",jsonData.Model.ClaimCase.ClmPolicyId);\r",
+                  "pm.environment.set(\"EcsUpdateTime\",jsonData.Model.ClaimCase.EcsUpdateTime);\r",
+                  "pm.environment.set(\"NoticeTime\",jsonData.Model.ClaimCase.NoticeTime);\r",
+                  "pm.environment.set(\"ProcessDefId\",jsonData.Model.ClaimCase.ProcessDefId);\r",
+                  "pm.environment.set(\"VersionSeq\",jsonData.Model.ClaimCase.VersionSeq);\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Registration Load successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"OperationType\": \"3\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\"\r\n}\r\n"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/registration",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "registration"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "registration submit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"'jsonData.Model.ClaimCase.ClaimNo'\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "//var TaskId = jsonData.Model.TaskId;\r",
+                  "//var taskId = bar;\r",
+                  "\r",
+                  "\r",
+                  "//pm.response.text(jsonData.Model.ClaimCase.ClaimNo)\r",
+                  "//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase));\r",
+                  "\r",
+                  "//pm.environment.set(\"ClaimCasepk\", jsonData.Model.ClaimCase[\"@pk\"]);\r",
+                  "//pm.environment.set(\"ClaimCaseBusinessObjectId\", jsonData.Model.ClaimCase.BusinessObjectId);\r",
+                  "//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+                  "\r",
+                  "//pm.environment.set(\"ClaimObjectListpk\", jsonData.Model.ClaimCase.ClaimObjectList[0][\"@pk\"]);\r",
+                  "//pm.environment.set(\"ClaimObjectListBusinessObjectId\", jsonData.Model.ClaimCase.ClaimObjectList[0].BusinessObjectId);\r",
+                  "//pm.environment.set(\"Injury\", JSON.stringify(jsonData.Model.ClaimCase.ClaimObjectList[0].Injury));\r",
+                  "//pm.environment.set(\"RiskName\", jsonData.Model.ClaimCase.ClaimObjectList[0].RiskName);\r",
+                  "//pm.environment.set(\"SubClaimType\", jsonData.Model.ClaimCase.ClaimObjectList[0].SubClaimType);\r",
+                  "\r",
+                  "//pm.environment.set(\"ClaimPartyList\", JSON.stringify(jsonData.Model.ClaimCase.ClaimPartyList[0]));\r",
+                  "\r",
+                  "//pm.environment.set(\"ClmPolicyId\", jsonData.Model.ClaimCase.ClmPolicyId);\r",
+                  "//pm.environment.set(\"VersionSeq\", jsonData.Model.ClaimCase.VersionSeq);\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Registration Load successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"OperationType\": \"2\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"UpdateReserve\": \"1\",\r\n    \"ClaimCase\": {{ClaimCase}}\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/registration",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "registration"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "taskquery calculation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "var TaskId = jsonData.Model.TaskInfoList[0].TaskId\r",
+                  "pm.environment.set(\"TaskId\",TaskId);\r",
+                  "pm.environment.set(\"CaseId\", jsonData.Model.TaskInfoList[0].CaseId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"AccidentTimeFrom\": \"\",\r\n    \"AccidentTimeTo\": \"\",\r\n    \"NoticeTimeFrom\": \"\",\r\n    \"NoticeTimeTo\": \"\",\r\n    \"PolicyNo\": \"\",\r\n    \"ProductLineCode\": \"\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"ClaimantName\": \"\",\r\n    \"PolicyHolderName\": \"\",\r\n    \"TaskType\":\"\",\r\n    \"MultipleQuery\": \"\",\r\n    \"PageNo\":\"1\",\r\n    \"PageSize\":\"100\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/api/v1/queryTask",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "api",
+                "v1",
+                "queryTask"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TaskAssignment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task Assignment successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/taskAssignment",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "taskAssignment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Calculation load",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var requestBody = pm.request.body.raw;\r",
+                  "var body_json = JSON.parse(requestBody);\r",
+                  "var requestTaskId = body_json.TaskId;\r",
+                  "console.log(\"requestTaskId:\", requestTaskId);\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "\r",
+                  "\r",
+                  "pm.environment.set(\"CreateDate\",jsonData.Model.CurrentCalculation.CreateDate);\r",
+                  "pm.environment.set(\"VersionSeq\",jsonData.Model.CurrentCalculation.VersionSeq);\r",
+                  "pm.environment.set(\"CalculationId\",jsonData.Model.CurrentCalculation.CalculationId);\r",
+                  "\r",
+                  "pm.test(\"Document Load successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\",\r\n    \"OperationType\": \"3\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\"\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/calculation",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "calculation"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Calculate",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Claiculation Submit successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"ClaimCalculateRequestForm-ClaimCalculateRequestForm\",\r\n    \"CurrentCalculation\": {\r\n        \"@pk\": \"\",\r\n        \"@type\": \"EClaimCalculation-EClaimCalculation\",\r\n        \"AdjustedAmount\": \"0.00\",\r\n        \"AdjustedTaxAmount\": \"0.00\",\r\n        \"BusinessObjectId\": \"\",\r\n        \"CalculationId\": {{CalculationId}},\r\n        \"CalculationStatus\": \"02\",\r\n        \"CaseId\": \"{{CaseId}}\",\r\n        \"CreateDate\": \"{{CreateDate}}\",\r\n        \"TaxAmount\": \"0.00\",\r\n        \"Times\": 1,\r\n        \"VersionSeq\": {{VersionSeq}},\r\n        \"CalculationItemList\": [\r\n            {\r\n                \"@type\": \"EClaimCalculationItem-EClaimCalculationItem\",\r\n                \"SequenceNumber\": 1,\r\n                \"ObjectId\": {{ObjectId}},\r\n                \"ReserveType\": \"01\",\r\n                \"CoverageCode\": \"MASTERFURNWTY0BASELAYERFURNITURETABLETOP\",\r\n                \"RequestedAmount\": 200,\r\n                \"RecognizedAmount\": 200,\r\n                \"PreviousRecognizedAmount\": 0,\r\n                \"TotalRecognizedAmount\": \"200.00\",\r\n                \"PreviousDepreciationAmount\": 0,\r\n                \"TotalDepreciationAmount\": 0,\r\n                \"PreviousDeductibleAmount\": 0,\r\n                \"TotalDeductibleAmount\": 0,\r\n                \"PreviousAdjustedAmount\": 0,\r\n                \"CalculatedAmount\": 0,\r\n                \"TaxAmount\": 0,\r\n                \"TotalAdjustedAmount\": 0,\r\n                \"ParameterData\": \"{}\",\r\n                \"AccidentLiabilityRatio\": 1\r\n            }\r\n        ]\r\n    }\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/atomic/v1/calculate/atomicApi",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "atomic",
+                "v1",
+                "calculate",
+                "atomicApi"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Calculation load",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var requestBody = pm.request.body.raw;\r",
+                  "var body_json = JSON.parse(requestBody);\r",
+                  "var requestTaskId = body_json.TaskId;\r",
+                  "console.log(\"requestTaskId:\", requestTaskId);\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "\r",
+                  "pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase));\r",
+                  "\r",
+                  "pm.environment.set(\"CurrentCalculation\",JSON.stringify(jsonData.Model.CurrentCalculation));\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Document Load successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\",\r\n    \"OperationType\": \"3\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\"\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/calculation",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "calculation"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Calculation submit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Claiculation Submit successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"OperationType\": \"2\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"ClaimCase\": {{ClaimCase}},\r\n    \"CurrentCalculation\": {{CurrentCalculation}}\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/calculation",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "calculation"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "taskquery Settlement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "var TaskId = jsonData.Model.TaskInfoList[0].TaskId\r",
+                  "pm.environment.set(\"TaskId\",TaskId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"AccidentTimeFrom\": \"\",\r\n    \"AccidentTimeTo\": \"\",\r\n    \"NoticeTimeFrom\": \"\",\r\n    \"NoticeTimeTo\": \"\",\r\n    \"PolicyNo\": \"\",\r\n    \"ProductLineCode\": \"\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"ClaimantName\": \"\",\r\n    \"PolicyHolderName\": \"\",\r\n    \"TaskType\":\"\",\r\n    \"MultipleQuery\": \"\",\r\n    \"PageNo\":\"1\",\r\n    \"PageSize\":\"100\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/api/v1/queryTask",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "api",
+                "v1",
+                "queryTask"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TaskAssignment Settlement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task Assignment successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/taskAssignment",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "taskAssignment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Settlement-load",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//var requestBody = pm.request.body.raw;\r",
+                  "//var body_json = JSON.parse(requestBody);\r",
+                  "//var requestTaskId = body_json.TaskId;\r",
+                  "//console.log(\"requestTaskId:\", requestTaskId);\r",
+                  "\r",
+                  "//var responseData = JSON.parse(responseBody);\r",
+                  "\r",
+                  "//delete responseData.Model['ProductName'];\r",
+                  "//delete responseData.Model['PolicyNo'];\r",
+                  "//delete responseData.Model['CaseId'];\r",
+                  "//delete responseData.Model['CaseStatus'];\r",
+                  "//delete responseData.Model['CalculationHistoryList'];\r",
+                  "//delete responseData.Model['ClaimTaskHistoryList'];\r",
+                  "\r",
+                  "//responseData.Model['TaskId'] = requestTaskId;\r",
+                  "//responseData.Model['@type'] = \"ClaimRequestForm-ClaimRequestForm\";\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase));\r",
+                  "pm.environment.set(\"CreateDate\",jsonData.Model.CurrentSettlement.CreateDate);\r",
+                  "pm.environment.set(\"EcsUpdateTime\",jsonData.Model.CurrentSettlement.EcsUpdateTime);\r",
+                  "pm.environment.set(\"SettlementId\",jsonData.Model.CurrentSettlement.SettlementId);\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "var VersionSeq=jsonData.Model.CurrentSettlement.VersionSeq;\r",
+                  "pm.environment.set(\"VersionSeq\",VersionSeq);\r",
+                  "\r",
+                  "\r",
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "pm.test(\"Settlement Load successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"@type\":\"ClaimRequestForm-ClaimRequestForm\",\n    \"OperationType\": \"3\",\n    \"ClaimNo\": \"{{ClaimNo}}\",\n    \"TaskId\": \"{{TaskId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/settlement",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "settlement"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Settlement -submit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Settlement Submit successfully\", function () {\r",
+                  "    pm.expect(jsonData.Status).to.eql('OK');\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ClaimNo\": \"{{ClaimNo}}\",\r\n    \"TaskId\": \"{{TaskId}}\",\r\n    \"CurrentSettlement\": {\r\n        \"@pk\": \"\",\r\n        \"@type\": \"EClaimSettlement-EClaimSettlement\",\r\n        \"BusinessObjectId\": \"\",\r\n        \"CaseId\": \"{{CaseId}}\",\r\n        \"CreateDate\": \"{{CreateDate}}\",\r\n        \"EcsUpdateTime\": \"{{EcsUpdateTime}}\",\r\n        \"SettleType\": \"01\",\r\n        \"SettlementId\": {{SettlementId}},\r\n        \"SettlementPayeeList\": [\r\n            {\r\n                \"@type\": \"EClaimSettlementPayee-EClaimSettlementPayee\",\r\n                \"PayModeCode\": \"04\",\r\n                \"SequenceNumber\": 1,\r\n                \"SettlementCurrency\": \"USD\",\r\n                \"SettlementItemList\": [\r\n                    {\r\n                        \"@type\": \"EClaimSettlementItem-EClaimSettlementItem\",\r\n                        \"CoverageCode\": \"MASTERFURNWTY0BASELAYERFURNITURETABLETOP\",\r\n                        \"EcsClaimSettlementAmount\": 200,\r\n                        \"EcsClaimTotalAmount\": 200,\r\n                        \"IndemnityAmount\": 200,\r\n                        \"ObjectId\": {{ObjectId}},\r\n                        \"PayeeSequenceNumber\": 1,\r\n                        \"ReserveType\": \"01\",\r\n                        \"SequenceNumber\": 1,\r\n                        \"SettlementAmount\": 200,\r\n                        \"PartialFinal\": \"01\"\r\n                    }\r\n                ],\r\n                \"SettlementTaxAmount\": \"200.00\",\r\n                \"PayeeExtendInfo\": {\r\n                    \"@type\": \"EClaimSettlementPayeeExtendInfo-EClaimSettlementPayeeExtendInfo\",\r\n                    \"DueDate\": \"\",\r\n                    \"IdentificationType\": \"\",\r\n                    \"IdentificationInfo\": \"\"\r\n                },\r\n                \"PayeeName\": \"Jane\",\r\n                \"BankAccountName\": \"Jane\",\r\n                \"BankName\": \"Bank\",\r\n                \"BankAccountNo\": \"4235345234\"\r\n            }\r\n        ],\r\n        \"SettlementStatus\": \"02\",\r\n        \"Times\": 1,\r\n        \"VersionSeq\": {{VersionSeq}}\r\n    },\r\n    \"ClaimCase\": {{ClaimCase}},\r\n    \"UpdateReserve\": \"1\",\r\n    \"OperationType\": \"2\"\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/settlement",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "settlement"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "query claim",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "//var TaskId = jsonData.Model.TaskId;\r",
+                  "//var taskId = bar;\r",
+                  "//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+                  "pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+                  "//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+                  "//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+                  "// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"SortFieldsAndTypes\": {\r\n        \"AccidentTime\": \"desc\"\r\n    },\r\n    \"PageNo\": 1,\r\n    \"PageSize\": 10,\r\n    \"ClaimNo\": \"{{ClaimNo}}\"\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/api/v1/queryClaim",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "api",
+                "v1",
+                "queryClaim"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "claim-auto finish",
+      "item": [
+        {
+          "name": "fnol",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "//var TaskId = jsonData.Model.TaskId;\r",
+                  "//var taskId = bar;\r",
+                  "//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+                  "pm.environment.set(\"ClaimNo2\", jsonData.Model.ClaimNo);\r",
+                  "//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+                  "//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+                  "// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ReportChannel\": \"2\",\r\n    \"OperationType\": \"2\",\r\n    \"ClaimCase\": {\r\n        \"@type\": \"ClaimCase-ClaimCase\",\r\n        \"AccidentTime\": \"2024-10-23T14:45:35\",\r\n        \"ClaimObjectList\": [\r\n            {\r\n                \"@type\": \"ClaimObject-ClaimObject\",\r\n                \"DamageType\": \"02\",\r\n                \"Property\": {\r\n                    \"@type\": \"EClaimProperty-EClaimProperty\"\r\n                },\r\n                \"SequenceNo\": 1,\r\n                \"StatusCode\": \"01\",\r\n                \"SubClaimType\": \"02\",\r\n                \"DamageObject\": \"Table\",\r\n                \"RiskName\": 10868330056\r\n            }\r\n        ],\r\n        \"EcsHasOtherPolicies\": \"0\",\r\n        \"EcsIsFromApp\": \"N\",\r\n        \"EcsProductLineCode\": \"06\",\r\n        \"EcsProductVersion\": \"20241001_V01\",\r\n        \"FnolRemark\": \"\",\r\n        \"FnolStatus\": \"01\",\r\n        \"LossCause\": \"19\",\r\n        \"NoticeTime\": \"2024-10-23T15:03:58\",\r\n        \"PolicyNo\": \"POX_EX_US_FURNWTY100000005\",\r\n        \"PolicyOrgCode\": \"77710\",\r\n        \"ProductCode\": \"X_EX_US_FURNWTY1\",\r\n        \"RecordType\": \"1\",\r\n        \"VersionSeq\": 3,\r\n        \"WithPolicy\": \"0\",\r\n        \"PolicyHolderName\": \"Jane Smith\",\r\n        \"SettlementTimes\": 0\r\n    },\r\n    \"ClaimCasePayeeList\": [\r\n        {\r\n            \"@type\": \"ClaimCasePayee-ClaimCasePayee\",\r\n            \"PayModeCode\": \"04\",\r\n            \"ClaimCasePayeeItemItemList\": [\r\n                {\r\n                    \"@type\": \"ClaimCasePayeeItem-ClaimCasePayeeItem\",\r\n                    \"PartialFinal\": \"01\",\r\n                    \"ReserveType\": \"01\",\r\n                    \"CoverageCode\": \"MASTERFURNWTY0BASELAYERFURNITUREASSEMBLYDEFECTS\",\r\n                    \"IndemnityAmount\": 1600,\r\n                    \"SettlementAmount\": 1600\r\n                }\r\n            ],\r\n            \"SettlementTaxAmount\": \"1600.00\",\r\n            \"PayeeName\": \"Jane\",\r\n            \"BankAccountName\": \"Jane\",\r\n            \"BankName\": \"Bank\",\r\n            \"BankAccountNo\": \"119834455344222\"\r\n        }\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v2/fnol",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v2",
+                "fnol"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "query claim",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "//var TaskId = jsonData.Model.TaskId;\r",
+                  "//var taskId = bar;\r",
+                  "//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+                  "pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+                  "//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+                  "//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+                  "// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"SortFieldsAndTypes\": {\r\n        \"AccidentTime\": \"desc\"\r\n    },\r\n    \"PageNo\": 1,\r\n    \"PageSize\": 10,\r\n    \"ClaimNo\": \"{{ClaimNo2}}\"\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/api/v1/queryClaim",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "api",
+                "v1",
+                "queryClaim"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "claim-without policy",
+      "item": [
+        {
+          "name": "open claim without policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "//var TaskId = jsonData.Model.TaskId;\r",
+                  "//var taskId = bar;\r",
+                  "//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+                  "//pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+                  "pm.environment.set(\"ClaimNo1\", jsonData.Model.ClaimCase.ClaimNo);\r",
+                  "//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+                  "// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"ClaimRequestForm-ClaimRequestForm\",\r\n    \"ReportChannel\": \"2\",\r\n    \"OperationType\": \"1\",\r\n    \"ClaimCase\": {\r\n        \"@type\": \"ClaimCase-ClaimCase\",\r\n        \"AccidentTime\": \"2024-10-23T14:32:07\",\r\n        \"ClaimObjectList\": [\r\n            {\r\n                \"@type\": \"ClaimObject-ClaimObject\",\r\n                \"DamageType\": \"02\",\r\n                \"Property\": {\r\n                    \"@type\": \"EClaimProperty-EClaimProperty\"\r\n                },\r\n                \"RiskName\": \"01\",\r\n                \"SequenceNo\": 1,\r\n                \"StatusCode\": \"01\",\r\n                \"SubClaimType\": \"02\",\r\n                \"DamageObject\": \"Table\"\r\n            }\r\n        ],\r\n        \"EcsHasOtherPolicies\": \"0\",\r\n        \"EcsIsFromApp\": \"N\",\r\n        \"EcsProductLineCode\": \"06\",\r\n        \"EcsProductVersion\": \"20241001_V01\",\r\n        \"FnolRemark\": \"\",\r\n        \"FnolStatus\": \"01\",\r\n        \"LossCause\": \"23\",\r\n        \"NoticeTime\": \"2024-10-23T16:33:58\",\r\n        \"ProductCode\": \"X_EX_US_FURNWTY1\",\r\n        \"RecordType\": \"1\",\r\n        \"VersionSeq\": 1,\r\n        \"WithPolicy\": \"0\",\r\n        \"SettlementTimes\": 0\r\n    }\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/business/v1/fnol",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "business",
+                "v1",
+                "fnol"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "query claim",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "tests[\"response code is 200\"] = responseCode.code === 200;\r",
+                  "var jsonData = pm.response.json();\r",
+                  "console.info(jsonData)\r",
+                  "//var TaskId = jsonData.Model.TaskId;\r",
+                  "//var taskId = bar;\r",
+                  "//pm.environment.set(\"TaskId\", jsonData.Model.TaskId);\r",
+                  "pm.environment.set(\"ClaimNo\", jsonData.Model.ClaimNo);\r",
+                  "//pm.environment.set(\"CaseId\", jsonData.Model.ClaimCase.CaseId);\r",
+                  "//pm.environment.set(\"ClaimCase\",JSON.stringify(jsonData.Model.ClaimCase))\r",
+                  "// JSON.parse(): 将一个 JSON 字符串转换为 JavaScript 对象。 JSON.stringify(): 于将 JavaScript 值转换为 JSON 字符串。 pm.environment.set(\"Tax\",JSON.stringify(Tax)) //获取 list 转成 json"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"SortFieldsAndTypes\": {\r\n        \"AccidentTime\": \"desc\"\r\n    },\r\n    \"PageNo\": 1,\r\n    \"PageSize\": 10,\r\n    \"ClaimNo\": \"{{ClaimNo1}}\"\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/easyclaim-core-v2/api/v1/queryClaim",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "easyclaim-core-v2",
+                "api",
+                "v1",
+                "queryClaim"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "policy-home insurance",
+      "item": [
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let json = pm.response.json();\r",
+                  "\r",
+                  "if (json.data && json.data.exchange_code) {\r",
+                  "    pm.environment.set(\"exchange_code\", json.data.exchange_code);\r",
+                  "    console.log(\"Exchange code actualizado:\", json.data.exchange_code);\r",
+                  "} else {\r",
+                  "    console.log(\"No se encontró el exchange_code en la respuesta.\");\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "accept",
+                "value": "application/json"
+              },
+              {
+                "key": "accept-language",
+                "value": "es-419,es;q=0.9,en;q=0.8"
+              },
+              {
+                "key": "content-type",
+                "value": "application/json; charset=UTF-8"
+              },
+              {
+                "key": "origin",
+                "value": "https://sandbox-am.insuremo.com"
+              },
+              {
+                "key": "priority",
+                "value": "u=1, i"
+              },
+              {
+                "key": "referer",
+                "value": "https://sandbox-am.insuremo.com/cas/login?client_id=key&response_type=code&tenant_code=softtek&redirect_uri=https:%2F%2Fsandbox-am.insuremo.com&tenant_uri=https:%2F%2Fsofttek-sandbox-am.insuremo.com%2Fui%2Fadmin%2F%23%2F"
+              },
+              {
+                "key": "sec-ch-ua",
+                "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+              },
+              {
+                "key": "sec-ch-ua-mobile",
+                "value": "?0"
+              },
+              {
+                "key": "sec-ch-ua-platform",
+                "value": "\"Windows\""
+              },
+              {
+                "key": "sec-fetch-dest",
+                "value": "empty"
+              },
+              {
+                "key": "sec-fetch-mode",
+                "value": "cors"
+              },
+              {
+                "key": "sec-fetch-site",
+                "value": "same-origin"
+              },
+              {
+                "key": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+              },
+              {
+                "key": "Cookie",
+                "value": "hubspotutk=0196f83fea4809487a4b01f1009797b3; _ga=GA1.2.142100382.1754589355; _ga_7BCFP03YV0=GS2.1.s1760969514$o2$g0$t1760969518$j56$l0$h0; __hstc=160866274.0196f83fea4809487a4b01f1009797b3.1754589356912.1760396014037.1760989862658.19"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"softtek.api.test\",\r\n    \"tenant_code\": \"softtek\",\r\n    \"user_source_id\": \"mo\",\r\n    \"enc_password\": \"*mo_encrypted_rsa*wPrnrKJv8DryAiH59R/xJ1+ryhdDuyZvN+wFsxgsbSqbxrGTB7JWMbe8VAQ6mnCqgyaSl95Kz383Xn2SBlb/uSY9BN7V3xUxzXct1o0tCNuz449b4tyqqDhNtwWo8ZYrBafxjEGyngFd9bfDlGjmkfMKIUU9g3dbPgrIUzyozV6NlxGoWX/D7oTQGIe0bfJiVPQUxjDRnwjlsoML/LKZ+JRTrbK6wjp+PaFXSRivSGsMd5YK4F7lbwhC0IGYsSK7p+OzHvJh016HsFuYGe3M6L1iJMgVEeqkr8F4QkstA+hFuRvpaD/yVEtU0b4TAHGJg21h9yUGBrkvWmpbu4bE0A==\",\r\n    \r\n    \"verification_type\": \"\",\r\n    \"verification\": \"\",\r\n    \"tenant_uri\": \"https://softtek-sandbox-am.insuremo.com/ui/admin/#/\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://sandbox-am.insuremo.com/cas/v2/login?client_id=key&response_type=code&tenant_code=softtek&redirect_uri=https://sandbox-am.insuremo.com&tenant_uri=https://softtek-sandbox-am.insuremo.com/ui/admin/%23/&format=json",
+              "protocol": "https",
+              "host": [
+                "sandbox-am",
+                "insuremo",
+                "com"
+              ],
+              "path": [
+                "cas",
+                "v2",
+                "login"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "key"
+                },
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "tenant_code",
+                  "value": "softtek"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://sandbox-am.insuremo.com"
+                },
+                {
+                  "key": "tenant_uri",
+                  "value": "https://softtek-sandbox-am.insuremo.com/ui/admin/%23/"
+                },
+                {
+                  "key": "format",
+                  "value": "json"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl 'https://sandbox-am.insuremo.com/cas/v2/login?client_id=key&response_type=code&tenant_code=softtek&redirect_uri=https://sandbox-am.insuremo.com&tenant_uri=https://softtek-sandbox-am.insuremo.com/ui/admin/%23/&format=json' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'accept-language: es-419,es;q=0.9,en;q=0.8' \\\r\n  -H 'content-type: application/json; charset=UTF-8' \\\r\n  -b 'hubspotutk=0196f83fea4809487a4b01f1009797b3; _ga=GA1.2.142100382.1754589355; _ga_7BCFP03YV0=GS2.1.s1760969514$o2$g0$t1760969518$j56$l0$h0; __hstc=160866274.0196f83fea4809487a4b01f1009797b3.1754589356912.1760396014037.1760989862658.19' \\\r\n  -H 'origin: https://sandbox-am.insuremo.com' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://sandbox-am.insuremo.com/cas/login?client_id=key&response_type=code&tenant_code=softtek&redirect_uri=https:%2F%2Fsandbox-am.insuremo.com&tenant_uri=https:%2F%2Fsofttek-sandbox-am.insuremo.com%2Fui%2Fadmin%2F%23%2F' \\\r\n  -H 'sec-ch-ua: \"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: same-origin' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' \\\r\n  --data-raw '{\"username\":\"aldair.chuman@softtek.com\",\"tenant_code\":\"softtek\",\"user_source_id\":\"mo\",\"enc_password\":\"*mo_encrypted_rsa*spJF5zqr/NIOtUFyZzpGdoI9O1a3/iZk5Bf9rSXBL5Lqq3aI6xfeoG4AUFkVAAh9c0Ve1bVkWJ7FJ9bGEBdr80Y8S9kJZk7aJWx2mnKQycK2VFVECUloDaqT8X4O30aSwFYKBEvb931cl4790cJ9yAgjC3H4qR41VG6LNJl6olFH/PR8yXuXbJlF3wBU6zrvlxgwsJ6unaEulL9+QTIse6YAwpLIpYDDAyBGJ2soUI6a/roJwA4Fz+s6BfH4fPbC/zUVwRmMis3ImG0sD2NbKMVIrkATXNJdAApxkY2INoeUBTMXWmAbPCuyH+aUyurgKxf79YkRRFgIROmZyDqOMw==\",\"verification_type\":\"\",\"verification\":\"\",\"tenant_uri\":\"https://softtek-sandbox-am.insuremo.com/ui/admin/#/\"}'"
+          },
+          "response": []
+        },
+        {
+          "name": "exchange_code",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let json = pm.response.json();\r",
+                  "\r",
+                  "if (json.data && json.data.access_token) {\r",
+                  "    pm.environment.set(\"access_token\", json.data.access_token);\r",
+                  "    console.log(\"Token actualizado:\", json.data.access_token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "accept",
+                "value": "application/json"
+              },
+              {
+                "key": "accept-language",
+                "value": "es-419,es;q=0.9,en;q=0.8"
+              },
+              {
+                "key": "content-length",
+                "value": "0"
+              },
+              {
+                "key": "content-type",
+                "value": "application/json; charset=UTF-8"
+              },
+              {
+                "key": "origin",
+                "value": "https://softtek-sandbox-am.insuremo.com"
+              },
+              {
+                "key": "priority",
+                "value": "u=1, i"
+              },
+              {
+                "key": "referer",
+                "value": "https://softtek-sandbox-am.insuremo.com/"
+              },
+              {
+                "key": "sec-ch-ua",
+                "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+              },
+              {
+                "key": "sec-ch-ua-mobile",
+                "value": "?0"
+              },
+              {
+                "key": "sec-ch-ua-platform",
+                "value": "\"Windows\""
+              },
+              {
+                "key": "sec-fetch-dest",
+                "value": "empty"
+              },
+              {
+                "key": "sec-fetch-mode",
+                "value": "cors"
+              },
+              {
+                "key": "sec-fetch-site",
+                "value": "same-site"
+              },
+              {
+                "key": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+              },
+              {
+                "key": "x-mo-module-ui-url",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/admin/?exchange_code=efd9eada2bb847679763080ae232739b&timestamp=1764863554000#/login"
+              },
+              {
+                "key": "x-mo-tenant-id",
+                "value": "softtek"
+              }
+            ],
+            "url": {
+              "raw": "https://sandbox-am.insuremo.com/cas/oauth2.0/v2/consume?exchange_code={{exchange_code}}",
+              "protocol": "https",
+              "host": [
+                "sandbox-am",
+                "insuremo",
+                "com"
+              ],
+              "path": [
+                "cas",
+                "oauth2.0",
+                "v2",
+                "consume"
+              ],
+              "query": [
+                {
+                  "key": "exchange_code",
+                  "value": "{{exchange_code}}"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl 'https://sandbox-am.insuremo.com/cas/oauth2.0/v2/consume?exchange_code=efd9eada2bb847679763080ae232739b' \\\r\n  -X 'POST' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'accept-language: es-419,es;q=0.9,en;q=0.8' \\\r\n  -H 'content-length: 0' \\\r\n  -H 'content-type: application/json; charset=UTF-8' \\\r\n  -H 'origin: https://softtek-sandbox-am.insuremo.com' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://softtek-sandbox-am.insuremo.com/' \\\r\n  -H 'sec-ch-ua: \"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: same-site' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' \\\r\n  -H 'x-mo-module-ui-url: https://softtek-sandbox-am.insuremo.com/ui/admin/?exchange_code=efd9eada2bb847679763080ae232739b&timestamp=1764863554000#/login' \\\r\n  -H 'x-mo-tenant-id: softtek'"
+          },
+          "response": []
+        },
+        {
+          "name": "easypa_createOrSave",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "accept",
+                "value": "*/*"
+              },
+              {
+                "key": "accept-language",
+                "value": "es-419,es;q=0.9,en;q=0.8"
+              },
+              {
+                "key": "authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "content-type",
+                "value": "application/json"
+              },
+              {
+                "key": "origin",
+                "value": "https://softtek-sandbox-am.insuremo.com"
+              },
+              {
+                "key": "priority",
+                "value": "u=1, i"
+              },
+              {
+                "key": "referer",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386"
+              },
+              {
+                "key": "response-type",
+                "value": "application/json"
+              },
+              {
+                "key": "sec-ch-ua",
+                "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+              },
+              {
+                "key": "sec-ch-ua-mobile",
+                "value": "?0"
+              },
+              {
+                "key": "sec-ch-ua-platform",
+                "value": "\"Windows\""
+              },
+              {
+                "key": "sec-fetch-dest",
+                "value": "empty"
+              },
+              {
+                "key": "sec-fetch-mode",
+                "value": "cors"
+              },
+              {
+                "key": "sec-fetch-site",
+                "value": "same-origin"
+              },
+              {
+                "key": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+              },
+              {
+                "key": "x-mo-env",
+                "value": "kylin_dev"
+              },
+              {
+                "key": "x-mo-module-permission-code",
+                "value": "NPD50"
+              },
+              {
+                "key": "x-mo-module-ui-url",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386#/policyManagement/HOMEOWNER_MKT"
+              },
+              {
+                "key": "x-mo-tenant-id",
+                "value": "softtek"
+              },
+              {
+                "key": "Cookie",
+                "value": "hubspotutk=0196f83fea4809487a4b01f1009797b3; _ga=GA1.2.142100382.1754589355; _ga_7BCFP03YV0=GS2.1.s1760969514$o2$g0$t1760969518$j56$l0$h0; __hstc=160866274.0196f83fea4809487a4b01f1009797b3.1754589356912.1760396014037.1760989862658.19; auth_code=df3df466-f2de-4326-baef-ba065bfe596e"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"EffectiveDate\": \"2025-12-04T00:00:00\",\r\n    \"ExpiryDate\": \"2026-12-03T23:59:59\",\r\n    \"PremiumCurrencyCode\": \"USD\",\r\n    \"BookCurrencyCode\": \"USD\",\r\n    \"PremiumBookExchangeRate\": 1,\r\n    \"PolicyCustomerList\": [\r\n        {\r\n            \"CustomerName\": \"asd\",\r\n            \"DateOfBirth\": \"2025-12-30T00:00:00\",\r\n            \"IdType\": \"1\",\r\n            \"IdNo\": \"123\",\r\n            \"City\": \"\",\r\n            \"State\": \"\",\r\n            \"Mobile\": \"\",\r\n            \"Email\": \"\",\r\n            \"PostCode\": \"\",\r\n            \"Address\": \"\",\r\n            \"AddressComplement\": \"\",\r\n            \"Gender\": \"F\",\r\n            \"CustomerType\": \"IndiCustomer\",\r\n            \"IsPolicyHolder\": \"Y\",\r\n            \"IsPep\": \"\",\r\n            \"MonthlyIncome\": \"\",\r\n            \"ConsentData\": \"\",\r\n            \"ConsentEmail\": \"\",\r\n            \"TipoGrupo\": \"\"\r\n        }\r\n    ],\r\n    \"PolicyLobList\": [\r\n        {\r\n            \"PolicyRiskList\": [\r\n                {\r\n                    \"HOIsPropertyOccupied\": \"0\", // Si 1 - No 0\r\n                    \"HODwellingUseTo\": \"Storage\", // Storage/OtherUse/Housing/Rental/CommercialUse/ANursingHome\r\n                    \"HOHowManyLiveProperty\": 20,\r\n                    \"HONumberFloors\": 2,\r\n                    \"HOPropertyInFloodZone\": \"0\", // Si 1 - No 0 \r\n                    \"HomeType\": \"Singlefamilyhome\", // Singlefamilyhome/Multifamilyhome/Villa/Chalet/Apartment/Mansion\r\n                    \"HOYearConstruction\": \"2025-12-04T00:00:00\",\r\n                    \"HOConstructionType\": \"Wood\", // Concrete/Wood/Stone/ConcreteReinforced/Drywall/Prefabricated\r\n                    \"BuildingArea\": 20000,\r\n                    \"HOLandArea\": 30000,\r\n                    \"HORCE\": 200.50,\r\n                    \"HONumberRooms\": 2,\r\n                    \"HODistanceFireHydrant\": 100.50,\r\n                    \"HODistanceFireStation\": \"10\",\r\n                    \"HOHaveGarage\": \"Y\", // Si Y - No N\r\n                    \"IsThereASwimmingPool\": \"1\", //Si 1 - No 0 \r\n                    \"HOPoolHaveARailing\": \"0\", //Si 1 - No 0 \r\n                    \"HOPoolHaveADivingBoard\": \"0\", //Si 1 - No 0\r\n                    \"TotalPrice\": 1000.30,\r\n                    \"HOAntiTheftAlarm\": \"1\", //Si 1 - No 0 \r\n                    \"HOSecurityBars\": \"Y\", // Si Y - No N\r\n                    \"HOSecurityCameras\": \"Y\", // Si Y - No N\r\n                    \"HOFireExtinguishers\": \"Y\", // Si Y - No N\r\n                    \"HOManyFireExtinguishers\": 2,\r\n                    \"HOHaveFireAlarm\": \"1\", //Si 1 - No 0 \r\n                    \"HOSprinkler\": \"Y\", // Si Y - No N\r\n                    \"HODoorsLocks\": \"Y\", // Si Y - No N\r\n                    \"HOSafe\": \"Y\", // Si Y - No N\r\n                    \"HOAnimals\": \"1\", //Si 1 - No 0 \r\n                    \"HOElectronicEquipment\": 200.80,\r\n                    \"HOJewelry\": 404.12,\r\n                    \"Address1\": \"Direccion 1\",\r\n                    \"Address2\": \"Direccion 2\",\r\n                    \"Address3\": \"Direccion 3\",\r\n                    \"FullAddress\": \"Direccion 4\",\r\n                    \"District\": \"LIM\",\r\n                    \"Province\": \"LIM\",\r\n                    \"Department\": \"PER\",\r\n                    \"Country\": \"PER\",\r\n                    \"Longitude\": \"1231241\",\r\n                    \"Latitude\": \"12412412\",\r\n                    \"PostalCode\": \"123456\",\r\n                    \"ProductElementCode\": \"DWELLING_RISK\",\r\n                    \"ProductElementId\": 906624903,\r\n                    \"RiskName\": \"ProductElement\",\r\n                    \"VersionSeq\": 1,\r\n                    \"PolicyCoverageList\": [\r\n                        {\r\n                            \"ProductElementCode\": \"HOUSENATURPHENOM_COV\",\r\n                            \"CoverageName\": \"Fenómenos Naturales\",\r\n                            \"SumInsured\": 1212\r\n                        }\r\n                    ]\r\n                }\r\n            ],\r\n            \"ProductId\": 906147921,\r\n            \"ProductCode\": \"HOMEOWNER_MKT\",\r\n            \"ProductElementCode\": \"HOMEOWNER_MKT\",\r\n            \"TechProductCode\": \"HOME_STK\",\r\n            \"TechProductId\": 906147910,\r\n            \"VersionSeq\": 1,\r\n            \"PolicyFormList\": []\r\n        }\r\n    ],\r\n    \"PolicyPaymentInfoList\": [\r\n        {\r\n            \"PayModeCode\": 100,\r\n            \"IsInstallment\": \"N\",\r\n            \"InstallmentType\": \"10\",\r\n            \"BillingType\": \"1\"\r\n        }\r\n    ],\r\n    \"ProposalStatus\": \"1\",\r\n    \"PolicyType\": \"1\",\r\n    \"ProductId\": 906147921,\r\n    \"ProductVersion\": \"1.0\",\r\n    \"ProductCode\": \"HOMEOWNER_MKT\",\r\n    \"CampaignDiscountList\": [\r\n        {\r\n            \"DiscountType\": \"01\",\r\n            \"DiscountCode\": \"01\",\r\n            \"Percentage\": -0.1,\r\n            \"Comments\": \"\"\r\n        },\r\n        {\r\n            \"DiscountType\": \"02\",\r\n            \"DiscountCode\": \"03\",\r\n            \"Percentage\": 0,\r\n            \"Comments\": \"\"\r\n        }\r\n    ],\r\n    \"ProposalDate\": \"2025-12-04T00:00:00\",\r\n    \"OrgCode\": \"softtek\",\r\n    \"AgentCode\": \"PTY10000095006013\",\r\n    \"PolicyAgentList\": [],\r\n    \"LocalCurrencyCode\": \"USD\",\r\n    \"PremiumLocalExchangeRate\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_createOrSave",
+              "protocol": "https",
+              "host": [
+                "softtek-sandbox-am",
+                "insuremo",
+                "com"
+              ],
+              "path": [
+                "api",
+                "softtek",
+                "api-orchestration",
+                "v1",
+                "flow",
+                "easypa_createOrSave"
+              ]
+            },
+            "description": "Generated from cURL: curl 'https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_createOrSave' \\\r\n  -H 'accept: */*' \\\r\n  -H 'accept-language: es-419,es;q=0.9,en;q=0.8' \\\r\n  -H 'authorization: Bearer KtEC2B6SSQ-L1Z7zMDfM-g' \\\r\n  -H 'content-type: application/json' \\\r\n  -b 'hubspotutk=0196f83fea4809487a4b01f1009797b3; _ga=GA1.2.142100382.1754589355; _ga_7BCFP03YV0=GS2.1.s1760969514$o2$g0$t1760969518$j56$l0$h0; __hstc=160866274.0196f83fea4809487a4b01f1009797b3.1754589356912.1760396014037.1760989862658.19; auth_code=df3df466-f2de-4326-baef-ba065bfe596e' \\\r\n  -H 'origin: https://softtek-sandbox-am.insuremo.com' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386' \\\r\n  -H 'response-type: application/json' \\\r\n  -H 'sec-ch-ua: \"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: same-origin' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' \\\r\n  -H 'x-mo-env: kylin_dev' \\\r\n  -H 'x-mo-module-permission-code: NPD50' \\\r\n  -H 'x-mo-module-ui-url: https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386#/policyManagement/HOMEOWNER_MKT' \\\r\n  -H 'x-mo-tenant-id: softtek' \\\r\n  --data-raw '{\"EffectiveDate\":\"2025-12-04T00:00:00\",\"ExpiryDate\":\"2026-12-03T23:59:59\",\"PremiumCurrencyCode\":\"USD\",\"BookCurrencyCode\":\"USD\",\"PremiumBookExchangeRate\":1,\"PolicyCustomerList\":[{\"CustomerName\":\"asd\",\"DateOfBirth\":\"2025-12-30T00:00:00\",\"IdType\":\"1\",\"IdNo\":\"123\",\"City\":\"\",\"State\":\"\",\"Mobile\":\"\",\"Email\":\"\",\"PostCode\":\"\",\"Address\":\"\",\"AddressComplement\":\"\",\"Gender\":\"F\",\"CustomerType\":\"IndiCustomer\",\"IsPolicyHolder\":\"Y\",\"IsPep\":\"\",\"MonthlyIncome\":\"\",\"ConsentData\":\"\",\"ConsentEmail\":\"\",\"TipoGrupo\":\"\"}],\"PolicyLobList\":[{\"PolicyRiskList\":[{\"ProductElementCode\":\"DWELLING_RISK\",\"ProductElementId\":906624903,\"RiskName\":\"ProductElement\",\"VersionSeq\":1,\"PolicyCoverageList\":[{\"ProductElementCode\":\"HOUSENATURPHENOM_COV\",\"CoverageName\":\"Fenómenos Naturales\",\"SumInsured\":1212}]}],\"ProductId\":906147921,\"ProductCode\":\"HOMEOWNER_MKT\",\"ProductElementCode\":\"HOMEOWNER_MKT\",\"TechProductCode\":\"HOME_STK\",\"TechProductId\":906147910,\"VersionSeq\":1,\"PolicyFormList\":[]}],\"PolicyPaymentInfoList\":[{\"PayModeCode\":100,\"IsInstallment\":\"N\",\"InstallmentType\":\"10\",\"BillingType\":\"1\"}],\"ProposalStatus\":\"1\",\"PolicyType\":\"1\",\"ProductId\":906147921,\"ProductVersion\":\"1.0\",\"ProductCode\":\"HOMEOWNER_MKT\",\"CampaignDiscountList\":[{\"DiscountType\":\"01\",\"DiscountCode\":\"01\",\"Percentage\":-0.1,\"Comments\":\"\"},{\"DiscountType\":\"02\",\"DiscountCode\":\"03\",\"Percentage\":0,\"Comments\":\"\"}],\"ProposalDate\":\"2025-12-04T00:00:00\",\"OrgCode\":\"softtek\",\"AgentCode\":\"PTY10000095006013\",\"PolicyAgentList\":[],\"LocalCurrencyCode\":\"USD\",\"PremiumLocalExchangeRate\":1}'"
+          },
+          "response": []
+        },
+        {
+          "name": "easypa_calculate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "accept",
+                "value": "application/json"
+              },
+              {
+                "key": "accept-language",
+                "value": "es-419,es;q=0.9,en;q=0.8"
+              },
+              {
+                "key": "authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "content-type",
+                "value": "application/json; charset=UTF-8"
+              },
+              {
+                "key": "origin",
+                "value": "https://softtek-sandbox-am.insuremo.com"
+              },
+              {
+                "key": "priority",
+                "value": "u=1, i"
+              },
+              {
+                "key": "referer",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386"
+              },
+              {
+                "key": "sec-ch-ua",
+                "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+              },
+              {
+                "key": "sec-ch-ua-mobile",
+                "value": "?0"
+              },
+              {
+                "key": "sec-ch-ua-platform",
+                "value": "\"Windows\""
+              },
+              {
+                "key": "sec-fetch-dest",
+                "value": "empty"
+              },
+              {
+                "key": "sec-fetch-mode",
+                "value": "cors"
+              },
+              {
+                "key": "sec-fetch-site",
+                "value": "same-origin"
+              },
+              {
+                "key": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+              },
+              {
+                "key": "x-mo-env",
+                "value": "kylin_dev"
+              },
+              {
+                "key": "x-mo-module-permission-code",
+                "value": "NPD50"
+              },
+              {
+                "key": "x-mo-module-ui-url",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386#/policyManagement/HOMEOWNER_MKT/12139460263,CF9295F8982A7C40BDC363026F075745"
+              },
+              {
+                "key": "x-mo-tenant-id",
+                "value": "softtek"
+              },
+              {
+                "key": "x-mo-user-identity",
+                "value": "aldair.chuman@softtek.com"
+              },
+              {
+                "key": "x-mo-user-name",
+                "value": "aldair.chuman@softtek.com"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"AgentCode\": \"PTY10000095006013\",\r\n    \"BookCurrencyCode\": \"USD\",\r\n    \"BusinessCateCode\": \"1\",\r\n    \"BusinessObjectId\": 906226863,\r\n    \"CampaignDiscountList\": [\r\n        {\r\n            \"BusinessObjectId\": 544076088,\r\n            \"Comments\": \"\",\r\n            \"DiscountCode\": \"01\",\r\n            \"DiscountType\": \"01\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"Percentage\": -0.1,\r\n            \"PolicyElementId\": 12159650044,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 1\r\n        },\r\n        {\r\n            \"BusinessObjectId\": 544076088,\r\n            \"Comments\": \"\",\r\n            \"DiscountCode\": \"03\",\r\n            \"DiscountType\": \"02\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"Percentage\": 0,\r\n            \"PolicyElementId\": 12159650045,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 2\r\n        }\r\n    ],\r\n    \"EffectiveDate\": \"2025-12-04\",\r\n    \"ExpiryDate\": \"2026-12-03T23:59:59\",\r\n    \"FirstDataEntryDate\": \"2025-12-04T14:22:26\",\r\n    \"IsRenewable\": \"Y\",\r\n    \"IsTakeUpPolicy\": \"N\",\r\n    \"LocalCurrencyCode\": \"USD\",\r\n    \"OrgCode\": \"softtek\",\r\n    \"PolicyCustomerList\": [\r\n        {\r\n            \"Address\": \"\",\r\n            \"AddressComplement\": \"\",\r\n            \"BusinessObjectId\": 1000000290,\r\n            \"City\": \"\",\r\n            \"ConsentData\": \"\",\r\n            \"ConsentEmail\": \"\",\r\n            \"CustomerName\": \"asd\",\r\n            \"CustomerType\": \"IndiCustomer\",\r\n            \"DateOfBirth\": \"2025-12-30\",\r\n            \"Email\": \"\",\r\n            \"Gender\": \"F\",\r\n            \"IdNo\": \"123\",\r\n            \"IdType\": \"1\",\r\n            \"IsInsured\": \"N\",\r\n            \"IsOrgParty\": \"N\",\r\n            \"IsPep\": \"\",\r\n            \"IsPolicyHolder\": \"Y\",\r\n            \"Mobile\": \"\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PolicyElementId\": 12159650047,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"PostCode\": \"\",\r\n            \"SequenceNumber\": 1,\r\n            \"State\": \"\",\r\n            \"TipoGrupo\": \"\",\r\n            \"TempData\": {\r\n                \"Mask-IdNo\": \"6AsIYw2s+4tfT/KfqVKbPw==\",\r\n                \"MaskAfter-IdNo\": \"123\"\r\n            }\r\n        }\r\n    ],\r\n    \"PolicyElementId\": 12159650042,\r\n    \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n    \"PolicyLobList\": [\r\n        {\r\n            \"BusinessObjectId\": 906226871,\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PolicyElementId\": 12159650049,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyRiskList\": [\r\n                {\r\n                    \"Address1\": \"Direccion 1\",\r\n                    \"Address2\": \"Direccion 2\",\r\n                    \"Address3\": \"Direccion 3\",\r\n                    \"BuildingArea\": 20000,\r\n                    \"BusinessObjectId\": 906226881,\r\n                    \"Country\": \"PER\",\r\n                    \"Department\": \"PER\",\r\n                    \"District\": \"LIM\",\r\n                    \"FullAddress\": \"Direccion 4\",\r\n                    \"HOAnimals\": \"1\",\r\n                    \"HOAntiTheftAlarm\": \"1\",\r\n                    \"HOConstructionType\": \"Wood\",\r\n                    \"HODistanceFireHydrant\": 100.5,\r\n                    \"HODistanceFireStation\": \"10\",\r\n                    \"HODoorsLocks\": \"Y\",\r\n                    \"HODwellingUseTo\": \"Storage\",\r\n                    \"HOElectronicEquipment\": 200.8,\r\n                    \"HOFireExtinguishers\": \"Y\",\r\n                    \"HOHaveFireAlarm\": \"1\",\r\n                    \"HOHaveGarage\": \"Y\",\r\n                    \"HOHowManyLiveProperty\": 20,\r\n                    \"HOIsPropertyOccupied\": \"0\",\r\n                    \"HOJewelry\": 404.12,\r\n                    \"HOLandArea\": 30000,\r\n                    \"HOManyFireExtinguishers\": 2,\r\n                    \"HONumberFloors\": 2,\r\n                    \"HONumberRooms\": 2,\r\n                    \"HOPoolHaveADivingBoard\": \"0\",\r\n                    \"HOPoolHaveARailing\": \"0\",\r\n                    \"HOPropertyInFloodZone\": \"0\",\r\n                    \"HORCE\": 200.5,\r\n                    \"HOSafe\": \"Y\",\r\n                    \"HOSecurityBars\": \"Y\",\r\n                    \"HOSecurityCameras\": \"Y\",\r\n                    \"HOSprinkler\": \"Y\",\r\n                    \"HOYearConstruction\": \"2025-12-04\",\r\n                    \"HomeType\": \"Singlefamilyhome\",\r\n                    \"IsThereASwimmingPool\": \"1\",\r\n                    \"Latitude\": \"12412412\",\r\n                    \"Longitude\": \"1231241\",\r\n                    \"ParentElementType\": \"POLICY_LOB\",\r\n                    \"ParentPolicyElementId\": 12159650049,\r\n                    \"PolicyCoverageList\": [\r\n                        {\r\n                            \"BusinessObjectId\": 906233270,\r\n                            \"CoverageName\": \"Fenómenos Naturales\",\r\n                            \"IsFinalLevelCt\": \"Y\",\r\n                            \"ParentElementType\": \"INSURED\",\r\n                            \"ParentPolicyElementId\": 12159650051,\r\n                            \"PolicyElementId\": 12159650053,\r\n                            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n                            \"PolicyStatus\": 2,\r\n                            \"ProductElementCode\": \"HOUSENATURPHENOM_COV\",\r\n                            \"ProductElementId\": 906624905,\r\n                            \"SequenceNumber\": 1,\r\n                            \"SumInsured\": 1212\r\n                        }\r\n                    ],\r\n                    \"PolicyElementId\": 12159650051,\r\n                    \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n                    \"PolicyStatus\": 2,\r\n                    \"PostalCode\": \"123456\",\r\n                    \"ProductElementCode\": \"DWELLING_RISK\",\r\n                    \"ProductElementId\": 906624903,\r\n                    \"Province\": \"LIM\",\r\n                    \"RiskName\": \"ProductElement\",\r\n                    \"SequenceNumber\": 1,\r\n                    \"TotalPrice\": 1000.3\r\n                }\r\n            ],\r\n            \"PolicyStatus\": 2,\r\n            \"ProductCode\": \"HOMEOWNER_MKT\",\r\n            \"ProductElementCode\": \"HOMEOWNER_MKT\",\r\n            \"ProductElementId\": 906147922,\r\n            \"ProductId\": 906147921,\r\n            \"ProductLobId\": 906147922,\r\n            \"SequenceNumber\": 1,\r\n            \"TechProductCode\": \"HOME_STK\",\r\n            \"TechProductId\": 906147910\r\n        }\r\n    ],\r\n    \"PolicyPaymentInfoList\": [\r\n        {\r\n            \"BillingType\": \"1\",\r\n            \"BusinessObjectId\": 520259,\r\n            \"InstallmentPeriodCount\": 1,\r\n            \"InstallmentType\": \"10\",\r\n            \"IsInstallment\": \"N\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PayModeCode\": \"100\",\r\n            \"PayRate\": 1,\r\n            \"PolicyElementId\": 12159650055,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 1\r\n        }\r\n    ],\r\n    \"PolicyStatus\": 1,\r\n    \"PolicyStatusForDisplay\": 1,\r\n    \"PolicyType\": \"1\",\r\n    \"PremiumBookExchangeRate\": 1,\r\n    \"PremiumCurrencyCode\": \"USD\",\r\n    \"PremiumLocalExchangeRate\": 1,\r\n    \"ProductCode\": \"HOMEOWNER_MKT\",\r\n    \"ProductId\": 906147921,\r\n    \"ProductVersion\": \"1.0\",\r\n    \"ProposalDate\": \"2025-12-04\",\r\n    \"ProposalNo\": \"PABHOMEOWNER_MKT0000000057\",\r\n    \"ProposalStatus\": \"1\",\r\n    \"QuotationDate\": \"2025-12-04T14:22:26\",\r\n    \"SchemaVersion\": 2,\r\n    \"TechProductCode\": \"HOME_STK\",\r\n    \"TechProductId\": 906147910,\r\n    \"VersionSeq\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_calculate",
+              "protocol": "https",
+              "host": [
+                "softtek-sandbox-am",
+                "insuremo",
+                "com"
+              ],
+              "path": [
+                "api",
+                "softtek",
+                "api-orchestration",
+                "v1",
+                "flow",
+                "easypa_calculate"
+              ]
+            },
+            "description": "Generated from cURL: curl 'https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_calculate' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'accept-language: es-419,es;q=0.9,en;q=0.8' \\\r\n  -H 'authorization: Bearer KtEC2B6SSQ-L1Z7zMDfM-g' \\\r\n  -H 'content-type: application/json; charset=UTF-8' \\\r\n  -H 'origin: https://softtek-sandbox-am.insuremo.com' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386' \\\r\n  -H 'sec-ch-ua: \"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: same-origin' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' \\\r\n  -H 'x-mo-env: kylin_dev' \\\r\n  -H 'x-mo-module-permission-code: NPD50' \\\r\n  -H 'x-mo-module-ui-url: https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386#/policyManagement/HOMEOWNER_MKT/12139460263,CF9295F8982A7C40BDC363026F075745' \\\r\n  -H 'x-mo-tenant-id: softtek' \\\r\n  -H 'x-mo-user-identity: aldair.chuman@softtek.com' \\\r\n  -H 'x-mo-user-name: aldair.chuman@softtek.com' \\\r\n  --data-raw '{\"AgentCode\":\"PTY10000095006013\",\"BookCurrencyCode\":\"USD\",\"BusinessCateCode\":\"1\",\"BusinessObjectId\":906226863,\"CampaignDiscountList\":[{\"BusinessObjectId\":544076088,\"Comments\":\"\",\"DiscountCode\":\"01\",\"DiscountType\":\"01\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"Percentage\":-0.1,\"PolicyElementId\":12139460265,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":1},{\"BusinessObjectId\":544076088,\"Comments\":\"\",\"DiscountCode\":\"03\",\"DiscountType\":\"02\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"Percentage\":0,\"PolicyElementId\":12139460266,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":2}],\"EffectiveDate\":\"2025-12-04\",\"ExpiryDate\":\"2026-12-03T23:59:59\",\"FirstDataEntryDate\":\"2025-12-04T12:06:55\",\"IsRenewable\":\"Y\",\"IsTakeUpPolicy\":\"N\",\"LocalCurrencyCode\":\"USD\",\"OrgCode\":\"softtek\",\"PolicyCustomerList\":[{\"Address\":\"\",\"AddressComplement\":\"\",\"BusinessObjectId\":1000000290,\"City\":\"\",\"ConsentData\":\"\",\"ConsentEmail\":\"\",\"CustomerName\":\"asd\",\"CustomerType\":\"IndiCustomer\",\"DateOfBirth\":\"2025-12-30\",\"Email\":\"\",\"Gender\":\"F\",\"IdNo\":\"123\",\"IdType\":\"1\",\"IsInsured\":\"N\",\"IsOrgParty\":\"N\",\"IsPep\":\"\",\"IsPolicyHolder\":\"Y\",\"Mobile\":\"\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PolicyElementId\":12139460268,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"PostCode\":\"\",\"SequenceNumber\":1,\"State\":\"\",\"TipoGrupo\":\"\",\"TempData\":{\"Mask-IdNo\":\"6AsIYw2s+4tfT/KfqVKbPw==\",\"MaskAfter-IdNo\":\"123\"}}],\"PolicyElementId\":12139460263,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyLobList\":[{\"BusinessObjectId\":906226871,\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PolicyElementId\":12139460270,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyRiskList\":[{\"BusinessObjectId\":906226881,\"ParentElementType\":\"POLICY_LOB\",\"ParentPolicyElementId\":12139460270,\"PolicyCoverageList\":[{\"BusinessObjectId\":906233270,\"CoverageName\":\"Fenómenos Naturales\",\"IsFinalLevelCt\":\"Y\",\"ParentElementType\":\"INSURED\",\"ParentPolicyElementId\":12139460272,\"PolicyElementId\":12139460274,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"ProductElementCode\":\"HOUSENATURPHENOM_COV\",\"ProductElementId\":906624905,\"SequenceNumber\":1,\"SumInsured\":1212}],\"PolicyElementId\":12139460272,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"ProductElementCode\":\"DWELLING_RISK\",\"ProductElementId\":906624903,\"RiskName\":\"ProductElement\",\"SequenceNumber\":1}],\"PolicyStatus\":2,\"ProductCode\":\"HOMEOWNER_MKT\",\"ProductElementCode\":\"HOMEOWNER_MKT\",\"ProductElementId\":906147922,\"ProductId\":906147921,\"ProductLobId\":906147922,\"SequenceNumber\":1,\"TechProductCode\":\"HOME_STK\",\"TechProductId\":906147910}],\"PolicyPaymentInfoList\":[{\"BillingType\":\"1\",\"BusinessObjectId\":520259,\"InstallmentPeriodCount\":1,\"InstallmentType\":\"10\",\"IsInstallment\":\"N\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PayModeCode\":\"100\",\"PayRate\":1,\"PolicyElementId\":12139460276,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":1}],\"PolicyStatus\":1,\"PolicyStatusForDisplay\":1,\"PolicyType\":\"1\",\"PremiumBookExchangeRate\":1,\"PremiumCurrencyCode\":\"USD\",\"PremiumLocalExchangeRate\":1,\"ProductCode\":\"HOMEOWNER_MKT\",\"ProductId\":906147921,\"ProductVersion\":\"1.0\",\"ProposalDate\":\"2025-12-04\",\"ProposalNo\":\"PABHOMEOWNER_MKT0000000044\",\"ProposalStatus\":\"1\",\"QuotationDate\":\"2025-12-04T12:06:55\",\"SchemaVersion\":2,\"TechProductCode\":\"HOME_STK\",\"TechProductId\":906147910,\"VersionSeq\":1}'"
+          },
+          "response": []
+        },
+        {
+          "name": "easypa_bind",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "accept",
+                "value": "*/*"
+              },
+              {
+                "key": "accept-language",
+                "value": "es-419,es;q=0.9,en;q=0.8"
+              },
+              {
+                "key": "authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "content-type",
+                "value": "application/json"
+              },
+              {
+                "key": "origin",
+                "value": "https://softtek-sandbox-am.insuremo.com"
+              },
+              {
+                "key": "priority",
+                "value": "u=1, i"
+              },
+              {
+                "key": "referer",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386"
+              },
+              {
+                "key": "response-type",
+                "value": "application/json"
+              },
+              {
+                "key": "sec-ch-ua",
+                "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+              },
+              {
+                "key": "sec-ch-ua-mobile",
+                "value": "?0"
+              },
+              {
+                "key": "sec-ch-ua-platform",
+                "value": "\"Windows\""
+              },
+              {
+                "key": "sec-fetch-dest",
+                "value": "empty"
+              },
+              {
+                "key": "sec-fetch-mode",
+                "value": "cors"
+              },
+              {
+                "key": "sec-fetch-site",
+                "value": "same-origin"
+              },
+              {
+                "key": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+              },
+              {
+                "key": "x-mo-env",
+                "value": "kylin_dev"
+              },
+              {
+                "key": "x-mo-module-permission-code",
+                "value": "NPD50"
+              },
+              {
+                "key": "x-mo-module-ui-url",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386#/policyManagement/HOMEOWNER_MKT/12139460263,CF9295F8982A7C40BDC363026F075745"
+              },
+              {
+                "key": "x-mo-tenant-id",
+                "value": "softtek"
+              },
+              {
+                "key": "Cookie",
+                "value": "hubspotutk=0196f83fea4809487a4b01f1009797b3; _ga=GA1.2.142100382.1754589355; _ga_7BCFP03YV0=GS2.1.s1760969514$o2$g0$t1760969518$j56$l0$h0; __hstc=160866274.0196f83fea4809487a4b01f1009797b3.1754589356912.1760396014037.1760989862658.19; auth_code=df3df466-f2de-4326-baef-ba065bfe596e"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"AgentCode\": \"PTY10000095006013\",\r\n    \"BeforeVatPremium\": 108.78,\r\n    \"BookCurrencyCode\": \"USD\",\r\n    \"BusinessCateCode\": \"1\",\r\n    \"BusinessObjectId\": 906226863,\r\n    \"CampaignDiscount\": -0.1,\r\n    \"CampaignDiscountAmount\": -12.09,\r\n    \"CampaignDiscountList\": [\r\n        {\r\n            \"BusinessObjectId\": 544076088,\r\n            \"Comments\": \"\",\r\n            \"DiscountAmount\": -12.09,\r\n            \"DiscountCode\": \"01\",\r\n            \"DiscountType\": \"01\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"Percentage\": -0.1,\r\n            \"PolicyElementId\": 12159650044,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 1,\r\n            \"TempData\": {}\r\n        },\r\n        {\r\n            \"BusinessObjectId\": 544076088,\r\n            \"Comments\": \"\",\r\n            \"DiscountCode\": \"03\",\r\n            \"DiscountType\": \"02\",\r\n            \"LoadingAmount\": 0,\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"Percentage\": 0,\r\n            \"PolicyElementId\": 12159650045,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 2,\r\n            \"TempData\": {}\r\n        }\r\n    ],\r\n    \"Commission\": 10.88,\r\n    \"CommissionRate\": 0.1,\r\n    \"DuePremium\": 128.36,\r\n    \"EffectiveDate\": \"2025-12-04\",\r\n    \"ExpiryDate\": \"2026-12-03T23:59:59\",\r\n    \"FirstDataEntryDate\": \"2025-12-04T14:22:26\",\r\n    \"GrossPremium\": 124.4961,\r\n    \"InterestRate\": 0,\r\n    \"IsPremiumCalcSuccess\": \"Y\",\r\n    \"IsRenewable\": \"Y\",\r\n    \"IsTakeUpPolicy\": \"N\",\r\n    \"LocalCurrencyCode\": \"USD\",\r\n    \"OrgCode\": \"softtek\",\r\n    \"POIRate\": 1,\r\n    \"PolicyCustomerList\": [\r\n        {\r\n            \"Address\": \"\",\r\n            \"AddressComplement\": \"\",\r\n            \"BusinessObjectId\": 1000000290,\r\n            \"City\": \"\",\r\n            \"ConsentData\": \"\",\r\n            \"ConsentEmail\": \"\",\r\n            \"CustomerName\": \"asd\",\r\n            \"CustomerType\": \"IndiCustomer\",\r\n            \"DateOfBirth\": \"2025-12-30\",\r\n            \"Email\": \"\",\r\n            \"Gender\": \"F\",\r\n            \"IdNo\": \"123\",\r\n            \"IdType\": \"1\",\r\n            \"IsInsured\": \"N\",\r\n            \"IsOrgParty\": \"N\",\r\n            \"IsPep\": \"\",\r\n            \"IsPolicyHolder\": \"Y\",\r\n            \"Mobile\": \"\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PolicyElementId\": 12159650047,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"PostCode\": \"\",\r\n            \"SequenceNumber\": 1,\r\n            \"State\": \"\",\r\n            \"TipoGrupo\": \"\",\r\n            \"TempData\": {\r\n                \"Mask-IdNo\": \"6AsIYw2s+4tfT/KfqVKbPw==\",\r\n                \"MaskAfter-IdNo\": \"123\"\r\n            }\r\n        }\r\n    ],\r\n    \"PolicyElementId\": 12159650042,\r\n    \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n    \"PolicyLobList\": [\r\n        {\r\n            \"BeforeVatPremium\": 108.78,\r\n            \"BusinessObjectId\": 906226871,\r\n            \"DuePremium\": 128.36,\r\n            \"GrossPremium\": 124.4961,\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PolicyElementId\": 12159650049,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyRiskList\": [\r\n                {\r\n                    \"Address1\": \"Direccion 1\",\r\n                    \"Address2\": \"Direccion 2\",\r\n                    \"Address3\": \"Direccion 3\",\r\n                    \"BeforeVatPremium\": 108.78,\r\n                    \"BuildingArea\": 20000,\r\n                    \"BusinessObjectId\": 906226881,\r\n                    \"Country\": \"PER\",\r\n                    \"Department\": \"PER\",\r\n                    \"District\": \"LIM\",\r\n                    \"DuePremium\": 128.36,\r\n                    \"FullAddress\": \"Direccion 4\",\r\n                    \"GrossPremium\": 124.4961,\r\n                    \"HOAnimals\": \"1\",\r\n                    \"HOAntiTheftAlarm\": \"1\",\r\n                    \"HOConstructionType\": \"Wood\",\r\n                    \"HODistanceFireHydrant\": 100.5,\r\n                    \"HODistanceFireStation\": \"10\",\r\n                    \"HODoorsLocks\": \"Y\",\r\n                    \"HODwellingUseTo\": \"Storage\",\r\n                    \"HOElectronicEquipment\": 200.8,\r\n                    \"HOFireExtinguishers\": \"Y\",\r\n                    \"HOHaveFireAlarm\": \"1\",\r\n                    \"HOHaveGarage\": \"Y\",\r\n                    \"HOHowManyLiveProperty\": 20,\r\n                    \"HOIsPropertyOccupied\": \"0\",\r\n                    \"HOJewelry\": 404.12,\r\n                    \"HOLandArea\": 30000,\r\n                    \"HOManyFireExtinguishers\": 2,\r\n                    \"HONumberFloors\": 2,\r\n                    \"HONumberRooms\": 2,\r\n                    \"HOPoolHaveADivingBoard\": \"0\",\r\n                    \"HOPoolHaveARailing\": \"0\",\r\n                    \"HOPropertyInFloodZone\": \"0\",\r\n                    \"HORCE\": 200.5,\r\n                    \"HOSafe\": \"Y\",\r\n                    \"HOSecurityBars\": \"Y\",\r\n                    \"HOSecurityCameras\": \"Y\",\r\n                    \"HOSprinkler\": \"Y\",\r\n                    \"HOYearConstruction\": \"2025-12-04\",\r\n                    \"HomeType\": \"Singlefamilyhome\",\r\n                    \"IsThereASwimmingPool\": \"1\",\r\n                    \"Latitude\": \"12412412\",\r\n                    \"Longitude\": \"1231241\",\r\n                    \"ParentElementType\": \"POLICY_LOB\",\r\n                    \"ParentPolicyElementId\": 12159650049,\r\n                    \"PolicyCoverageList\": [\r\n                        {\r\n                            \"AnnualPremium\": 121.2,\r\n                            \"BeforeVatPremium\": 108.78,\r\n                            \"BusinessObjectId\": 906233270,\r\n                            \"CampaignDiscountAmount\": -12.09,\r\n                            \"CostAmount\": 3.6261,\r\n                            \"CoverageName\": \"Fenómenos Naturales\",\r\n                            \"DuePremium\": 128.36,\r\n                            \"GrossPremium\": 124.4961,\r\n                            \"IsFinalLevelCt\": \"Y\",\r\n                            \"ParentElementType\": \"INSURED\",\r\n                            \"ParentPolicyElementId\": 12159650051,\r\n                            \"PolicyElementId\": 12159650053,\r\n                            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n                            \"PolicyStatus\": 2,\r\n                            \"ProductElementCode\": \"HOUSENATURPHENOM_COV\",\r\n                            \"ProductElementId\": 906624905,\r\n                            \"SequenceNumber\": 1,\r\n                            \"SumInsured\": 1212,\r\n                            \"TotalDiscountLoadingAmount\": -12.09,\r\n                            \"UWLoadingAmount\": 0,\r\n                            \"Vat\": 19.58\r\n                        }\r\n                    ],\r\n                    \"PolicyElementId\": 12159650051,\r\n                    \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n                    \"PolicyStatus\": 2,\r\n                    \"PostalCode\": \"123456\",\r\n                    \"ProductElementCode\": \"DWELLING_RISK\",\r\n                    \"ProductElementId\": 906624903,\r\n                    \"Province\": \"LIM\",\r\n                    \"RiskName\": \"ProductElement\",\r\n                    \"SequenceNumber\": 1,\r\n                    \"TempData\": {},\r\n                    \"TotalPrice\": 1000.3,\r\n                    \"Vat\": 19.58\r\n                }\r\n            ],\r\n            \"PolicyStatus\": 2,\r\n            \"ProductCode\": \"HOMEOWNER_MKT\",\r\n            \"ProductElementCode\": \"HOMEOWNER_MKT\",\r\n            \"ProductElementId\": 906147922,\r\n            \"ProductId\": 906147921,\r\n            \"ProductLobId\": 906147922,\r\n            \"SequenceNumber\": 1,\r\n            \"TechProductCode\": \"HOME_STK\",\r\n            \"TechProductId\": 906147910,\r\n            \"Vat\": 19.58\r\n        }\r\n    ],\r\n    \"PolicyPaymentInfoList\": [\r\n        {\r\n            \"BillingType\": \"1\",\r\n            \"BusinessObjectId\": 520259,\r\n            \"ExpiryDate\": \"2026-12-03T23:59:59\",\r\n            \"InstallmentList\": [\r\n                {\r\n                    \"BeforeVatPremium\": 108.78,\r\n                    \"BeforeVatPremiumLocal\": 108.78,\r\n                    \"BusinessObjectId\": 200001394,\r\n                    \"Commission\": 10.88,\r\n                    \"CommissionLocal\": 10.88,\r\n                    \"DuePremium\": 128.36,\r\n                    \"DuePremiumLocal\": 128.36,\r\n                    \"FeeSeq\": 1,\r\n                    \"InstallmentAmount\": 128.36,\r\n                    \"InstallmentAmountLocal\": 128.36,\r\n                    \"InstallmentDate\": \"2025-12-04\",\r\n                    \"InstallmentPeriodSeq\": 1,\r\n                    \"ParentElementType\": \"POLICY_PAYMENT\",\r\n                    \"ParentPolicyElementId\": 12159650055,\r\n                    \"PolicyElementId\": 12159720055,\r\n                    \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n                    \"PolicyStatus\": 2,\r\n                    \"PremiumInterest\": 0,\r\n                    \"PremiumInterestLocal\": 0,\r\n                    \"SequenceNumber\": 1,\r\n                    \"TaxInterest\": 0,\r\n                    \"TaxInterestLocal\": 0,\r\n                    \"TotalInterest\": 0,\r\n                    \"TotalInterestLocal\": 0,\r\n                    \"Vat\": 19.58,\r\n                    \"VatLocal\": 19.58\r\n                }\r\n            ],\r\n            \"InstallmentPeriodCount\": 1,\r\n            \"InstallmentType\": \"10\",\r\n            \"IsInstallment\": \"N\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PayModeCode\": \"100\",\r\n            \"PayRate\": 1,\r\n            \"PolicyElementId\": 12159650055,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 1\r\n        }\r\n    ],\r\n    \"PolicyStatus\": 1,\r\n    \"PolicyStatusForDisplay\": 1,\r\n    \"PolicyType\": \"1\",\r\n    \"PremCalcFactorHash\": \"20251204_142246_236,v5SKvbkIADxQN2xKlJRXOPZeriictjh0NbmyN9jNXlU=\",\r\n    \"PremCalcResultHash\": \"20251204_142246_237,4M7ETU+M0jIeshjRoUFtaGavQ408fFtoTseYrh0DS0A=\",\r\n    \"PremiumBookExchangeRate\": 1,\r\n    \"PremiumCurrencyCode\": \"USD\",\r\n    \"PremiumInterest\": 0,\r\n    \"PremiumLocalExchangeRate\": 1,\r\n    \"ProductCode\": \"HOMEOWNER_MKT\",\r\n    \"ProductId\": 906147921,\r\n    \"ProductVersion\": \"1.0\",\r\n    \"ProposalDate\": \"2025-12-04\",\r\n    \"ProposalNo\": \"PABHOMEOWNER_MKT0000000057\",\r\n    \"ProposalStatus\": \"1\",\r\n    \"QuotationDate\": \"2025-12-04T14:22:26\",\r\n    \"SchemaVersion\": 2,\r\n    \"TaxInterest\": 0,\r\n    \"TechProductCode\": \"HOME_STK\",\r\n    \"TechProductId\": 906147910,\r\n    \"TotalDiscountLoading\": -0.1,\r\n    \"TotalDiscountLoadingAmount\": -12.09,\r\n    \"TotalInterest\": 0,\r\n    \"TotalPremium\": 128.36,\r\n    \"UWLoading\": 0,\r\n    \"UWLoadingAmount\": 0,\r\n    \"Vat\": 19.58,\r\n    \"VatRate\": 0.18,\r\n    \"VersionSeq\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_bind",
+              "protocol": "https",
+              "host": [
+                "softtek-sandbox-am",
+                "insuremo",
+                "com"
+              ],
+              "path": [
+                "api",
+                "softtek",
+                "api-orchestration",
+                "v1",
+                "flow",
+                "easypa_bind"
+              ]
+            },
+            "description": "Generated from cURL: curl 'https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_bind' \\\r\n  -H 'accept: */*' \\\r\n  -H 'accept-language: es-419,es;q=0.9,en;q=0.8' \\\r\n  -H 'authorization: Bearer KtEC2B6SSQ-L1Z7zMDfM-g' \\\r\n  -H 'content-type: application/json' \\\r\n  -b 'hubspotutk=0196f83fea4809487a4b01f1009797b3; _ga=GA1.2.142100382.1754589355; _ga_7BCFP03YV0=GS2.1.s1760969514$o2$g0$t1760969518$j56$l0$h0; __hstc=160866274.0196f83fea4809487a4b01f1009797b3.1754589356912.1760396014037.1760989862658.19; auth_code=df3df466-f2de-4326-baef-ba065bfe596e' \\\r\n  -H 'origin: https://softtek-sandbox-am.insuremo.com' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386' \\\r\n  -H 'response-type: application/json' \\\r\n  -H 'sec-ch-ua: \"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: same-origin' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' \\\r\n  -H 'x-mo-env: kylin_dev' \\\r\n  -H 'x-mo-module-permission-code: NPD50' \\\r\n  -H 'x-mo-module-ui-url: https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386#/policyManagement/HOMEOWNER_MKT/12139460263,CF9295F8982A7C40BDC363026F075745' \\\r\n  -H 'x-mo-tenant-id: softtek' \\\r\n  --data-raw '{\"AgentCode\":\"PTY10000095006013\",\"BeforeVatPremium\":108.78,\"BookCurrencyCode\":\"USD\",\"BusinessCateCode\":\"1\",\"BusinessObjectId\":906226863,\"CampaignDiscount\":-0.1,\"CampaignDiscountAmount\":-12.09,\"CampaignDiscountList\":[{\"BusinessObjectId\":544076088,\"Comments\":\"\",\"DiscountAmount\":-12.09,\"DiscountCode\":\"01\",\"DiscountType\":\"01\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"Percentage\":-0.1,\"PolicyElementId\":12139460265,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":1,\"TempData\":{}},{\"BusinessObjectId\":544076088,\"Comments\":\"\",\"DiscountCode\":\"03\",\"DiscountType\":\"02\",\"LoadingAmount\":0,\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"Percentage\":0,\"PolicyElementId\":12139460266,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":2,\"TempData\":{}}],\"Commission\":10.88,\"CommissionRate\":0.1,\"DuePremium\":128.36,\"EffectiveDate\":\"2025-12-04\",\"ExpiryDate\":\"2026-12-03T23:59:59\",\"FirstDataEntryDate\":\"2025-12-04T12:06:55\",\"GrossPremium\":124.4961,\"InterestRate\":0,\"IsPremiumCalcSuccess\":\"Y\",\"IsRenewable\":\"Y\",\"IsTakeUpPolicy\":\"N\",\"LocalCurrencyCode\":\"USD\",\"OrgCode\":\"softtek\",\"POIRate\":1,\"PolicyCustomerList\":[{\"Address\":\"\",\"AddressComplement\":\"\",\"BusinessObjectId\":1000000290,\"City\":\"\",\"ConsentData\":\"\",\"ConsentEmail\":\"\",\"CustomerName\":\"asd\",\"CustomerType\":\"IndiCustomer\",\"DateOfBirth\":\"2025-12-30\",\"Email\":\"\",\"Gender\":\"F\",\"IdNo\":\"123\",\"IdType\":\"1\",\"IsInsured\":\"N\",\"IsOrgParty\":\"N\",\"IsPep\":\"\",\"IsPolicyHolder\":\"Y\",\"Mobile\":\"\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PolicyElementId\":12139460268,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"PostCode\":\"\",\"SequenceNumber\":1,\"State\":\"\",\"TipoGrupo\":\"\",\"TempData\":{\"Mask-IdNo\":\"6AsIYw2s+4tfT/KfqVKbPw==\",\"MaskAfter-IdNo\":\"123\"}}],\"PolicyElementId\":12139460263,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyLobList\":[{\"BeforeVatPremium\":108.78,\"BusinessObjectId\":906226871,\"DuePremium\":128.36,\"GrossPremium\":124.4961,\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PolicyElementId\":12139460270,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyRiskList\":[{\"BeforeVatPremium\":108.78,\"BusinessObjectId\":906226881,\"DuePremium\":128.36,\"GrossPremium\":124.4961,\"ParentElementType\":\"POLICY_LOB\",\"ParentPolicyElementId\":12139460270,\"PolicyCoverageList\":[{\"AnnualPremium\":121.2,\"BeforeVatPremium\":108.78,\"BusinessObjectId\":906233270,\"CampaignDiscountAmount\":-12.09,\"CostAmount\":3.6261,\"CoverageName\":\"Fenómenos Naturales\",\"DuePremium\":128.36,\"GrossPremium\":124.4961,\"IsFinalLevelCt\":\"Y\",\"ParentElementType\":\"INSURED\",\"ParentPolicyElementId\":12139460272,\"PolicyElementId\":12139460274,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"ProductElementCode\":\"HOUSENATURPHENOM_COV\",\"ProductElementId\":906624905,\"SequenceNumber\":1,\"SumInsured\":1212,\"TotalDiscountLoadingAmount\":-12.09,\"UWLoadingAmount\":0,\"Vat\":19.58}],\"PolicyElementId\":12139460272,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"ProductElementCode\":\"DWELLING_RISK\",\"ProductElementId\":906624903,\"RiskName\":\"ProductElement\",\"SequenceNumber\":1,\"TempData\":{},\"Vat\":19.58}],\"PolicyStatus\":2,\"ProductCode\":\"HOMEOWNER_MKT\",\"ProductElementCode\":\"HOMEOWNER_MKT\",\"ProductElementId\":906147922,\"ProductId\":906147921,\"ProductLobId\":906147922,\"SequenceNumber\":1,\"TechProductCode\":\"HOME_STK\",\"TechProductId\":906147910,\"Vat\":19.58}],\"PolicyPaymentInfoList\":[{\"BillingType\":\"1\",\"BusinessObjectId\":520259,\"ExpiryDate\":\"2026-12-03T23:59:59\",\"InstallmentList\":[{\"BeforeVatPremium\":108.78,\"BeforeVatPremiumLocal\":108.78,\"BusinessObjectId\":200001394,\"Commission\":10.88,\"CommissionLocal\":10.88,\"DuePremium\":128.36,\"DuePremiumLocal\":128.36,\"FeeSeq\":1,\"InstallmentAmount\":128.36,\"InstallmentAmountLocal\":128.36,\"InstallmentDate\":\"2025-12-04\",\"InstallmentPeriodSeq\":1,\"ParentElementType\":\"POLICY_PAYMENT\",\"ParentPolicyElementId\":12139460276,\"PolicyElementId\":12139920023,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"PremiumInterest\":0,\"PremiumInterestLocal\":0,\"SequenceNumber\":1,\"TaxInterest\":0,\"TaxInterestLocal\":0,\"TotalInterest\":0,\"TotalInterestLocal\":0,\"Vat\":19.58,\"VatLocal\":19.58}],\"InstallmentPeriodCount\":1,\"InstallmentType\":\"10\",\"IsInstallment\":\"N\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PayModeCode\":\"100\",\"PayRate\":1,\"PolicyElementId\":12139460276,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":1}],\"PolicyStatus\":1,\"PolicyStatusForDisplay\":1,\"PolicyType\":\"1\",\"PremCalcFactorHash\":\"20251204_121038_369,v5SKvbkIADxQN2xKlJRXOPZeriictjh0NbmyN9jNXlU=\",\"PremCalcResultHash\":\"20251204_121038_371,9Ez3KnM7r26TZ2KDV8HuIMzXLf8/qK46RBGDsud3/Ak=\",\"PremiumBookExchangeRate\":1,\"PremiumCurrencyCode\":\"USD\",\"PremiumInterest\":0,\"PremiumLocalExchangeRate\":1,\"ProductCode\":\"HOMEOWNER_MKT\",\"ProductId\":906147921,\"ProductVersion\":\"1.0\",\"ProposalDate\":\"2025-12-04\",\"ProposalNo\":\"PABHOMEOWNER_MKT0000000044\",\"ProposalStatus\":\"1\",\"QuotationDate\":\"2025-12-04T12:06:55\",\"SchemaVersion\":2,\"TaxInterest\":0,\"TechProductCode\":\"HOME_STK\",\"TechProductId\":906147910,\"TotalDiscountLoading\":-0.1,\"TotalDiscountLoadingAmount\":-12.09,\"TotalInterest\":0,\"TotalPremium\":128.36,\"UWLoading\":0,\"UWLoadingAmount\":0,\"Vat\":19.58,\"VatRate\":0.18,\"VersionSeq\":3}'"
+          },
+          "response": []
+        },
+        {
+          "name": "easypa_issue",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "accept",
+                "value": "*/*"
+              },
+              {
+                "key": "accept-language",
+                "value": "es-419,es;q=0.9,en;q=0.8"
+              },
+              {
+                "key": "authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "content-type",
+                "value": "application/json"
+              },
+              {
+                "key": "origin",
+                "value": "https://softtek-sandbox-am.insuremo.com"
+              },
+              {
+                "key": "priority",
+                "value": "u=1, i"
+              },
+              {
+                "key": "referer",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386"
+              },
+              {
+                "key": "response-type",
+                "value": "application/json"
+              },
+              {
+                "key": "sec-ch-ua",
+                "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+              },
+              {
+                "key": "sec-ch-ua-mobile",
+                "value": "?0"
+              },
+              {
+                "key": "sec-ch-ua-platform",
+                "value": "\"Windows\""
+              },
+              {
+                "key": "sec-fetch-dest",
+                "value": "empty"
+              },
+              {
+                "key": "sec-fetch-mode",
+                "value": "cors"
+              },
+              {
+                "key": "sec-fetch-site",
+                "value": "same-origin"
+              },
+              {
+                "key": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+              },
+              {
+                "key": "x-mo-env",
+                "value": "kylin_dev"
+              },
+              {
+                "key": "x-mo-module-permission-code",
+                "value": "NPD50"
+              },
+              {
+                "key": "x-mo-module-ui-url",
+                "value": "https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386#/policyManagement/HOMEOWNER_MKT/12139460263,CF9295F8982A7C40BDC363026F075745"
+              },
+              {
+                "key": "x-mo-tenant-id",
+                "value": "softtek"
+              },
+              {
+                "key": "Cookie",
+                "value": "hubspotutk=0196f83fea4809487a4b01f1009797b3; _ga=GA1.2.142100382.1754589355; _ga_7BCFP03YV0=GS2.1.s1760969514$o2$g0$t1760969518$j56$l0$h0; __hstc=160866274.0196f83fea4809487a4b01f1009797b3.1754589356912.1760396014037.1760989862658.19; auth_code=df3df466-f2de-4326-baef-ba065bfe596e"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"AgentCode\": \"PTY10000095006013\",\r\n    \"AutoUwResultCode\": \"1\",\r\n    \"BeforeVatPremium\": 108.78,\r\n    \"BookCurrencyCode\": \"USD\",\r\n    \"BusinessCateCode\": \"1\",\r\n    \"BusinessObjectId\": 906226863,\r\n    \"CampaignDiscount\": -0.1,\r\n    \"CampaignDiscountAmount\": -12.09,\r\n    \"CampaignDiscountList\": [\r\n        {\r\n            \"BusinessObjectId\": 544076088,\r\n            \"Comments\": \"\",\r\n            \"DiscountAmount\": -12.09,\r\n            \"DiscountCode\": \"01\",\r\n            \"DiscountType\": \"01\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"Percentage\": -0.1,\r\n            \"PolicyElementId\": 12159650044,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 1,\r\n            \"TempData\": {}\r\n        },\r\n        {\r\n            \"BusinessObjectId\": 544076088,\r\n            \"Comments\": \"\",\r\n            \"DiscountCode\": \"03\",\r\n            \"DiscountType\": \"02\",\r\n            \"LoadingAmount\": 0,\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"Percentage\": 0,\r\n            \"PolicyElementId\": 12159650045,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 2,\r\n            \"TempData\": {}\r\n        }\r\n    ],\r\n    \"Commission\": 10.88,\r\n    \"CommissionRate\": 0.1,\r\n    \"DuePremium\": 128.36,\r\n    \"EffectiveDate\": \"2025-12-04\",\r\n    \"ExpiryDate\": \"2026-12-03T23:59:59\",\r\n    \"FirstDataEntryDate\": \"2025-12-04T14:22:26\",\r\n    \"GrossPremium\": 124.4961,\r\n    \"InterestRate\": 0,\r\n    \"IsIssueAfterPay\": \"N\",\r\n    \"IsPremiumCalcSuccess\": \"Y\",\r\n    \"IsRenewable\": \"Y\",\r\n    \"IsTakeUpPolicy\": \"N\",\r\n    \"LocalCurrencyCode\": \"USD\",\r\n    \"OrgCode\": \"softtek\",\r\n    \"POIRate\": 1,\r\n    \"PolicyCustomerList\": [\r\n        {\r\n            \"Address\": \"\",\r\n            \"AddressComplement\": \"\",\r\n            \"BusinessObjectId\": 1000000290,\r\n            \"City\": \"\",\r\n            \"ConsentData\": \"\",\r\n            \"ConsentEmail\": \"\",\r\n            \"CustomerName\": \"asd\",\r\n            \"CustomerType\": \"IndiCustomer\",\r\n            \"DateOfBirth\": \"2025-12-30\",\r\n            \"Email\": \"\",\r\n            \"Gender\": \"F\",\r\n            \"IdNo\": \"123\",\r\n            \"IdType\": \"1\",\r\n            \"IsInsured\": \"N\",\r\n            \"IsOrgParty\": \"N\",\r\n            \"IsPep\": \"\",\r\n            \"IsPolicyHolder\": \"Y\",\r\n            \"Mobile\": \"\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PolicyElementId\": 12159650047,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"PostCode\": \"\",\r\n            \"SequenceNumber\": 1,\r\n            \"State\": \"\",\r\n            \"TipoGrupo\": \"\",\r\n            \"TempData\": {\r\n                \"Mask-IdNo\": \"6AsIYw2s+4tfT/KfqVKbPw==\",\r\n                \"MaskAfter-IdNo\": \"123\"\r\n            }\r\n        }\r\n    ],\r\n    \"PolicyElementId\": 12159650042,\r\n    \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n    \"PolicyLobList\": [\r\n        {\r\n            \"BeforeVatPremium\": 108.78,\r\n            \"BusinessObjectId\": 906226871,\r\n            \"DuePremium\": 128.36,\r\n            \"GrossPremium\": 124.4961,\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PolicyElementId\": 12159650049,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyRiskList\": [\r\n                {\r\n                    \"Address1\": \"Direccion 1\",\r\n                    \"Address2\": \"Direccion 2\",\r\n                    \"Address3\": \"Direccion 3\",\r\n                    \"BeforeVatPremium\": 108.78,\r\n                    \"BuildingArea\": 20000,\r\n                    \"BusinessObjectId\": 906226881,\r\n                    \"Country\": \"PER\",\r\n                    \"Department\": \"PER\",\r\n                    \"District\": \"LIM\",\r\n                    \"DuePremium\": 128.36,\r\n                    \"FullAddress\": \"Direccion 4\",\r\n                    \"GrossPremium\": 124.4961,\r\n                    \"HOAnimals\": \"1\",\r\n                    \"HOAntiTheftAlarm\": \"1\",\r\n                    \"HOConstructionType\": \"Wood\",\r\n                    \"HODistanceFireHydrant\": 100.5,\r\n                    \"HODistanceFireStation\": \"10\",\r\n                    \"HODoorsLocks\": \"Y\",\r\n                    \"HODwellingUseTo\": \"Storage\",\r\n                    \"HOElectronicEquipment\": 200.8,\r\n                    \"HOFireExtinguishers\": \"Y\",\r\n                    \"HOHaveFireAlarm\": \"1\",\r\n                    \"HOHaveGarage\": \"Y\",\r\n                    \"HOHowManyLiveProperty\": 20,\r\n                    \"HOIsPropertyOccupied\": \"0\",\r\n                    \"HOJewelry\": 404.12,\r\n                    \"HOLandArea\": 30000,\r\n                    \"HOManyFireExtinguishers\": 2,\r\n                    \"HONumberFloors\": 2,\r\n                    \"HONumberRooms\": 2,\r\n                    \"HOPoolHaveADivingBoard\": \"0\",\r\n                    \"HOPoolHaveARailing\": \"0\",\r\n                    \"HOPropertyInFloodZone\": \"0\",\r\n                    \"HORCE\": 200.5,\r\n                    \"HOSafe\": \"Y\",\r\n                    \"HOSecurityBars\": \"Y\",\r\n                    \"HOSecurityCameras\": \"Y\",\r\n                    \"HOSprinkler\": \"Y\",\r\n                    \"HOYearConstruction\": \"2025-12-04\",\r\n                    \"HomeType\": \"Singlefamilyhome\",\r\n                    \"IsThereASwimmingPool\": \"1\",\r\n                    \"Latitude\": \"12412412\",\r\n                    \"Longitude\": \"1231241\",\r\n                    \"ParentElementType\": \"POLICY_LOB\",\r\n                    \"ParentPolicyElementId\": 12159650049,\r\n                    \"PolicyCoverageList\": [\r\n                        {\r\n                            \"AnnualPremium\": 121.2,\r\n                            \"BeforeVatPremium\": 108.78,\r\n                            \"BusinessObjectId\": 906233270,\r\n                            \"CampaignDiscountAmount\": -12.09,\r\n                            \"CostAmount\": 3.6261,\r\n                            \"CoverageName\": \"Fenómenos Naturales\",\r\n                            \"DuePremium\": 128.36,\r\n                            \"GrossPremium\": 124.4961,\r\n                            \"IsFinalLevelCt\": \"Y\",\r\n                            \"ParentElementType\": \"INSURED\",\r\n                            \"ParentPolicyElementId\": 12159650051,\r\n                            \"PolicyElementId\": 12159650053,\r\n                            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n                            \"PolicyStatus\": 2,\r\n                            \"ProductElementCode\": \"HOUSENATURPHENOM_COV\",\r\n                            \"ProductElementId\": 906624905,\r\n                            \"SequenceNumber\": 1,\r\n                            \"SumInsured\": 1212,\r\n                            \"TotalDiscountLoadingAmount\": -12.09,\r\n                            \"UWLoadingAmount\": 0,\r\n                            \"Vat\": 19.58\r\n                        }\r\n                    ],\r\n                    \"PolicyElementId\": 12159650051,\r\n                    \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n                    \"PolicyStatus\": 2,\r\n                    \"PostalCode\": \"123456\",\r\n                    \"ProductElementCode\": \"DWELLING_RISK\",\r\n                    \"ProductElementId\": 906624903,\r\n                    \"Province\": \"LIM\",\r\n                    \"RiskName\": \"ProductElement\",\r\n                    \"SequenceNumber\": 1,\r\n                    \"TempData\": {},\r\n                    \"TotalPrice\": 1000.3,\r\n                    \"Vat\": 19.58\r\n                }\r\n            ],\r\n            \"PolicyStatus\": 2,\r\n            \"ProductCode\": \"HOMEOWNER_MKT\",\r\n            \"ProductElementCode\": \"HOMEOWNER_MKT\",\r\n            \"ProductElementId\": 906147922,\r\n            \"ProductId\": 906147921,\r\n            \"ProductLobId\": 906147922,\r\n            \"SequenceNumber\": 1,\r\n            \"TechProductCode\": \"HOME_STK\",\r\n            \"TechProductId\": 906147910,\r\n            \"Vat\": 19.58\r\n        }\r\n    ],\r\n    \"PolicyPaymentInfoList\": [\r\n        {\r\n            \"BillingType\": \"1\",\r\n            \"BusinessObjectId\": 520259,\r\n            \"ExpiryDate\": \"2026-12-03T23:59:59\",\r\n            \"InstallmentList\": [\r\n                {\r\n                    \"BeforeVatPremium\": 108.78,\r\n                    \"BeforeVatPremiumLocal\": 108.78,\r\n                    \"BusinessObjectId\": 200001394,\r\n                    \"Commission\": 10.88,\r\n                    \"CommissionLocal\": 10.88,\r\n                    \"DuePremium\": 128.36,\r\n                    \"DuePremiumLocal\": 128.36,\r\n                    \"FeeSeq\": 1,\r\n                    \"InstallmentAmount\": 128.36,\r\n                    \"InstallmentAmountLocal\": 128.36,\r\n                    \"InstallmentDate\": \"2025-12-04\",\r\n                    \"InstallmentPeriodSeq\": 1,\r\n                    \"ParentElementType\": \"POLICY_PAYMENT\",\r\n                    \"ParentPolicyElementId\": 12159650055,\r\n                    \"PolicyElementId\": 12159720055,\r\n                    \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n                    \"PolicyStatus\": 2,\r\n                    \"PremiumInterest\": 0,\r\n                    \"PremiumInterestLocal\": 0,\r\n                    \"SequenceNumber\": 1,\r\n                    \"TaxInterest\": 0,\r\n                    \"TaxInterestLocal\": 0,\r\n                    \"TotalInterest\": 0,\r\n                    \"TotalInterestLocal\": 0,\r\n                    \"Vat\": 19.58,\r\n                    \"VatLocal\": 19.58\r\n                }\r\n            ],\r\n            \"InstallmentPeriodCount\": 1,\r\n            \"InstallmentType\": \"10\",\r\n            \"IsInstallment\": \"N\",\r\n            \"ParentElementType\": \"POLICY\",\r\n            \"ParentPolicyElementId\": 12159650042,\r\n            \"PayModeCode\": \"100\",\r\n            \"PayRate\": 1,\r\n            \"PolicyElementId\": 12159650055,\r\n            \"PolicyId\": \"12159650042,5E239235812EAB86C0510D77E7EC17FF\",\r\n            \"PolicyStatus\": 2,\r\n            \"SequenceNumber\": 1\r\n        }\r\n    ],\r\n    \"PolicyStatus\": 1,\r\n    \"PolicyStatusForDisplay\": 1,\r\n    \"PolicyType\": \"1\",\r\n    \"PremCalcFactorHash\": \"20251204_142253_007,v5SKvbkIADxQN2xKlJRXOPZeriictjh0NbmyN9jNXlU=\",\r\n    \"PremCalcResultHash\": \"20251204_142253_008,Cq83SDIX6q3gSMZYJCdlALplGNY6b2KSMjVyXlTclYA=\",\r\n    \"PremiumBookExchangeRate\": 1,\r\n    \"PremiumCurrencyCode\": \"USD\",\r\n    \"PremiumInterest\": 0,\r\n    \"PremiumLocalExchangeRate\": 1,\r\n    \"ProductCode\": \"HOMEOWNER_MKT\",\r\n    \"ProductId\": 906147921,\r\n    \"ProductVersion\": \"1.0\",\r\n    \"ProposalDate\": \"2025-12-04\",\r\n    \"ProposalNo\": \"PABHOMEOWNER_MKT0000000057\",\r\n    \"ProposalStatus\": \"2\",\r\n    \"QuotationDate\": \"2025-12-04T14:22:26\",\r\n    \"SchemaVersion\": 2,\r\n    \"TaxInterest\": 0,\r\n    \"TechProductCode\": \"HOME_STK\",\r\n    \"TechProductId\": 906147910,\r\n    \"TotalDiscountLoading\": -0.1,\r\n    \"TotalDiscountLoadingAmount\": -12.09,\r\n    \"TotalInterest\": 0,\r\n    \"TotalPremium\": 128.36,\r\n    \"UWLoading\": 0,\r\n    \"UWLoadingAmount\": 0,\r\n    \"Vat\": 19.58,\r\n    \"VatRate\": 0.18,\r\n    \"VersionSeq\": 5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_issue",
+              "protocol": "https",
+              "host": [
+                "softtek-sandbox-am",
+                "insuremo",
+                "com"
+              ],
+              "path": [
+                "api",
+                "softtek",
+                "api-orchestration",
+                "v1",
+                "flow",
+                "easypa_issue"
+              ]
+            },
+            "description": "Generated from cURL: curl 'https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_issue' \\\r\n  -H 'accept: */*' \\\r\n  -H 'accept-language: es-419,es;q=0.9,en;q=0.8' \\\r\n  -H 'authorization: Bearer KtEC2B6SSQ-L1Z7zMDfM-g' \\\r\n  -H 'content-type: application/json' \\\r\n  -b 'hubspotutk=0196f83fea4809487a4b01f1009797b3; _ga=GA1.2.142100382.1754589355; _ga_7BCFP03YV0=GS2.1.s1760969514$o2$g0$t1760969518$j56$l0$h0; __hstc=160866274.0196f83fea4809487a4b01f1009797b3.1754589356912.1760396014037.1760989862658.19; auth_code=df3df466-f2de-4326-baef-ba065bfe596e' \\\r\n  -H 'origin: https://softtek-sandbox-am.insuremo.com' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386' \\\r\n  -H 'response-type: application/json' \\\r\n  -H 'sec-ch-ua: \"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: same-origin' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' \\\r\n  -H 'x-mo-env: kylin_dev' \\\r\n  -H 'x-mo-module-permission-code: NPD50' \\\r\n  -H 'x-mo-module-ui-url: https://softtek-sandbox-am.insuremo.com/ui/pa50/?iframeV=0.3992699683990386#/policyManagement/HOMEOWNER_MKT/12139460263,CF9295F8982A7C40BDC363026F075745' \\\r\n  -H 'x-mo-tenant-id: softtek' \\\r\n  --data-raw '{\"AgentCode\":\"PTY10000095006013\",\"AutoUwResultCode\":\"1\",\"BeforeVatPremium\":108.78,\"BookCurrencyCode\":\"USD\",\"BusinessCateCode\":\"1\",\"BusinessObjectId\":906226863,\"CampaignDiscount\":-0.1,\"CampaignDiscountAmount\":-12.09,\"CampaignDiscountList\":[{\"BusinessObjectId\":544076088,\"Comments\":\"\",\"DiscountAmount\":-12.09,\"DiscountCode\":\"01\",\"DiscountType\":\"01\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"Percentage\":-0.1,\"PolicyElementId\":12139460265,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":1,\"TempData\":{}},{\"BusinessObjectId\":544076088,\"Comments\":\"\",\"DiscountCode\":\"03\",\"DiscountType\":\"02\",\"LoadingAmount\":0,\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"Percentage\":0,\"PolicyElementId\":12139460266,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":2,\"TempData\":{}}],\"Commission\":10.88,\"CommissionRate\":0.1,\"DuePremium\":128.36,\"EffectiveDate\":\"2025-12-04\",\"ExpiryDate\":\"2026-12-03T23:59:59\",\"FirstDataEntryDate\":\"2025-12-04T12:06:55\",\"GrossPremium\":124.4961,\"InterestRate\":0,\"IsIssueAfterPay\":\"N\",\"IsPremiumCalcSuccess\":\"Y\",\"IsRenewable\":\"Y\",\"IsTakeUpPolicy\":\"N\",\"LocalCurrencyCode\":\"USD\",\"OrgCode\":\"softtek\",\"POIRate\":1,\"PolicyCustomerList\":[{\"Address\":\"\",\"AddressComplement\":\"\",\"BusinessObjectId\":1000000290,\"City\":\"\",\"ConsentData\":\"\",\"ConsentEmail\":\"\",\"CustomerName\":\"asd\",\"CustomerType\":\"IndiCustomer\",\"DateOfBirth\":\"2025-12-30\",\"Email\":\"\",\"Gender\":\"F\",\"IdNo\":\"123\",\"IdType\":\"1\",\"IsInsured\":\"N\",\"IsOrgParty\":\"N\",\"IsPep\":\"\",\"IsPolicyHolder\":\"Y\",\"Mobile\":\"\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PolicyElementId\":12139460268,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"PostCode\":\"\",\"SequenceNumber\":1,\"State\":\"\",\"TipoGrupo\":\"\",\"TempData\":{\"Mask-IdNo\":\"6AsIYw2s+4tfT/KfqVKbPw==\",\"MaskAfter-IdNo\":\"123\"}}],\"PolicyElementId\":12139460263,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyLobList\":[{\"BeforeVatPremium\":108.78,\"BusinessObjectId\":906226871,\"DuePremium\":128.36,\"GrossPremium\":124.4961,\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PolicyElementId\":12139460270,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyRiskList\":[{\"BeforeVatPremium\":108.78,\"BusinessObjectId\":906226881,\"DuePremium\":128.36,\"GrossPremium\":124.4961,\"ParentElementType\":\"POLICY_LOB\",\"ParentPolicyElementId\":12139460270,\"PolicyCoverageList\":[{\"AnnualPremium\":121.2,\"BeforeVatPremium\":108.78,\"BusinessObjectId\":906233270,\"CampaignDiscountAmount\":-12.09,\"CostAmount\":3.6261,\"CoverageName\":\"Fenómenos Naturales\",\"DuePremium\":128.36,\"GrossPremium\":124.4961,\"IsFinalLevelCt\":\"Y\",\"ParentElementType\":\"INSURED\",\"ParentPolicyElementId\":12139460272,\"PolicyElementId\":12139460274,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"ProductElementCode\":\"HOUSENATURPHENOM_COV\",\"ProductElementId\":906624905,\"SequenceNumber\":1,\"SumInsured\":1212,\"TotalDiscountLoadingAmount\":-12.09,\"UWLoadingAmount\":0,\"Vat\":19.58}],\"PolicyElementId\":12139460272,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"ProductElementCode\":\"DWELLING_RISK\",\"ProductElementId\":906624903,\"RiskName\":\"ProductElement\",\"SequenceNumber\":1,\"TempData\":{},\"Vat\":19.58}],\"PolicyStatus\":2,\"ProductCode\":\"HOMEOWNER_MKT\",\"ProductElementCode\":\"HOMEOWNER_MKT\",\"ProductElementId\":906147922,\"ProductId\":906147921,\"ProductLobId\":906147922,\"SequenceNumber\":1,\"TechProductCode\":\"HOME_STK\",\"TechProductId\":906147910,\"Vat\":19.58}],\"PolicyPaymentInfoList\":[{\"BillingType\":\"1\",\"BusinessObjectId\":520259,\"ExpiryDate\":\"2026-12-03T23:59:59\",\"InstallmentList\":[{\"BeforeVatPremium\":108.78,\"BeforeVatPremiumLocal\":108.78,\"BusinessObjectId\":200001394,\"Commission\":10.88,\"CommissionLocal\":10.88,\"DuePremium\":128.36,\"DuePremiumLocal\":128.36,\"FeeSeq\":1,\"InstallmentAmount\":128.36,\"InstallmentAmountLocal\":128.36,\"InstallmentDate\":\"2025-12-04\",\"InstallmentPeriodSeq\":1,\"ParentElementType\":\"POLICY_PAYMENT\",\"ParentPolicyElementId\":12139460276,\"PolicyElementId\":12139920023,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"PremiumInterest\":0,\"PremiumInterestLocal\":0,\"SequenceNumber\":1,\"TaxInterest\":0,\"TaxInterestLocal\":0,\"TotalInterest\":0,\"TotalInterestLocal\":0,\"Vat\":19.58,\"VatLocal\":19.58}],\"InstallmentPeriodCount\":1,\"InstallmentType\":\"10\",\"IsInstallment\":\"N\",\"ParentElementType\":\"POLICY\",\"ParentPolicyElementId\":12139460263,\"PayModeCode\":\"100\",\"PayRate\":1,\"PolicyElementId\":12139460276,\"PolicyId\":\"12139460263,CF9295F8982A7C40BDC363026F075745\",\"PolicyStatus\":2,\"SequenceNumber\":1}],\"PolicyStatus\":1,\"PolicyStatusForDisplay\":1,\"PolicyType\":\"1\",\"PremCalcFactorHash\":\"20251204_121147_139,v5SKvbkIADxQN2xKlJRXOPZeriictjh0NbmyN9jNXlU=\",\"PremCalcResultHash\":\"20251204_121147_140,yQuv2GukiSkZXJwkyHz4YQL/A2meea3MFEaK8Clh/8o=\",\"PremiumBookExchangeRate\":1,\"PremiumCurrencyCode\":\"USD\",\"PremiumInterest\":0,\"PremiumLocalExchangeRate\":1,\"ProductCode\":\"HOMEOWNER_MKT\",\"ProductId\":906147921,\"ProductVersion\":\"1.0\",\"ProposalDate\":\"2025-12-04\",\"ProposalNo\":\"PABHOMEOWNER_MKT0000000044\",\"ProposalStatus\":\"2\",\"QuotationDate\":\"2025-12-04T12:06:55\",\"SchemaVersion\":2,\"TaxInterest\":0,\"TechProductCode\":\"HOME_STK\",\"TechProductId\":906147910,\"TotalDiscountLoading\":-0.1,\"TotalDiscountLoadingAmount\":-12.09,\"TotalInterest\":0,\"TotalPremium\":128.36,\"UWLoading\":0,\"UWLoadingAmount\":0,\"Vat\":19.58,\"VatRate\":0.18,\"VersionSeq\":6,\"IssueUserId\":10000077008959}'"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "server",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
