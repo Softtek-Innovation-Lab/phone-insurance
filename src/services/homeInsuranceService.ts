@@ -187,13 +187,21 @@ function mapFormDataToAPIPayload(
             ProductElementId: HOME_INSURANCE_PRODUCT.RiskElementId,
             RiskName: 'ProductElement',
             VersionSeq: 1,
-            PolicyCoverageList: [
-              {
-                ProductElementCode: HOME_INSURANCE_PRODUCT.CoverageElementCode,
-                CoverageName: 'Fenómenos Naturales',
-                SumInsured: formData.totalPrice,
-              },
-            ],
+            PolicyCoverageList: formData.selectedCoverages && formData.selectedCoverages.length > 0
+              ? formData.selectedCoverages
+                  .filter(cov => cov.selected)
+                  .map(cov => ({
+                    ProductElementCode: cov.ProductElementCode,
+                    CoverageName: cov.CoverageName,
+                    SumInsured: cov.SumInsured,
+                  }))
+              : [
+                  {
+                    ProductElementCode: HOME_INSURANCE_PRODUCT.CoverageElementCode,
+                    CoverageName: 'Fenómenos Naturales',
+                    SumInsured: formData.totalPrice,
+                  },
+                ],
           },
         ],
         ProductId: HOME_INSURANCE_PRODUCT.ProductId,

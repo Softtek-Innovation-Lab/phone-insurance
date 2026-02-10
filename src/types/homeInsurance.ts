@@ -58,6 +58,16 @@ export interface HomeInsuranceFormData {
   // Bienes
   electronicEquipment: number;
   jewelry: number;
+  
+  // Coberturas seleccionadas
+  selectedCoverages?: SelectedCoverage[];
+}
+
+export interface SelectedCoverage {
+  ProductElementCode: string;
+  CoverageName: string;
+  SumInsured: number;
+  selected: boolean;
 }
 
 export interface HomeInsuranceAPIPayload {

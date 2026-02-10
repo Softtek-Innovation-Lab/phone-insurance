@@ -3,10 +3,11 @@ import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
+import { Checkbox } from "@heroui/checkbox";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { processHomeInsuranceApplication } from "@/services/homeInsuranceService";
-import type { HomeInsuranceFormData } from "@/types/homeInsurance";
+import type { HomeInsuranceFormData, SelectedCoverage } from "@/types/homeInsurance";
 import { useNotification } from "@/providers/NotificationProvider";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
 import { useDisclosure } from "@heroui/use-disclosure";
@@ -28,6 +29,23 @@ export default function HomeInsurancePage() {
   const [cardName, setCardName] = useState('');
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   
+  // Lista de coberturas disponibles
+  const [availableCoverages, setAvailableCoverages] = useState<SelectedCoverage[]>([
+    { ProductElementCode: "HOUSENATURPHENOM_COV", CoverageName: "Fenómenos Naturales", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEFIRECONTENT_COV", CoverageName: "Incendio", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSESWIMPOOLTRAMPO_COV", CoverageName: "Piscina", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEFLOOD_COV", CoverageName: "Daño", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEELECTROEQUIELECTRO_COV", CoverageName: "Electrodomésticos", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSETEMPACCOMMOD_COV", CoverageName: "Alojamiento", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSELIABILITYFAM_COV", CoverageName: "Responsabilidad", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEHOMECARE_COV", CoverageName: "Asistencia", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEFIRE_COV", CoverageName: "Incendio", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEJEWERLYVALUES_COV", CoverageName: "Joyas", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEBURGLARY_COV", CoverageName: "Robo", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEDEBRISREMOVAL_COV", CoverageName: "Remoción", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSECRYSTALGLASS_COV", CoverageName: "Cristales", SumInsured: 0, selected: false },
+  ]);
+  
   // Datos del formulario
   const [formData, setFormData] = useState<Partial<HomeInsuranceFormData>>({
     homeType: "Singlefamilyhome",
@@ -47,6 +65,7 @@ export default function HomeInsurancePage() {
     thereIsSwimmingPool: "0",
     constructionType: "Concrete",
     country: "PER",
+    selectedCoverages: [],
   });
 
   const updateField = (field: keyof HomeInsuranceFormData, value: any) => {
@@ -128,15 +147,63 @@ export default function HomeInsurancePage() {
     setLoading(false);
   };
 
+  // Función para manejar cambios en coberturas
+  const handleCoverageToggle = (code: string) => {
+    setAvailableCoverages(prev =>
+      prev.map(cov =>
+        cov.ProductElementCode === code
+          ? { ...cov, selected: !cov.selected }
+          : cov
+      )
+    );
+  };
+
+  const handleCoverageSumInsured = (code: string, value: number) => {
+    setAvailableCoverages(prev =>
+      prev.map(cov =>
+        cov.ProductElementCode === code
+          ? { ...cov, SumInsured: value }
+          : cov
+      )
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (step < 4) {
+    if (step < 5) {
+      // Auto-complete algunos valores de cobertura al pasar al paso 4
+      if (step === 3) {
+        setAvailableCoverages(prev =>
+          prev.map(cov => {
+            // Auto-completar electrodomésticos con el valor ingresado
+            if (cov.ProductElementCode === "HOUSEELECTROEQUIELECTRO_COV" && formData.electronicEquipment) {
+              return { ...cov, SumInsured: formData.electronicEquipment, selected: true };
+            }
+            // Auto-completar joyas con el valor ingresado
+            if (cov.ProductElementCode === "HOUSEJEWERLYVALUES_COV" && formData.jewelry) {
+              return { ...cov, SumInsured: formData.jewelry, selected: true };
+            }
+            // Auto-completar piscina si tiene piscina
+            if (cov.ProductElementCode === "HOUSESWIMPOOLTRAMPO_COV" && formData.thereIsSwimmingPool === "1") {
+              return { ...cov, SumInsured: formData.totalPrice ? formData.totalPrice * 0.1 : 0, selected: true };
+            }
+            // Auto-completar valor de la propiedad en algunas coberturas
+            if ((cov.ProductElementCode === "HOUSENATURPHENOM_COV" || cov.ProductElementCode === "HOUSEFIRE_COV") && formData.totalPrice) {
+              return { ...cov, SumInsured: formData.totalPrice, selected: true };
+            }
+            return cov;
+          })
+        );
+      }
       setStep(step + 1);
       return;
     }
 
     setLoading(true);
+    
+    // Obtener coberturas seleccionadas
+    const selectedCoverages = availableCoverages.filter(cov => cov.selected);
     
     try {
       // Obtener datos del usuario
@@ -154,9 +221,15 @@ export default function HomeInsurancePage() {
         gender: "M",
       };
 
+      // Crear formData completo con las coberturas seleccionadas
+      const completeFormData: HomeInsuranceFormData = {
+        ...formData as HomeInsuranceFormData,
+        selectedCoverages: selectedCoverages,
+      };
+
       // Usar el nuevo proceso completo con confirmación y pago
       const response = await processHomeInsuranceApplication(
-        formData as HomeInsuranceFormData,
+        completeFormData,
         customerData,
         handleCalculationConfirmation,
         handlePaymentConfirmation
@@ -223,16 +296,17 @@ export default function HomeInsurancePage() {
             
             {/* Progress Indicator */}
             <div className="mb-8">
-              <div className="flex justify-between mb-2">
-                <span className={`text-sm ${step >= 1 ? 'text-primary' : 'text-gray-400'}`}>Property Info</span>
-                <span className={`text-sm ${step >= 2 ? 'text-primary' : 'text-gray-400'}`}>Location</span>
-                <span className={`text-sm ${step >= 3 ? 'text-primary' : 'text-gray-400'}`}>Security</span>
-                <span className={`text-sm ${step >= 4 ? 'text-primary' : 'text-gray-400'}`}>Review</span>
+              <div className="flex justify-between mb-2 text-xs sm:text-sm">
+                <span className={`${step >= 1 ? 'text-primary' : 'text-gray-400'}`}>Property</span>
+                <span className={`${step >= 2 ? 'text-primary' : 'text-gray-400'}`}>Location</span>
+                <span className={`${step >= 3 ? 'text-primary' : 'text-gray-400'}`}>Security</span>
+                <span className={`${step >= 4 ? 'text-primary' : 'text-gray-400'}`}>Coverage</span>
+                <span className={`${step >= 5 ? 'text-primary' : 'text-gray-400'}`}>Review</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
                   className="bg-primary h-2 rounded-full transition-all"
-                  style={{ width: `${(step / 4) * 100}%` }}
+                  style={{ width: `${(step / 5) * 100}%` }}
                 />
               </div>
             </div>
@@ -543,8 +617,59 @@ export default function HomeInsurancePage() {
                 </div>
               )}
 
-              {/* Step 4: Review */}
+              {/* Step 4: Coverage Selection */}
               {step === 4 && (
+                <div className="space-y-4">
+                  <h2 className="text-xl font-semibold mb-4">Select Coverage Options</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Choose the coverages you want to include in your policy. Some coverages have been pre-filled based on your previous answers.
+                  </p>
+                  
+                  <div className="space-y-3">
+                    {availableCoverages.map((coverage) => (
+                      <Card key={coverage.ProductElementCode} className="p-4">
+                        <div className="flex flex-col space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Checkbox
+                              isSelected={coverage.selected}
+                              onValueChange={() => handleCoverageToggle(coverage.ProductElementCode)}
+                            >
+                              <span className="font-semibold">{coverage.CoverageName}</span>
+                            </Checkbox>
+                          </div>
+                          
+                          {coverage.selected && (
+                            <div className="ml-6">
+                              <Input
+                                label="Sum Insured (USD)"
+                                type="number"
+                                value={coverage.SumInsured.toString()}
+                                onValueChange={(value) => handleCoverageSumInsured(coverage.ProductElementCode, parseFloat(value) || 0)}
+                                min="0"
+                                isRequired
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                  
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mt-4">
+                    <p className="text-sm text-blue-700 dark:text-blue-400">
+                      <strong>Selected Coverages:</strong> {availableCoverages.filter(c => c.selected).length} of {availableCoverages.length}
+                    </p>
+                    {availableCoverages.filter(c => c.selected).length > 0 && (
+                      <p className="text-sm text-blue-700 dark:text-blue-400 mt-2">
+                        <strong>Total Coverage Value:</strong> ${availableCoverages.filter(c => c.selected).reduce((sum, c) => sum + c.SumInsured, 0).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 5: Review */}
+              {step === 5 && (
                 <div className="space-y-4">
                   <h2 className="text-xl font-semibold mb-4">Review Your Information</h2>
                   
@@ -560,6 +685,7 @@ export default function HomeInsurancePage() {
                         formData.haveFireAlarm === "1" && "Fire Alarm",
                       ].filter(Boolean).join(", ") || "None"
                     }</p>
+                    <p><strong>Selected Coverages:</strong> {availableCoverages.filter(c => c.selected).length}</p>
                   </div>
 
                   <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -586,7 +712,7 @@ export default function HomeInsurancePage() {
                   isLoading={loading}
                   className="flex-1"
                 >
-                  {step < 4 ? "Next" : "Submit Application"}
+                  {step < 5 ? "Next" : "Submit Application"}
                 </Button>
               </div>
             </form>
