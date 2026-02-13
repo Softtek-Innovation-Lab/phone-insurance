@@ -1,9 +1,13 @@
-# Azure Static Web Apps Ignore File
-# Solo deployar la carpeta dist/ y archivos de configuración necesarios
+# Azure Static Web Apps
+# Solo desplegar carpeta dist/
+
+# Source code
+src/
+public/
 
 # Dependencies
 node_modules/
-.pnp
+.pnp/
 .pnp.js
 
 # Lock files
@@ -11,19 +15,10 @@ yarn.lock
 pnpm-lock.yaml
 package-lock.json
 
-# Source files (ya están compilados en dist/)
-src/
-
-# Public assets (ya están copiados en dist/)
-public/
-
 # Testing
 coverage/
-.nyc_output/
-*.test.ts
-*.test.tsx
-*.spec.ts
-*.spec.tsx
+*.test.*
+*.spec.*
 __tests__/
 
 # Documentation
@@ -32,46 +27,34 @@ docs/
 *.md
 !README.md
 
-# Git
-.git/
-.gitignore
-.gitattributes
-
-# Environment files
-.env*
-
-# Logs
-*.log
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Build config files (no se necesitan en runtime)
+# Configuration files
 *.config.js
 *.config.ts
 tsconfig*.json
 .eslintrc*
 .prettierrc*
 .editorconfig
+components.json
 
-# Development files
+# Build tools
 Makefile
 compress-images.mjs
 vercel.json
 .npmrc
-components.json
-.deployignore
-.staticwebappignore
-.eslintignore
-LICENSE
 
-# Workflow files
-.github/
+# Git & IDE
+.git/
+.gitignore
+.gitattributes
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env*
+
+# Logs
+*.log

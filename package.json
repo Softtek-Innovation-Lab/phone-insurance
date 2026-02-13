@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:analyze": "tsc && vite build --mode analyze",
     "lint": "eslint -c .eslintrc.json ./src/**/**/*.{ts,tsx} --fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check-size": "du -sh dist/ && echo '\nArchivos más grandes:' && find dist -type f -exec ls -lh {} \\; | sort -k5 -hr | head -10"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.8.0",
     "@heroui/avatar": "^2.2.19",
     "@heroui/button": "2.2.13",
     "@heroui/card": "^2.2.14",
@@ -83,6 +84,7 @@
     "postcss": "8.4.38",
     "prettier": "3.3.3",
     "redux-mock-store": "^1.5.5",
+    "@faker-js/faker": "^9.8.0",
     "typescript": "5.6.3",
     "vite": "^5.2.0",
     "vite-tsconfig-paths": "^4.3.2"
