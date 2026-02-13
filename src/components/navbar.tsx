@@ -86,6 +86,12 @@ export const Navbar = () => {
                   >
                     {t('productsAndServices')}
                   </Link>
+                  <Link
+                    to="/claims-centre"
+                    className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
+                  >
+                    {t('claimsCentre')}
+                  </Link>
                   <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
                     {t('industrySolutions')}
                   </span>
@@ -95,12 +101,6 @@ export const Navbar = () => {
                   <span className="text-sm font-medium text-gray-400 cursor-not-allowed">
                     {t('brokers')}
                   </span>
-                  <Link
-                    to="/claims-centre"
-                    className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
-                  >
-                    {t('claimsCentre')}
-                  </Link>
                 </div>
               </nav>
 

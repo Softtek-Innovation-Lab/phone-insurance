@@ -31,20 +31,60 @@ export default function HomeInsurancePage() {
   
   // Lista de coberturas disponibles
   const [availableCoverages, setAvailableCoverages] = useState<SelectedCoverage[]>([
-    { ProductElementCode: "HOUSENATURPHENOM_COV", CoverageName: "Fenómenos Naturales", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSEFIRECONTENT_COV", CoverageName: "Incendio", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSESWIMPOOLTRAMPO_COV", CoverageName: "Piscina", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSEFLOOD_COV", CoverageName: "Daño", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSEELECTROEQUIELECTRO_COV", CoverageName: "Electrodomésticos", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSETEMPACCOMMOD_COV", CoverageName: "Alojamiento", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSELIABILITYFAM_COV", CoverageName: "Responsabilidad", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSEHOMECARE_COV", CoverageName: "Asistencia", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSEFIRE_COV", CoverageName: "Incendio", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSEJEWERLYVALUES_COV", CoverageName: "Joyas", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSEBURGLARY_COV", CoverageName: "Robo", SumInsured: 0, selected: false },
-    { ProductElementCode: "HOUSEDEBRISREMOVAL_COV", CoverageName: "Remoción", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEFIRE_COV", CoverageName: "Incendio Edificio", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEFIRECONTENT_COV", CoverageName: "Incendio Contenidos", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSELIABILITYFAM_COV", CoverageName: "Responsabilidad Civil Familiar", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEHOMECARE_COV", CoverageName: "Asistencia Domiciliaria", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEBURGLARY_COV", CoverageName: "Robo / Hurto", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEFLOOD_COV", CoverageName: "Daños por Agua", SumInsured: 0, selected: false },
     { ProductElementCode: "HOUSECRYSTALGLASS_COV", CoverageName: "Cristales", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEDEBRISREMOVAL_COV", CoverageName: "Remoción de Escombros", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSETEMPACCOMMOD_COV", CoverageName: "Alojamiento Temporal", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSENATURPHENOM_COV", CoverageName: "Fenómenos Naturales", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEELECTROEQUIELECTRO_COV", CoverageName: "Electrodomésticos / Equipos electrónicos", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSEJEWERLYVALUES_COV", CoverageName: "Joyas y Objetos de Valor", SumInsured: 0, selected: false },
+    { ProductElementCode: "HOUSESWIMPOOLTRAMPO_COV", CoverageName: "Piscina / Trampolín", SumInsured: 0, selected: false },
   ]);
+  
+  // Pack seleccionado
+  const [selectedPack, setSelectedPack] = useState<string>("custom");
+  
+  // Definición de packs
+  const coveragePacks = {
+    basic: {
+      name: "HOGAR BÁSICO",
+      description: "Protección esencial para tu hogar",
+      coverages: ["HOUSEFIRE_COV", "HOUSEFIRECONTENT_COV", "HOUSELIABILITYFAM_COV", "HOUSEHOMECARE_COV"]
+    },
+    standard: {
+      name: "HOGAR ESTÁNDAR",
+      description: "Protección completa con coberturas adicionales",
+      coverages: [
+        "HOUSEFIRE_COV", "HOUSEFIRECONTENT_COV", "HOUSELIABILITYFAM_COV", "HOUSEHOMECARE_COV",
+        "HOUSEBURGLARY_COV", "HOUSEFLOOD_COV", "HOUSECRYSTALGLASS_COV", "HOUSEDEBRISREMOVAL_COV",
+        "HOUSETEMPACCOMMOD_COV"
+      ]
+    },
+    plus: {
+      name: "HOGAR PLUS",
+      description: "Mayor protección con cobertura para fenómenos naturales",
+      coverages: [
+        "HOUSEFIRE_COV", "HOUSEFIRECONTENT_COV", "HOUSELIABILITYFAM_COV", "HOUSEHOMECARE_COV",
+        "HOUSEBURGLARY_COV", "HOUSEFLOOD_COV", "HOUSECRYSTALGLASS_COV", "HOUSEDEBRISREMOVAL_COV",
+        "HOUSETEMPACCOMMOD_COV", "HOUSENATURPHENOM_COV", "HOUSEELECTROEQUIELECTRO_COV"
+      ]
+    },
+    premium: {
+      name: "HOGAR PREMIUM",
+      description: "Protección total para tu hogar y bienes de valor",
+      coverages: [
+        "HOUSEFIRE_COV", "HOUSEFIRECONTENT_COV", "HOUSELIABILITYFAM_COV", "HOUSEHOMECARE_COV",
+        "HOUSEBURGLARY_COV", "HOUSEFLOOD_COV", "HOUSECRYSTALGLASS_COV", "HOUSEDEBRISREMOVAL_COV",
+        "HOUSETEMPACCOMMOD_COV", "HOUSENATURPHENOM_COV", "HOUSEELECTROEQUIELECTRO_COV",
+        "HOUSEJEWERLYVALUES_COV", "HOUSESWIMPOOLTRAMPO_COV"
+      ]
+    }
+  };
   
   // Datos del formulario
   const [formData, setFormData] = useState<Partial<HomeInsuranceFormData>>({
@@ -149,6 +189,11 @@ export default function HomeInsurancePage() {
 
   // Función para manejar cambios en coberturas
   const handleCoverageToggle = (code: string) => {
+    // Si se modifica manualmente, cambiar a custom
+    if (selectedPack !== "custom") {
+      setSelectedPack("custom");
+    }
+    
     setAvailableCoverages(prev =>
       prev.map(cov =>
         cov.ProductElementCode === code
@@ -165,6 +210,59 @@ export default function HomeInsurancePage() {
           ? { ...cov, SumInsured: value }
           : cov
       )
+    );
+  };
+
+  // Función para seleccionar un pack
+  const handlePackSelection = (packKey: string) => {
+    setSelectedPack(packKey);
+    
+    const packData = coveragePacks[packKey as keyof typeof coveragePacks];
+    
+    if (packKey === "custom") {
+      // No hacer nada, dejar que el usuario seleccione manualmente
+      return;
+    }
+    
+    // Auto-seleccionar coberturas del pack
+    setAvailableCoverages(prev =>
+      prev.map(cov => {
+        const isInPack = packData.coverages.includes(cov.ProductElementCode);
+        
+        if (isInPack) {
+          // Auto-completar valores según el tipo de cobertura
+          let sumInsured = cov.SumInsured || 0;
+          
+          // Incendio edificio y contenidos: usar valor de la propiedad
+          if (cov.ProductElementCode === "HOUSEFIRE_COV" || cov.ProductElementCode === "HOUSEFIRECONTENT_COV") {
+            sumInsured = formData.totalPrice || 0;
+          }
+          // Fenómenos naturales: usar valor de la propiedad
+          else if (cov.ProductElementCode === "HOUSENATURPHENOM_COV") {
+            sumInsured = formData.totalPrice || 0;
+          }
+          // Electrodomésticos: usar valor ingresado
+          else if (cov.ProductElementCode === "HOUSEELECTROEQUIELECTRO_COV") {
+            sumInsured = formData.electronicEquipment || 0;
+          }
+          // Joyas: usar valor ingresado
+          else if (cov.ProductElementCode === "HOUSEJEWERLYVALUES_COV") {
+            sumInsured = formData.jewelry || 0;
+          }
+          // Piscina: usar 10% del valor de la propiedad si tiene piscina
+          else if (cov.ProductElementCode === "HOUSESWIMPOOLTRAMPO_COV") {
+            sumInsured = formData.thereIsSwimmingPool === "1" ? (formData.totalPrice || 0) * 0.1 : 0;
+          }
+          // Otras coberturas: usar 20% del valor de la propiedad como estimado
+          else if (sumInsured === 0) {
+            sumInsured = (formData.totalPrice || 0) * 0.2;
+          }
+          
+          return { ...cov, selected: true, SumInsured: sumInsured };
+        } else {
+          return { ...cov, selected: false };
+        }
+      })
     );
   };
 
@@ -619,13 +717,66 @@ export default function HomeInsurancePage() {
 
               {/* Step 4: Coverage Selection */}
               {step === 4 && (
-                <div className="space-y-4">
-                  <h2 className="text-xl font-semibold mb-4">Select Coverage Options</h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Choose the coverages you want to include in your policy. Some coverages have been pre-filled based on your previous answers.
-                  </p>
+                <div className="space-y-6">
+                  <h2 className="text-xl font-semibold mb-4">Select Coverage Package</h2>
                   
+                  {/* Pack Selection Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    {Object.entries(coveragePacks).map(([key, pack]) => (
+                      <Card 
+                        key={key}
+                        isPressable
+                        onPress={() => handlePackSelection(key)}
+                        className={`p-4 cursor-pointer transition-all ${
+                          selectedPack === key 
+                            ? 'ring-2 ring-primary bg-primary/10' 
+                            : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-bold text-lg">{pack.name}</h3>
+                            {selectedPack === key && (
+                              <span className="text-primary">✓</span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{pack.description}</p>
+                          {pack.coverages.length > 0 && (
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                              {pack.coverages.length} coberturas incluidas
+                            </p>
+                          )}
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+
+                  {/* Show selected pack details */}
+                  {selectedPack !== "custom" && (
+                    <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-4 rounded-lg border border-primary/20">
+                      <h3 className="font-semibold mb-2">📋 Coberturas del Pack {coveragePacks[selectedPack as keyof typeof coveragePacks].name}</h3>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                        {availableCoverages
+                          .filter(c => c.selected)
+                          .map((coverage) => (
+                            <li key={coverage.ProductElementCode} className="flex items-center gap-2">
+                              <span className="text-primary">✓</span>
+                              <span>{coverage.CoverageName}</span>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Individual Coverage Selection */}
                   <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Coberturas {selectedPack === "custom" ? "" : "(Modificables)"}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {selectedPack === "custom" 
+                        ? "Selecciona las coberturas individuales que necesitas."
+                        : "Puedes ajustar las coberturas o cambiar a personalizado si lo prefieres."}
+                    </p>
+                    
                     {availableCoverages.map((coverage) => (
                       <Card key={coverage.ProductElementCode} className="p-4">
                         <div className="flex flex-col space-y-3">
@@ -641,7 +792,7 @@ export default function HomeInsurancePage() {
                           {coverage.selected && (
                             <div className="ml-6">
                               <Input
-                                label="Sum Insured (USD)"
+                                label="Suma Asegurada (USD)"
                                 type="number"
                                 value={coverage.SumInsured.toString()}
                                 onValueChange={(value) => handleCoverageSumInsured(coverage.ProductElementCode, parseFloat(value) || 0)}
@@ -657,11 +808,11 @@ export default function HomeInsurancePage() {
                   
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mt-4">
                     <p className="text-sm text-blue-700 dark:text-blue-400">
-                      <strong>Selected Coverages:</strong> {availableCoverages.filter(c => c.selected).length} of {availableCoverages.length}
+                      <strong>Coberturas Seleccionadas:</strong> {availableCoverages.filter(c => c.selected).length} de {availableCoverages.length}
                     </p>
                     {availableCoverages.filter(c => c.selected).length > 0 && (
                       <p className="text-sm text-blue-700 dark:text-blue-400 mt-2">
-                        <strong>Total Coverage Value:</strong> ${availableCoverages.filter(c => c.selected).reduce((sum, c) => sum + c.SumInsured, 0).toLocaleString()}
+                        <strong>Valor Total de Cobertura:</strong> ${availableCoverages.filter(c => c.selected).reduce((sum, c) => sum + c.SumInsured, 0).toLocaleString()}
                       </p>
                     )}
                   </div>
@@ -719,72 +870,131 @@ export default function HomeInsurancePage() {
           </Card>
         </div>
 
-        {/* Confirmation Modal */}
-        <Modal isOpen={isOpen} onClose={handleCancel} size="2xl">
+        {/* Confirmation Modal - Detailed Information */}
+        <Modal isOpen={isOpen} onClose={handleCancel} size="5xl" scrollBehavior="inside">
           <ModalContent>
             <ModalHeader className="flex flex-col gap-1">
-              Premium Calculation
+              Resumen de Póliza - Confirme los Detalles
             </ModalHeader>
-            <ModalBody>
+            <ModalBody className="max-h-[70vh] overflow-y-auto">
               {calculationData && (
-                <div className="space-y-4">
-                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                    <h3 className="text-xl font-bold text-green-700 dark:text-green-400">
-                      Proposal No: {calculationData.ProposalNo}
-                    </h3>
+                <div className="space-y-6">
+                  {/* Proposal Number */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-lg border-2 border-blue-200 dark:border-blue-800">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Número de Propuesta</p>
+                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">{calculationData.ProposalNo}</p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Dates Section */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">📅 Vigencia de la Póliza</h3>
+                    <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Fecha de Inicio</p>
+                        <p className="font-semibold">{new Date(calculationData.EffectiveDate).toLocaleDateString('es-ES')}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Fecha de Vencimiento</p>
+                        <p className="font-semibold">{new Date(calculationData.ExpiryDate).toLocaleDateString('es-ES')}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Property Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">🏠 Información de la Propiedad</h3>
+                    <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Dirección</p>
+                        <p className="font-semibold">{formData.fullAddress}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Tipo de Vivienda</p>
+                        <p className="font-semibold">{formData.homeType}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Valor de la Propiedad</p>
+                        <p className="font-semibold">${formData.totalPrice?.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Área de Construcción</p>
+                        <p className="font-semibold">{formData.buildingArea} m²</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Coverage Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">🛡️ Coberturas Seleccionadas</h3>
                     <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Total Premium</p>
-                      <p className="text-2xl font-bold">${calculationData.TotalPremium?.toFixed(2)}</p>
-                    </div>
-                    <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Due Premium</p>
-                      <p className="text-2xl font-bold">${calculationData.DuePremium?.toFixed(2)}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Gross Premium</p>
-                      <p className="font-semibold">${calculationData.GrossPremium?.toFixed(2)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Before VAT</p>
-                      <p className="font-semibold">${calculationData.BeforeVatPremium?.toFixed(2)}</p>
+                      <ul className="space-y-2">
+                        {availableCoverages.filter(c => c.selected).map((coverage) => (
+                          <li key={coverage.ProductElementCode} className="flex items-start justify-between">
+                            <div className="flex items-start">
+                              <span className="text-green-500 mr-2">✓</span>
+                              <span className="font-semibold">{coverage.CoverageName}</span>
+                            </div>
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                              ${coverage.SumInsured.toLocaleString()}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Security Features */}
+                  {(formData.antiTheftAlarm === "1" || formData.securityCameras === "Y" || 
+                    formData.haveFireAlarm === "1" || formData.fireExtinguishers === "Y") && (
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">VAT</p>
-                      <p className="font-semibold">${calculationData.Vat?.toFixed(2)}</p>
+                      <h3 className="text-lg font-semibold mb-3">🔒 Características de Seguridad</h3>
+                      <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                        <ul className="grid grid-cols-2 gap-2">
+                          {formData.antiTheftAlarm === "1" && (
+                            <li className="flex items-center">
+                              <span className="text-blue-500 mr-2">•</span>
+                              <span>Alarma Anti-robo</span>
+                            </li>
+                          )}
+                          {formData.securityCameras === "Y" && (
+                            <li className="flex items-center">
+                              <span className="text-blue-500 mr-2">•</span>
+                              <span>Cámaras de Seguridad</span>
+                            </li>
+                          )}
+                          {formData.haveFireAlarm === "1" && (
+                            <li className="flex items-center">
+                              <span className="text-blue-500 mr-2">•</span>
+                              <span>Alarma contra Incendios</span>
+                            </li>
+                          )}
+                          {formData.fireExtinguishers === "Y" && (
+                            <li className="flex items-center">
+                              <span className="text-blue-500 mr-2">•</span>
+                              <span>Extintores ({formData.manyFireExtinguishers || 0})</span>
+                            </li>
+                          )}
+                        </ul>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Commission</p>
-                      <p className="font-semibold">${calculationData.Commission?.toFixed(2)}</p>
-                    </div>
-                  </div>
+                  )}
 
-                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <p className="text-sm text-blue-700 dark:text-blue-400">
-                      <strong>Policy Period:</strong> {new Date(calculationData.EffectiveDate).toLocaleDateString()} to {new Date(calculationData.ExpiryDate).toLocaleDateString()}
+                  {/* Important Notice */}
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 rounded">
+                    <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                      <strong>Importante:</strong> Por favor revise toda la información antes de continuar con el pago. 
+                      Al hacer clic en "Continuar con el Pago", estará confirmando que todos los datos son correctos.
                     </p>
                   </div>
-
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Do you want to proceed with this policy? Clicking "Accept" will bind and issue the policy.
-                  </p>
                 </div>
               )}
             </ModalBody>
             <ModalFooter>
               <Button variant="light" onPress={handleCancel}>
-                Cancel
+                Cancelar
               </Button>
               <Button color="primary" onPress={handleConfirm}>
-                Accept & Issue Policy
+                Continuar con el Pago
               </Button>
             </ModalFooter>
           </ModalContent>
