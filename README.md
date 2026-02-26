@@ -6,7 +6,13 @@ Demo
 
 ![image](https://github.com/user-attachments/assets/ef4cc7f7-c57e-4d3b-bcee-4532a300e8a0)
 
+## 🌐 URLs de Producción
 
+| Servicio | URL |
+|----------|-----|
+| **Frontend** | https://mango-mud-0df363503.6.azurestaticapps.net |
+
+https://mango-mud-0df363503.6.azurestaticapps.net/
 
 ## Technologies Used
 

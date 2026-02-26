@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useTranslation } from 'react-i18next';
 
-import cameraImage from '@/assets/camera-nikon.webp';
-import laptopImage from '@/assets/laptop.webp';
-import phoneImage from '@/assets/phone.webp';
+import cameraImage from '@/assets/products/camera.webp';
+import laptopImage from '@/assets/products/laptop.webp';
+import phoneImage from '@/assets/products/phone.webp';
 import { products } from "@/data/products";
 
 export default function HeroSection() {
@@ -38,15 +38,6 @@ export default function HeroSection() {
                         >
                             K-12 School Quotes
                         </Button>
-                    </div>
-                    <div className="animate-delayed flex justify-center md:justify-start gap-4 items-center mb-6 animate-slide-up animation-delay-600">
-                        {products.sort(() => 0.5 - Math.random()).slice(0, 3).map((product, index) => (
-                            <span
-                                key={index}
-                                style={{ "backgroundImage": `url(${product.image})` }}
-                                className="w-16 h-16 bg-cover bg-center bg-no-repeat rounded-lg shadow-md"
-                            />
-                        ))}
                     </div>
                     <div className="animate-delayed flex flex-wrap justify-center md:justify-start gap-4 text-sm animate-slide-up animation-delay-800">
                         <div className="flex items-center bg-yellow-900 bg-opacity-50 px-4 py-2 rounded-full shadow-md text-yellow-100">

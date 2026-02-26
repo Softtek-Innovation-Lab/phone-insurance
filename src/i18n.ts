@@ -162,7 +162,7 @@ i18n
                     myClaimsSectionPlaceholder: 'My Claims section (to be implemented).',
 
                     // Hero Section
-                    heroTitle: 'Protect Your Devices with Confidence',
+                    heroTitle: 'Protect Your Assets with Confidence',
                     heroSubtitle: 'Affordable, reliable insurance for your phone, laptop, and more. Get covered in minutes.',
                     getStarted: 'Get Started',
                     learnMore: 'Learn More',
@@ -209,7 +209,7 @@ i18n
                     // New Accident Tab
                     newAccident: {
                         title: 'Report a New Accident',
-                        proceed: 'Proceed with the process',
+                        proceed: 'Claim Process Guide',
                         successTitle: 'Accident Reported Successfully!',
                         claimNumber: 'Claim Number:',
                         taskId: 'Task ID:',
@@ -412,7 +412,7 @@ i18n
                     myClaimsSectionPlaceholder: 'Sección de siniestros (pendiente de implementación).',
 
                     // Hero Section
-                    heroTitle: 'Protege tus dispositivos con confianza',
+                    heroTitle: 'Protege tus activos con confianza',
                     heroSubtitle: 'Seguro asequible y confiable para tu teléfono, laptop y más. Obtén cobertura en minutos.',
                     getStarted: 'Comenzar',
                     learnMore: 'Saber más',
@@ -459,7 +459,7 @@ i18n
                     // New Accident Tab
                     newAccident: {
                         title: 'Reportar un Nuevo Siniestro',
-                        proceed: 'Continuar con el proceso',
+                        proceed: 'Guia de proceso de reclamo',
                         successTitle: '¡Siniestro Reportado Exitosamente!',
                         claimNumber: 'Número de Siniestro:',
                         taskId: 'ID de Tarea:',
@@ -661,7 +661,7 @@ i18n
                     myClaimsSectionPlaceholder: 'Seção de sinistros (pendente de implementação).',
 
                     // Hero Section
-                    heroTitle: 'Proteja seus dispositivos com confiança',
+                    heroTitle: 'Proteja seus ativos com confiança',
                     heroSubtitle: 'Seguro acessível e confiável para seu telefone, laptop e mais. Obtenha cobertura em minutos.',
                     getStarted: 'Começar',
                     learnMore: 'Saiba mais',
@@ -708,7 +708,7 @@ i18n
                     // New Accident Tab
                     newAccident: {
                         title: 'Reportar um Novo Sinistro',
-                        proceed: 'Continuar com o processo',
+                        proceed: 'Guia do processo de reclamação',
                         successTitle: 'Sinistro Reportado com Sucesso!',
                         claimNumber: 'Número do Sinistro:',
                         taskId: 'ID da Tarefa:',
