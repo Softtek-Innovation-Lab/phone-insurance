@@ -27,6 +27,7 @@ interface ProcessGuideModalProps {
 
 export default function ProcessGuideModal({ isOpen, onClose, policyNumber, productName, claimNo, taskId }: ProcessGuideModalProps) {
     const [currentStep, setCurrentStep] = useState(0);
+    const [fnolSubStep, setFnolSubStep] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [fnolData, setFnolData] = useState<FNOLData | null>(null);
 
@@ -75,9 +76,18 @@ export default function ProcessGuideModal({ isOpen, onClose, policyNumber, produ
 
     const handleNext = async () => {
         const currentStepData = steps[currentStep];
+        
+        // Si estamos en FNOL y aún hay sub-pasos, avanzar al siguiente sub-paso
+        if (currentStepData.title === "FNOL (First Notice of Loss)" && fnolSubStep < 2) {
+            setFnolSubStep(fnolSubStep + 1);
+            return;
+        }
+        
+        // Si terminamos todos los sub-pasos de FNOL o estamos en otro paso, procesar la acción
         if (currentStepData.action) {
             if (currentStepData.title === "FNOL (First Notice of Loss)") {
                 await handleFNOL(fnolData);
+                setFnolSubStep(0); // Reset sub-step for next time
             } else {
                 await currentStepData.action();
             }
@@ -90,26 +100,53 @@ export default function ProcessGuideModal({ isOpen, onClose, policyNumber, produ
         }
     };
 
+    const handlePrevious = () => {
+        const currentStepData = steps[currentStep];
+        
+        // Si estamos en FNOL y no es el primer sub-paso, retroceder al sub-paso anterior
+        if (currentStepData.title === "FNOL (First Notice of Loss)" && fnolSubStep > 0) {
+            setFnolSubStep(fnolSubStep - 1);
+        } else if (currentStep > 0) {
+            // Si no, retroceder al paso anterior
+            setCurrentStep(currentStep - 1);
+            // Si el paso anterior es FNOL, ir al último sub-paso
+            if (steps[currentStep - 1].title === "FNOL (First Notice of Loss)") {
+                setFnolSubStep(2);
+            }
+        }
+    };
+
     const handleClose = () => {
         setCurrentStep(0);
+        setFnolSubStep(0);
         onClose();
     }
 
     const currentStepData = steps[currentStep];
+    const isFNOLStep = currentStepData.title === "FNOL (First Notice of Loss)";
+    const fnolSubStepTitles = ["Información Básica", "Información de Contacto", "Detalles del Accidente"];
 
     return (
-        <Modal isOpen={isOpen} onOpenChange={handleClose} isDismissable={false}>
+        <Modal isOpen={isOpen} onOpenChange={handleClose} isDismissable={false} size="3xl">
             <ModalContent>
                 <>
-                    <ModalHeader className="flex flex-col gap-1">Claim Process Guide</ModalHeader>
-                    <ModalBody>
-                        {currentStepData.title === "FNOL (First Notice of Loss)" ? (
+                    <ModalHeader className="flex flex-col gap-1">
+                        <span>Claim Process Guide</span>
+                        {isFNOLStep && (
+                            <span className="text-sm font-normal text-gray-500">
+                                FNOL - Paso {fnolSubStep + 1} de 3: {fnolSubStepTitles[fnolSubStep]}
+                            </span>
+                        )}
+                    </ModalHeader>
+                    <ModalBody className="max-h-[60vh] overflow-y-auto">
+                        {isFNOLStep ? (
                             <FNOLForm
                                 policyNumber={policyNumber}
                                 productName={productName}
                                 onDataChange={setFnolData}
                                 claimNo={claimNo}
                                 taskId={taskId}
+                                currentSubStep={fnolSubStep}
                             />
                         ) : (
                             <>
@@ -126,13 +163,16 @@ export default function ProcessGuideModal({ isOpen, onClose, policyNumber, produ
                             <Button
                                 color="default"
                                 variant="bordered"
-                                onPress={() => setCurrentStep(currentStep - 1)}
-                                disabled={currentStep === 0}
+                                onPress={handlePrevious}
+                                disabled={currentStep === 0 && fnolSubStep === 0}
                             >
                                 Previous
                             </Button>
                             <Button color="primary" onPress={handleNext} disabled={isLoading}>
-                                {isLoading ? "Loading..." : (currentStep < steps.length - 1 ? "Next" : "Finish")}
+                                {isLoading ? "Loading..." : (
+                                    isFNOLStep && fnolSubStep < 2 ? "Next" :
+                                    currentStep < steps.length - 1 ? "Next Step" : "Finish"
+                                )}
                             </Button>
                         </div>
                     </ModalFooter>
