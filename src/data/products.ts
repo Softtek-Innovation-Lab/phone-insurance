@@ -1,22 +1,20 @@
 
-import phoneIphone from '@/assets/products/phoneIphone.webp';
-import cellPhone from '@/assets/products/cellPhoneInsurance.webp'
-import chromebook from '@/assets/products/chromebook.webp'
+import iphone from '@/assets/products/iphone.webp';
+import phone from '@/assets/products/phone.webp'
 import laptop from '@/assets/products/laptop.webp'
 import ipad from '@/assets/products/ipad.webp'
 import tablet from '@/assets/products/tablet.webp'
 import camera from '@/assets/products/camera.webp'
 import gamingSystem from '@/assets/products/gaming.webp'
-import ipod from '@/assets/products/ipod.webp'
 import eReader from '@/assets/products/ereader.webp'
 import appleWatch from '@/assets/products/applewatch.webp'
-import smartwatch from '@/assets/products/watch.webp'
+import smartwatch from '@/assets/products/smartwatch.webp'
 import homeInsurance from '@/assets/products/home.webp'
 
 export const products = [
     {
         name: "iPhone Insurance",
-        image: phoneIphone,
+        image: iphone,
         category: "Mobile",
         ProductCode: "TRAV_PROP_MKT_IPHONE",
         ProductId: 789725308,
@@ -29,8 +27,8 @@ export const products = [
         ProductElementId: 789611473,
     },
     {
-        name: "Cell Phone Insurance",
-        image: cellPhone,
+        name: "Phone Insurance",
+        image: phone,
         category: "Mobile",
         ProductCode: "TRAV_PROP_MKT_CELLPHONE",
         ProductId: 789725309,
@@ -41,20 +39,6 @@ export const products = [
         LimitDeductibleValue: 800,
         ProductElementCode: "TRAV_PROP_RISK_CELLPHONE",
         ProductElementId: 789611474,
-    },
-    {
-        name: "Chromebook Insurance",
-        image: chromebook,
-        category: "Computers",
-        ProductCode: "TRAV_PROP_MKT_CHROMEBOOK",
-        ProductId: 789725310,
-        TechProductCode: "TRAV_PROP_TEC_CHROMEBOOK",
-        TechProductId: 789317615,
-        SumInsured: 1200,
-        PredefinedPremium: 120,
-        LimitDeductibleValue: 1200,
-        ProductElementCode: "TRAV_PROP_RISK_CHROMEBOOK",
-        ProductElementId: 789611475,
     },
     {
         name: "Laptop Insurance",
@@ -127,20 +111,6 @@ export const products = [
         ProductElementId: 789611480,
     },
     {
-        name: "iPod Insurance",
-        image: ipod,
-        category: "Other",
-        ProductCode: "TRAV_PROP_MKT_IPOD",
-        ProductId: 789725316,
-        TechProductCode: "TRAV_PROP_TEC_IPOD",
-        TechProductId: 789317621,
-        SumInsured: 600,
-        PredefinedPremium: 60,
-        LimitDeductibleValue: 600,
-        ProductElementCode: "TRAV_PROP_RISK_IPOD",
-        ProductElementId: 789611481,
-    },
-    {
         name: "eReader Insurance",
         image: eReader,
         category: "Other",
@@ -195,6 +165,6 @@ export const products = [
         LimitDeductibleValue: 50000,
         ProductElementCode: "HOMEOWNER_MKT",
         ProductElementId: 906147922,
-        isHomeInsurance: true, // Flag para identificar seguros de hogar
+        isHomeInsurance: true,
     },
 ];

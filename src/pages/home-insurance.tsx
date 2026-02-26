@@ -4,7 +4,7 @@ import { Card } from "@heroui/card";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Checkbox } from "@heroui/checkbox";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { processHomeInsuranceApplication } from "@/services/homeInsuranceService";
 import type { HomeInsuranceFormData, SelectedCoverage } from "@/types/homeInsurance";
@@ -17,6 +17,11 @@ export default function HomeInsurancePage() {
   const { addNotification } = useNotification();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isPaymentOpen, onOpen: onPaymentOpen, onClose: onPaymentClose } = useDisclosure();
   const [calculationData, setCalculationData] = useState<any>(null);

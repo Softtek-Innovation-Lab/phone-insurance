@@ -1,46 +1,21 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Card, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
 import './ProductsSection.css';
 import { useNavigate } from 'react-router-dom';
 import { products } from '@/data/products';
-import { SearchBar } from '@/components/ui/SearchBar';
 
 const ProductsSection = () => {
-    const [activeCategory, setActiveCategory] = useState('All');
-    const [visibleProducts, setVisibleProducts] = useState(products);
-    const [searchQuery, setSearchQuery] = useState('');
     const sectionRef = useRef(null);
     const navigate = useNavigate();
 
-    const categories = [
-        { name: "Mobile", icon: "📱" },
-        { name: "Computers", icon: "💻" },
-        { name: "Tablets", icon: "📟" },
-        { name: "Wearables", icon: "⌚" },
-        { name: "Other", icon: "📷" },
-    ];
-
-    // Filter products based on category and search query
-    useEffect(() => {
-        // Filtrar productos excluyendo Home Insurance
-        let filtered = products.filter(product => !product.isHomeInsurance);
-
-        // Filter by category
-        if (activeCategory !== 'All') {
-            filtered = filtered.filter(product => product.category === activeCategory);
-        }
-
-        // Filter by search query
-        if (searchQuery.trim()) {
-            filtered = filtered.filter(product =>
-                product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.category.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        setVisibleProducts(filtered);
-    }, [activeCategory, searchQuery]);
+    // Mostrar solo los productos específicos: Phone, iPhone, Laptop, Camera e iPad
+    const featuredProducts = products.filter(product => 
+        product.name === "Phone Insurance" || 
+        product.name === "iPhone Insurance" || 
+        product.name === "Laptop Insurance" || 
+        product.name === "Home Insurance"
+    );
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -66,16 +41,11 @@ const ProductsSection = () => {
     }, []);
 
     const handleGetInsurance = (product: (typeof products)[0]) => {
-        // Redirigir a la página específica de seguros de hogar
         if (product.isHomeInsurance) {
             navigate('/home-insurance', { state: { product } });
         } else {
             navigate(`/get-insurance/${product.ProductId}`, { state: { product } });
         }
-    };
-
-    const handleSearch = (query: string) => {
-        setSearchQuery(query);
     };
 
     return (
@@ -92,35 +62,8 @@ const ProductsSection = () => {
                     </p>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-3 mb-10">
-                    <button
-                        className={`category-btn ${activeCategory === 'All' ? 'active' : ''}`}
-                        onClick={() => setActiveCategory('All')}
-                    >
-                        All
-                    </button>
-                    {categories.map((category, index) => (
-                        <button
-                            key={category.name}
-                            className={`category-btn ${activeCategory === category.name ? 'active' : ''}`}
-                            style={{ "--delay": `${index * 0.1}s` } as React.CSSProperties}
-                            onClick={() => setActiveCategory(category.name)}
-                        >
-                            <span className="mr-2">{category.icon}</span>
-                            {category.name}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="mb-10">
-                    <SearchBar
-                        placeholder="Search for products or categories..."
-                        onSearch={handleSearch}
-                    />
-                </div>
-
                 <div className="products-grid">
-                    {visibleProducts.map((product, index) => (
+                    {featuredProducts.map((product, index) => (
                         <div
                             key={product.name}
                             className="product-card"
