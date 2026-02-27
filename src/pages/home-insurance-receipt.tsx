@@ -10,7 +10,6 @@ interface ReceiptData {
   policyNumber: string;
   proposalNo: string;
   totalPremium: number;
-  issuedData: any;
   calculatedData: any;
   formData: any;
   customerData: any;
@@ -38,7 +37,7 @@ export default function HomeInsuranceReceiptPage() {
     return null;
   }
 
-  const { policyNumber, proposalNo, totalPremium, issuedData, calculatedData } = receiptData;
+  const { policyNumber, proposalNo, totalPremium, calculatedData } = receiptData;
 
   const handlePrint = () => {
     window.print();

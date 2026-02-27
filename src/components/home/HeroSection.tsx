@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import cameraImage from '@/assets/products/camera.webp';
 import laptopImage from '@/assets/products/laptop.webp';
 import phoneImage from '@/assets/products/phone.webp';
-import { products } from "@/data/products";
 
 export default function HeroSection() {
     const { t } = useTranslation();
