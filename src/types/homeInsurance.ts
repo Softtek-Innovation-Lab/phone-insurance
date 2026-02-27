@@ -196,18 +196,6 @@ export interface CampaignDiscount {
   Comments: string;
 }
 
-export interface InsuremoAuthResponse {
-  data: {
-    exchange_code: string;
-  };
-}
-
-export interface InsuremoTokenResponse {
-  data: {
-    access_token: string;
-  };
-}
-
 export interface HomeInsuranceQuoteResponse {
   success: boolean;
   data?: any;

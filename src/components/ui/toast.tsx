@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/classNames";
 import { X } from "lucide-react";
 
 export interface ToastProps {

@@ -1,20 +1,14 @@
 import type {
   HomeInsuranceFormData,
   HomeInsuranceAPIPayload,
-  InsuremoAuthResponse,
-  InsuremoTokenResponse,
   HomeInsuranceQuoteResponse,
 } from '@/types/homeInsurance';
+import { authenticateInsuremo, AUTH_CONSTANTS } from './authService';
 
-const INSUREMO_BASE_URL = 'https://sandbox-am.insuremo.com';
 const INSUREMO_API_BASE_URL = 'https://softtek-sandbox-am.insuremo.com/api/softtek';
-const TENANT_CODE = 'softtek';
+const TENANT_CODE = AUTH_CONSTANTS.TENANT_CODE;
 const ORG_CODE = 'softtek';
 const AGENT_CODE = 'PTY10000095006013';
-
-// Credenciales de API
-const API_USERNAME = 'softtek.api.test';
-const API_ENCRYPTED_PASSWORD = '*mo_encrypted_rsa*wPrnrKJv8DryAiH59R/xJ1+ryhdDuyZvN+wFsxgsbSqbxrGTB7JWMbe8VAQ6mnCqgyaSl95Kz383Xn2SBlb/uSY9BN7V3xUxzXct1o0tCNuz449b4tyqqDhNtwWo8ZYrBafxjEGyngFd9bfDlGjmkfMKIUU9g3dbPgrIUzyozV6NlxGoWX/D7oTQGIe0bfJiVPQUxjDRnwjlsoML/LKZ+JRTrbK6wjp+PaFXSRivSGsMd5YK4F7lbwhC0IGYsSK7p+OzHvJh016HsFuYGe3M6L1iJMgVEeqkr8F4QkstA+hFuRvpaD/yVEtU0b4TAHGJg21h9yUGBrkvWmpbu4bE0A==';
 
 // IDs de productos para seguros de hogar
 const HOME_INSURANCE_PRODUCT = {
@@ -31,70 +25,7 @@ const HOME_INSURANCE_PRODUCT = {
   ProductVersion: '1.0',
 };
 
-/**
- * Paso 1: Autenticación - Obtener exchange_code
- */
-async function login(): Promise<string> {
-  const response = await fetch(
-    `${INSUREMO_BASE_URL}/cas/v2/login?client_id=key&response_type=code&tenant_code=${TENANT_CODE}&redirect_uri=${INSUREMO_BASE_URL}&tenant_uri=https://${TENANT_CODE}-sandbox-am.insuremo.com/ui/admin/%23/&format=json`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'accept': 'application/json',
-      },
-      body: JSON.stringify({
-        username: API_USERNAME,
-        tenant_code: TENANT_CODE,
-        user_source_id: 'mo',
-        enc_password: API_ENCRYPTED_PASSWORD,
-        verification_type: '',
-        verification: '',
-        tenant_uri: `https://${TENANT_CODE}-sandbox-am.insuremo.com/ui/admin/#/`,
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error('Error en autenticación');
-  }
-
-  const data: InsuremoAuthResponse = await response.json();
-  return data.data.exchange_code;
-}
-
-/**
- * Paso 2: Intercambiar exchange_code por access_token
- */
-async function getAccessToken(exchangeCode: string): Promise<string> {
-  const response = await fetch(
-    `${INSUREMO_BASE_URL}/cas/oauth2.0/v2/consume?exchange_code=${exchangeCode}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'accept': 'application/json',
-        'x-mo-tenant-id': TENANT_CODE,
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error('Error obteniendo access token');
-  }
-
-  const data: InsuremoTokenResponse = await response.json();
-  return data.data.access_token;
-}
-
-/**
- * Obtener token de autenticación completo (login + exchange)
- */
-async function authenticate(): Promise<string> {
-  const exchangeCode = await login();
-  const accessToken = await getAccessToken(exchangeCode);
-  return accessToken;
-}
+// Nota: Las funciones de autenticación ahora están centralizadas en authService.ts
 
 /**
  * Convertir datos del formulario al formato de la API
@@ -258,7 +189,7 @@ export async function createHomeInsurancePolicy(
 ): Promise<HomeInsuranceQuoteResponse> {
   try {
     // Autenticar
-    const accessToken = await authenticate();
+    const accessToken = await authenticateInsuremo();
 
     // Mapear datos
     const payload = mapFormDataToAPIPayload(formData, customerData);
@@ -309,7 +240,7 @@ export async function calculateHomeInsurancePremium(
   policyData: any
 ): Promise<HomeInsuranceQuoteResponse> {
   try {
-    const accessToken = await authenticate();
+    const accessToken = await authenticateInsuremo();
 
     const response = await fetch(
       `${INSUREMO_API_BASE_URL}/api-orchestration/v1/flow/easypa_calculate`,
@@ -353,7 +284,7 @@ export async function bindHomeInsurancePolicy(
   policyData: any
 ): Promise<HomeInsuranceQuoteResponse> {
   try {
-    const accessToken = await authenticate();
+    const accessToken = await authenticateInsuremo();
 
     const response = await fetch(
       `${INSUREMO_API_BASE_URL}/api-orchestration/v1/flow/easypa_bind`,
@@ -420,7 +351,7 @@ export async function issueHomeInsurancePolicy(
   policyData: any
 ): Promise<HomeInsuranceQuoteResponse> {
   try {
-    const accessToken = await authenticate();
+    const accessToken = await authenticateInsuremo();
 
     // Limpiar boundData antes de enviarlo
     const cleanedPolicyData = cleanBoundDataForIssue(policyData);
@@ -479,9 +410,9 @@ export async function processHomeInsuranceApplication(
   onPayment?: (boundData: any) => Promise<boolean> // Callback para simulación de pago
 ): Promise<HomeInsuranceQuoteResponse> {
   try {
-    // Paso 1 y 2: Login automático incluido en authenticate()
+    // Paso 1 y 2: Login automático incluido en authenticateInsuremo()
     console.log('Step 1-2: Authenticating...');
-    const accessToken = await authenticate();
+    const accessToken = await authenticateInsuremo();
 
     // Paso 3: Crear propuesta
     console.log('Step 3: Creating proposal...');

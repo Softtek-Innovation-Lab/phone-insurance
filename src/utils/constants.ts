@@ -1,18 +1,14 @@
-// src/utils/constants.ts
-
 /**
- * Formats a date to YYYY-MM-DDTHH:mm:ss format for the API.
- * @param date The date to format (can be a string or Date object).
- * @returns The formatted date string.
+ * Constantes y utilidades del proyecto
+ * 
+ * NOTA: Las funciones de formateo de fechas se han movido a dateFormatters.ts
+ * Este archivo re-exporta por compatibilidad con código existente.
  */
-export const formatDateForApi = (date: string | Date): string => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-    const seconds = String(d.getSeconds()).padStart(2, '0');
 
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-};
+// Re-exportar formatDateForApi para mantener compatibilidad
+export { formatDateForApi } from './dateFormatters';
+
+// Aquí se pueden agregar otras constantes del proyecto en el futuro
+// Ejemplo:
+// export const API_TIMEOUT = 30000;
+// export const MAX_RETRY_ATTEMPTS = 3;

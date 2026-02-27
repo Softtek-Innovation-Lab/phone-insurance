@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/classNames";
 import { ReactNode } from "react";
 
 export type FormValues = {

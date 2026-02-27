@@ -1,14 +1,10 @@
 import ky from 'ky';
 import { formatDateForApi } from '@/utils/constants';
 import { FNOLData } from '@/components/claims/FNOLForm';
+import { authenticateInsuremo, getCallCenterToken, AUTH_CONSTANTS } from './authService';
 
 const API_URL = 'https://ebaogi-gi-sandbox-am.insuremo.com/api/platform';
-const INSUREMO_BASE_URL = 'https://sandbox-am.insuremo.com';
-const TENANT_CODE = 'softtek';
-
-// Credenciales de API para autenticación Insuremo
-const API_USERNAME = 'softtek.api.test';
-const API_ENCRYPTED_PASSWORD = '*mo_encrypted_rsa*wPrnrKJv8DryAiH59R/xJ1+ryhdDuyZvN+wFsxgsbSqbxrGTB7JWMbe8VAQ6mnCqgyaSl95Kz383Xn2SBlb/uSY9BN7V3xUxzXct1o0tCNuz449b4tyqqDhNtwWo8ZYrBafxjEGyngFd9bfDlGjmkfMKIUU9g3dbPgrIUzyozV6NlxGoWX/D7oTQGIe0bfJiVPQUxjDRnwjlsoML/LKZ+JRTrbK6wjp+PaFXSRivSGsMd5YK4F7lbwhC0IGYsSK7p+OzHvJh016HsFuYGe3M6L1iJMgVEeqkr8F4QkstA+hFuRvpaD/yVEtU0b4TAHGJg21h9yUGBrkvWmpbu4bE0A==';
+const TENANT_CODE = AUTH_CONSTANTS.TENANT_CODE;
 
 // --- Instancia de KY con interceptor para Auth ---
 const api = ky.create({
@@ -143,100 +139,7 @@ export interface ClaimResponse {
     };
 }
 
-// --- Helper for Call Center Auth ---
-export const getCallCenterToken = async () => {
-    try {
-        // Usar un endpoint diferente para la autenticación del call center
-        const loginApi = ky.create();
-        const response: { access_token: string } = await loginApi.post('https://sandbox-am.insuremo.com/cas/ebao/v1/json/tickets', {
-            headers: {
-                'Content-Type': 'application/json',
-                'x-ebao-tenant-code': 'softtek',
-            },
-            json: {
-                username: 'softtek_callcenterop',
-                password: 'Softtek@2025',
-            }
-        }).json();
-        if (response.access_token) {
-            localStorage.setItem('api_token', response.access_token);
-            return response.access_token;
-        }
-        return null;
-    } catch (error) {
-        console.error("Call Center Login failed:", error);
-        return null;
-    }
-};
-
-// --- Helper for Insuremo API Auth (login + exchange) ---
-interface InsuremoAuthResponse {
-    data: {
-        exchange_code: string;
-    };
-}
-
-interface InsuremoTokenResponse {
-    data: {
-        access_token: string;
-    };
-}
-
-async function login(): Promise<string> {
-    const response = await fetch(
-        `${INSUREMO_BASE_URL}/cas/v2/login?client_id=key&response_type=code&tenant_code=${TENANT_CODE}&redirect_uri=${INSUREMO_BASE_URL}&tenant_uri=https://${TENANT_CODE}-sandbox-am.insuremo.com/ui/admin/%23/&format=json`,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json',
-            },
-            body: JSON.stringify({
-                username: API_USERNAME,
-                tenant_code: TENANT_CODE,
-                user_source_id: 'mo',
-                enc_password: API_ENCRYPTED_PASSWORD,
-                verification_type: '',
-                verification: '',
-                tenant_uri: `https://${TENANT_CODE}-sandbox-am.insuremo.com/ui/admin/#/`,
-            }),
-        }
-    );
-
-    if (!response.ok) {
-        throw new Error('Error en autenticación');
-    }
-
-    const data: InsuremoAuthResponse = await response.json();
-    return data.data.exchange_code;
-}
-
-async function getAccessToken(exchangeCode: string): Promise<string> {
-    const response = await fetch(
-        `${INSUREMO_BASE_URL}/cas/oauth2.0/v2/consume?exchange_code=${exchangeCode}`,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json',
-                'x-mo-tenant-id': TENANT_CODE,
-            },
-        }
-    );
-
-    if (!response.ok) {
-        throw new Error('Error obteniendo access token');
-    }
-
-    const data: InsuremoTokenResponse = await response.json();
-    return data.data.access_token;
-}
-
-export const authenticateInsuremo = async (): Promise<string> => {
-    const exchangeCode = await login();
-    const accessToken = await getAccessToken(exchangeCode);
-    return accessToken;
-};
+// Nota: Las funciones de autenticación ahora están centralizadas en authService.ts
 
 // --- Servicio de API ---
 
