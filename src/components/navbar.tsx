@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, UserCircle, Menu, X } from "lucide-react";
-import travelersLogo from "@/assets/generic-logo.png"
+import travelersLogo from "@/assets/verified-shield.png"
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import { useAuth } from "@/auth/AuthProvider";
 import { useTranslation } from 'react-i18next';
@@ -64,7 +64,7 @@ export const Navbar = () => {
                 <div className="flex items-center space-x-8">
                   <a
                     href="#get-insurance"
-                    className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
+                    className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors py-2 border-b-2 border-transparent hover:border-blue-600"
                     onClick={(e) => {
                       e.preventDefault();
                       const element = document.getElementById("get-insurance");
@@ -82,13 +82,13 @@ export const Navbar = () => {
                   </a>
                   <Link
                     to="/products-services"
-                    className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
+                    className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors py-2 border-b-2 border-transparent hover:border-blue-600"
                   >
                     {t('productsAndServices')}
                   </Link>
                   <Link
                     to="/claims-centre"
-                    className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600"
+                    className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors py-2 border-b-2 border-transparent hover:border-blue-600"
                   >
                     {t('claimsCentre')}
                   </Link>
@@ -109,12 +109,12 @@ export const Navbar = () => {
                 {/* Cart Icon */}
                 <Link
                   to="/cart"
-                  className="relative p-2 text-gray-600 hover:text-red-600 transition-colors rounded-full hover:bg-gray-100"
+                  className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors rounded-full hover:bg-gray-100"
                   aria-label="Shopping Cart"
                 >
                   <ShoppingCart className="h-6 w-6" />
                   {cartItemCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 bg-red-600 text-white text-xs font-bold rounded-full">
+                    <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 bg-blue-600 text-white text-xs font-bold rounded-full">
                       {cartItemCount}
                     </span>
                   )}
@@ -125,14 +125,14 @@ export const Navbar = () => {
                   <div className="hidden lg:flex items-center space-x-3">
                     <Link 
                       to="/profile" 
-                      className="flex items-center space-x-2 p-2 text-gray-600 hover:text-red-600 transition-colors rounded-lg hover:bg-gray-100"
+                      className="flex items-center space-x-2 p-2 text-gray-600 hover:text-blue-600 transition-colors rounded-lg hover:bg-gray-100"
                     >
                       <UserCircle className="h-6 w-6" />
                       <span className="text-sm font-medium">{user.name}</span>
                     </Link>
                     <button
                       onClick={logout}
-                      className="text-sm font-medium text-red-600 hover:text-red-700 transition-colors px-3 py-1 rounded-md hover:bg-red-50"
+                      className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors px-3 py-1 rounded-md hover:bg-blue-50"
                     >
                       {t('logout')}
                     </button>
@@ -140,7 +140,7 @@ export const Navbar = () => {
                 ) : (
                   <Link
                     to="/login"
-                    className="hidden lg:flex items-center space-x-2 p-2 text-gray-600 hover:text-red-600 transition-colors rounded-lg hover:bg-gray-100"
+                    className="hidden lg:flex items-center space-x-2 p-2 text-gray-600 hover:text-blue-600 transition-colors rounded-lg hover:bg-gray-100"
                     aria-label="Login"
                   >
                     <UserCircle className="h-6 w-6" />
@@ -172,7 +172,7 @@ export const Navbar = () => {
               <nav className="space-y-4">
                 <a
                   href="#get-insurance"
-                  className="block text-base font-medium text-gray-900 hover:text-red-600 transition-colors py-2"
+                  className="block text-base font-medium text-gray-900 hover:text-blue-600 transition-colors py-2"
                   onClick={(e) => {
                     e.preventDefault();
                     setIsMobileMenuOpen(false);
@@ -191,21 +191,21 @@ export const Navbar = () => {
                 </a>
                 <Link
                   to="/cart"
-                  className="block text-base font-medium text-gray-900 hover:text-red-600 transition-colors py-2"
+                  className="block text-base font-medium text-gray-900 hover:text-blue-600 transition-colors py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t('cart.nav')}
                 </Link>
                 <Link
                   to="/claims-centre"
-                  className="block text-base font-medium text-gray-900 hover:text-red-600 transition-colors py-2"
+                  className="block text-base font-medium text-gray-900 hover:text-blue-600 transition-colors py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t('claimsCentre')}
                 </Link>
                 <Link
                   to="/products-services"
-                  className="block text-base font-medium text-gray-900 hover:text-red-600 transition-colors py-2"
+                  className="block text-base font-medium text-gray-900 hover:text-blue-600 transition-colors py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t('productsAndServices')}
@@ -217,7 +217,7 @@ export const Navbar = () => {
                     <div className="space-y-2">
                       <Link
                         to="/profile"
-                        className="flex items-center space-x-2 text-base font-medium text-gray-900 hover:text-red-600 transition-colors py-2"
+                        className="flex items-center space-x-2 text-base font-medium text-gray-900 hover:text-blue-600 transition-colors py-2"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <UserCircle className="h-5 w-5" />
@@ -228,7 +228,7 @@ export const Navbar = () => {
                           logout();
                           setIsMobileMenuOpen(false);
                         }}
-                        className="block text-base font-medium text-red-600 hover:text-red-700 transition-colors py-2"
+                        className="block text-base font-medium text-blue-600 hover:text-blue-700 transition-colors py-2"
                       >
                         {t('logout')}
                       </button>
@@ -236,7 +236,7 @@ export const Navbar = () => {
                   ) : (
                     <Link
                       to="/login"
-                      className="flex items-center space-x-2 text-base font-medium text-gray-900 hover:text-red-600 transition-colors py-2"
+                      className="flex items-center space-x-2 text-base font-medium text-gray-900 hover:text-blue-600 transition-colors py-2"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <UserCircle className="h-5 w-5" />

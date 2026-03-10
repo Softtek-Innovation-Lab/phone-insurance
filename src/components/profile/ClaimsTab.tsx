@@ -21,9 +21,6 @@ export default function ClaimsTab() {
             <CardBody>
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold">My Claims History</h3>
-                    <Button color="primary" onPress={() => navigate('/new-claim')}>
-                        File a New Claim
-                    </Button>
                 </div>
                 {loading && <p>Loading claims...</p>}
                 {error && <p className="text-danger">Error: {error}</p>}
@@ -60,7 +57,6 @@ export default function ClaimsTab() {
                                         <Button
                                             size="sm"
                                             variant="light"
-                                            onPress={() => navigate(`/claim/${claim.ClaimNo}`)}
                                         >
                                             View Details
                                         </Button>

@@ -118,7 +118,7 @@
 }
 
 .product-card:hover .product-name {
-  @apply text-red-600 dark:text-red-400;
+  @apply text-blue-600 dark:text-blue-400;
 }
 
 .product-category {
@@ -135,7 +135,7 @@
 .product-card:hover .product-button {
   opacity: 1;
   transform: translateY(0);
-  @apply bg-red-600 text-white border-red-600 dark:border-red-500;
+  @apply bg-blue-600 text-white border-blue-600 dark:border-blue-500;
 }
 
 /* View Transitions API Support */
