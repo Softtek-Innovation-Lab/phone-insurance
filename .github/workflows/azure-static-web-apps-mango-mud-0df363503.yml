@@ -20,12 +20,22 @@ jobs:
           submodules: true
           lfs: false
 
+      # --- NUEVO: Instalar Node antes del build ---
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       # --- NUEVO: Instalar PNPM antes del build ---
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8 # O la versión que uses localmente
-      
+          version: 8
+
+      # --- NUEVO: Instalar dependencias con PNPM antes de Oryx ---
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -33,12 +43,13 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_MUD_0DF363503 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/" 
-          api_location: "" 
-          output_location: "dist" 
+          app_location: "/"
+          api_location: ""
+          output_location: "dist"
+          app_build_command: "pnpm run build"
         env:
-          # --- NUEVO: Forzar a Azure a usar PNPM ---
-          IS_PNPM: true
+          # --- Forzar a Azure a no intentar construir de nuevo si es necesario ---
+          SKIP_APP_BUILD: "true"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
