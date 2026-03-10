@@ -5,6 +5,8 @@ import { Divider } from "@heroui/divider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface ReceiptData {
   policyNumber: string;
@@ -41,6 +43,92 @@ export default function HomeInsuranceReceiptPage() {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    
+    // Configuración inicial
+    doc.setFont("helvetica");
+    
+    // Título
+    doc.setFontSize(22);
+    doc.setTextColor(40, 167, 69); // Verde
+    doc.text("Póliza de Seguro de Hogar", 105, 20, { align: "center" });
+    
+    // Estado
+    doc.setFontSize(14);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Emisión Confirmada", 105, 30, { align: "center" });
+
+    // Información General
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Detalles de la Póliza:", 20, 50);
+    
+    const policyDetails = [
+      ["Número de Póliza", policyNumber || "N/A"],
+      ["Número de Propuesta", proposalNo || "N/A"],
+      ["Fecha de Emisión", new Date().toLocaleDateString("es-ES")],
+    ];
+
+    autoTable(doc, {
+      startY: 55,
+      head: [["Campo", "Valor"]],
+      body: policyDetails,
+      theme: "grid",
+      headStyles: { fillColor: [40, 167, 69] },
+    });
+
+    // Información del Cliente
+    const finalY1 = (doc as any).lastAutoTable.finalY || 55;
+    doc.text("Datos del Asegurado:", 20, finalY1 + 15);
+
+    const customerDetails = [
+      ["Nombre Completo", receiptData?.customerData?.FullName || "N/A"],
+      ["Email", receiptData?.customerData?.Email || "N/A"],
+      ["Tipo de Identificación", receiptData?.customerData?.IdType || "N/A"],
+      ["Número de Identificación", receiptData?.customerData?.IdNo || "N/A"],
+    ];
+
+    autoTable(doc, {
+      startY: finalY1 + 20,
+      head: [["Campo", "Valor"]],
+      body: customerDetails,
+      theme: "grid",
+      headStyles: { fillColor: [40, 167, 69] },
+    });
+
+    // Resumen de Pago
+    const finalY2 = (doc as any).lastAutoTable.finalY || finalY1 + 20;
+    doc.text("Resumen de Pago:", 20, finalY2 + 15);
+
+    const paymentDetails = [
+      ["Prima Bruta", formatCurrency(calculatedData?.GrossPremium)],
+      ["Antes de IVA", formatCurrency(calculatedData?.BeforeVatPremium)],
+      ["IVA", formatCurrency(calculatedData?.Vat)],
+      ["Comisión", formatCurrency(calculatedData?.Commission)],
+      ["Prima Total", formatCurrency(totalPremium || calculatedData?.TotalPremium)],
+      ["Prima Adeudada", formatCurrency(calculatedData?.DuePremium)],
+    ];
+
+    autoTable(doc, {
+      startY: finalY2 + 20,
+      head: [["Concepto", "Monto"]],
+      body: paymentDetails,
+      theme: "striped",
+      headStyles: { fillColor: [0, 123, 255] },
+    });
+
+    // Footer
+    const finalY3 = (doc as any).lastAutoTable.finalY || finalY2 + 20;
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text("Este documento es un comprobante válido de la emisión de su póliza de seguro.", 105, finalY3 + 20, { align: "center" });
+    doc.text(`Generado el ${new Date().toLocaleString("es-ES")}`, 105, finalY3 + 26, { align: "center" });
+
+    // Descargar el PDF
+    doc.save(`Poliza_Hogar_${policyNumber || "Nueva"}.pdf`);
   };
 
   const handleGoToProfile = () => {
@@ -177,6 +265,14 @@ export default function HomeInsuranceReceiptPage() {
                 className="flex-1"
               >
                 🖨️ Imprimir Comprobante
+              </Button>
+              <Button
+                color="secondary"
+                variant="bordered"
+                onPress={generatePDF}
+                className="flex-1"
+              >
+                📄 Descargar Póliza PDF
               </Button>
               <Button
                 color="primary"
