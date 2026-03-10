@@ -7,7 +7,6 @@ import { fetchClaimDetails, fetchTasks, assignTask, loadStepData, submitStepData
 import { Card, CardBody } from "@heroui/card";
 import { Button } from "@heroui/button";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
-import { RegistrationForm } from "@/components/claims/RegistrationForm"; // Importar el nuevo formulario
 
 export default function ClaimDetailsPage() {
     const { claimNo } = useParams<{ claimNo: string }>();
@@ -118,15 +117,6 @@ export default function ClaimDetailsPage() {
                                     <Button onPress={() => handleLoadStep('calculation')} disabled>Load Calculation Data</Button>
                                     <Button onPress={() => handleLoadStep('settlement')} disabled>Load Settlement Data</Button>
                                 </div>
-
-                                {currentStep === 'registration' && currentClaimData && (
-                                    <RegistrationForm
-                                        initialData={currentClaimData}
-                                        onSubmit={handleSubmitForm}
-                                        isLoading={loading}
-                                    />
-                                )}
-                                {/* Aquí irían los otros formularios */}
                             </CardBody>
                         </Card>
                     )}

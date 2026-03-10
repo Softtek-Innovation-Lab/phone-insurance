@@ -16,12 +16,6 @@ import { useTranslation } from "react-i18next";
 import { processFNOL } from "@/services/claimService";
 import { formatDateForApi } from "@/utils/constants";
 
-interface PurchasedPolicy {
-    policyNo: string;
-    productName: string;
-    // Add other policy properties here if needed
-}
-
 export default function NewAccidentTab() {
     const { t } = useTranslation();
     const [selectedPolicy, setSelectedPolicy] = useState("");
@@ -29,22 +23,10 @@ export default function NewAccidentTab() {
     const [reportDate, setReportDate] = useState("");
     const [causeOfLoss, setCauseOfLoss] = useState("");
     const [fnolRemark, setFnolRemark] = useState("");
-    const [purchasedPolicies, setPurchasedPolicies] = useState<PurchasedPolicy[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error, retrievedPolicy, currentClaimData } = useSelector((state: RootState) => state.claims);
     const { addNotification } = useNotification();
     const { isOpen, onOpen, onClose } = useDisclosure();
-
-    useEffect(() => {
-        // Cargar las pólizas desde localStorage al montar el componente
-        const policies = JSON.parse(localStorage.getItem('purchasedPolicies') || '[]');
-        setPurchasedPolicies(policies);
-
-        // Establecer fecha de reporte por defecto (fecha actual)
-        setReportDate(new Date().toISOString().split('T')[0]);
-    }, []);
-
-    const selectedPolicyData = purchasedPolicies.find(p => p.policyNo === selectedPolicy);
 
     const handleRetrievePolicy = () => {
         if (selectedPolicy && dateOfLoss) {
@@ -142,46 +124,25 @@ export default function NewAccidentTab() {
                 <ProcessGuideModal
                     isOpen={isOpen}
                     onClose={onClose}
-                    policyNumber={selectedPolicy}
-                    productName={selectedPolicyData?.productName || ''}
+                    policyNumber={'POTRAV_PROP_MKT00000000'}
+                    productName={'Camera'}
                     claimNo={currentClaimData?.ClaimCase?.ClaimNo}
                     taskId={currentClaimData?.TaskId}
                 />
 
                 <div className="space-y-4">
-                    <Select
+                    <Input
                         label={t('newAccident.selectPolicy')}
-                        selectedKeys={selectedPolicy ? [selectedPolicy] : []}
-                        onSelectionChange={(keys) => {
-                            const policyNo = Array.from(keys)[0] as string;
-                            const currentDate = new Date().toISOString().split('T')[0];
-                            setSelectedPolicy(policyNo);
-                            setDateOfLoss(currentDate);
-
-                            if (policyNo && currentDate) {
-                                dispatch(retrievePolicyDetails({ policyNo, accidentTime: currentDate }));
-                            }
-                        }}
+                        placeholder="Ingrese el número de póliza"
+                        value={selectedPolicy}
+                        onValueChange={setSelectedPolicy}
                         required
-                    >
-                        {purchasedPolicies.map((p: any) => (
-                            <SelectItem key={p.policyNo}>
-                                {p.policyNo}
-                            </SelectItem>
-                        ))}
-                    </Select>
+                    />
                     <Input
                         label={t('newAccident.dateOfLoss')}
                         type="date"
                         value={dateOfLoss}
-                        onValueChange={(newDate) => {
-                            setDateOfLoss(newDate);
-
-                            // Búsqueda automática cuando se cambia la fecha si ya hay una póliza seleccionada
-                            if (selectedPolicy && newDate) {
-                                dispatch(retrievePolicyDetails({ policyNo: selectedPolicy, accidentTime: newDate }));
-                            }
-                        }}
+                        onValueChange={setDateOfLoss}
                         required
                     />
                     <Button onPress={handleRetrievePolicy} color="primary" isLoading={loading && !retrievedPolicy}>

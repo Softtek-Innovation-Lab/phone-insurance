@@ -78,13 +78,6 @@ export default function NewClaimPage() {
                         <CardBody className="p-8">
                             <h1 className="text-2xl font-bold mb-6">File a New Claim</h1>
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                {/* <Textarea
-                  label="Description of Incident"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  required
-                /> */}
                                 <Input
                                     label="Date of Incident"
                                     name="date"
