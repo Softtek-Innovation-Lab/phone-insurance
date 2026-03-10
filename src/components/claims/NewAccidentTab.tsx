@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";

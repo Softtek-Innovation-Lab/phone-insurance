@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultLayout from "@/layouts/default";
 import { AppDispatch, RootState } from "@/store";
-import { fetchClaimDetails, fetchTasks, assignTask, loadStepData, submitStepData } from "@/store/slices/claimsSlice";
+import { fetchClaimDetails, fetchTasks, assignTask, loadStepData } from "@/store/slices/claimsSlice";
 import { Card, CardBody } from "@heroui/card";
 import { Button } from "@heroui/button";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
@@ -11,9 +11,8 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from 
 export default function ClaimDetailsPage() {
     const { claimNo } = useParams<{ claimNo: string }>();
     const dispatch = useDispatch<AppDispatch>();
-    const { claims, tasks, loading, error, currentClaimData } = useSelector((state: RootState) => state.claims);
+    const { claims, tasks, loading, error } = useSelector((state: RootState) => state.claims);
     const [selectedTask, setSelectedTask] = useState<any>(null);
-    const [currentStep, setCurrentStep] = useState<string | null>(null);
 
     useEffect(() => {
         if (claimNo) {
@@ -33,20 +32,6 @@ export default function ClaimDetailsPage() {
     const handleLoadStep = (step: 'registration' | 'calculation' | 'settlement') => {
         if (claimNo && selectedTask) {
             dispatch(loadStepData({ step, claimNo, taskId: selectedTask.TaskId }));
-            setCurrentStep(step);
-        }
-    };
-
-    const handleSubmitForm = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (currentStep && currentClaimData) {
-            // Aquí se debería construir el payload final con los datos del formulario
-            const finalPayload = {
-                ...currentClaimData,
-                OperationType: "2", // 2 para submit
-                // ... fusionar con los datos del formulario
-            };
-            dispatch(submitStepData({ step: currentStep as 'registration' | 'calculation' | 'settlement', payload: finalPayload }));
         }
     };
 

@@ -1,14 +1,12 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { fetchAllClaims } from "@/store/slices/claimsSlice";
 
 export default function ClaimsTab() {
-    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const { claims, loading, error } = useSelector((state: RootState) => state.claims);
 
