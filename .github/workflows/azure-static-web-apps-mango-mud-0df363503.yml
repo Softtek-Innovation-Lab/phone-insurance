@@ -37,6 +37,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Build app
+        run: pnpm run build
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -44,10 +47,9 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_MUD_0DF363503 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"
+          app_location: "dist"
           api_location: ""
-          output_location: "dist"
-          app_build_command: "pnpm run build"
+          output_location: ""
         env:
           # --- Forzar a Azure a no intentar construir de nuevo si es necesario ---
           SKIP_APP_BUILD: "true"
