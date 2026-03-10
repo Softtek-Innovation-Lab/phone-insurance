@@ -726,34 +726,71 @@ export default function HomeInsurancePage() {
                   <h2 className="text-xl font-semibold mb-4">Select Coverage Package</h2>
                   
                   {/* Pack Selection Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                    {Object.entries(coveragePacks).map(([key, pack]) => (
-                      <Card 
-                        key={key}
-                        isPressable
-                        onPress={() => handlePackSelection(key)}
-                        className={`p-4 cursor-pointer transition-all ${
-                          selectedPack === key 
-                            ? 'ring-2 ring-primary bg-primary/10' 
-                            : 'hover:bg-gray-50 dark:hover:bg-gray-800'
-                        }`}
-                      >
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-bold text-lg">{pack.name}</h3>
-                            {selectedPack === key && (
-                              <span className="text-primary">✓</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
+                    {Object.entries(coveragePacks).map(([key, pack]) => {
+                      const getPackStyles = (name) => {
+                        switch (name) {
+                          case 'HOGAR BÁSICO':
+                            return { 
+                              card: 'ring-green-600 bg-green-300 dark:bg-green-900/20', 
+                              icon: 'text-green-600'
+                            };
+                          case 'HOGAR ESTÁNDAR':
+                            return { 
+                              card: 'ring-blue-600 bg-blue-300 dark:bg-blue-900/20', 
+                              icon: 'text-blue-600'
+                            };
+                          case 'HOGAR PLUS':
+                            return { 
+                              card: 'ring-amber-600 bg-amber-300 dark:bg-amber-900/20', 
+                              icon: 'text-amber-600' 
+                            };
+                          case 'HOGAR PREMIUM':
+                            return { 
+                              card: 'ring-gray-800 bg-gray-300 dark:bg-gray-900/20', 
+                              icon: 'text-gray-800'
+                            };
+                          default:
+                            return { 
+                              card: 'ring-primary bg-primary/10', 
+                              icon: 'text-primary' 
+                            };
+                        }
+                      };
+
+                      const styles = getPackStyles(pack.name);
+                      const isSelected = selectedPack === key;
+
+                      return (
+                        <Card 
+                          key={key}
+                          isPressable
+                          onPress={() => handlePackSelection(key)}
+                          className={`p-4 cursor-pointer transition-all ${
+                            isSelected 
+                              ? `ring-2 ${styles.card}` 
+                              : 'dark:hover:bg-gray-800 border-transparent'
+                          }`}
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-bold text-lg">{pack.name}</h3>
+                              {isSelected && (
+                                <span className={`font-bold ${styles.icon}`}>✓</span>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {pack.description}
+                            </p>
+                            {pack.coverages.length > 0 && (
+                              <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                                {pack.coverages.length} de 13 coberturas incluidas 
+                              </p>
                             )}
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{pack.description}</p>
-                          {pack.coverages.length > 0 && (
-                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
-                              {pack.coverages.length} coberturas incluidas
-                            </p>
-                          )}
-                        </div>
-                      </Card>
-                    ))}
+                        </Card>
+                      );
+                    })}
                   </div>
 
                   {/* Show selected pack details */}
@@ -797,7 +834,7 @@ export default function HomeInsurancePage() {
                           {coverage.selected && (
                             <div className="ml-6">
                               <Input
-                                label="Suma Asegurada (USD)"
+                                label="Suma asegurada hasta(USD)"
                                 type="number"
                                 value={coverage.SumInsured.toString()}
                                 onValueChange={(value) => handleCoverageSumInsured(coverage.ProductElementCode, parseFloat(value) || 0)}
@@ -842,6 +879,7 @@ export default function HomeInsurancePage() {
                       ].filter(Boolean).join(", ") || "None"
                     }</p>
                     <p><strong>Selected Coverages:</strong> {availableCoverages.filter(c => c.selected).length}</p>
+                    <p><strong>Valor Total de Cobertura:</strong> {availableCoverages.filter(c => c.selected).reduce((sum, c) => sum + c.SumInsured, 0).toLocaleString()}</p>
                   </div>
 
                   <p className="text-sm text-gray-600 dark:text-gray-400">
