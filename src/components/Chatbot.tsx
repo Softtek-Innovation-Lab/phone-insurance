@@ -29,14 +29,15 @@ export const Chatbot = () => {
         scrollToBottom();
     }, [messages]);
 
-    useEffect(() => {
-        // Auto-open chatbot after 1 second delay
+    // Auto-open chatbot after 1 second delay
+
+    /*useEffect(() => {
         const timer = setTimeout(() => {
             setIsOpen(true);
         }, 1000);
 
         return () => clearTimeout(timer);
-    }, []);
+    }, []);*/
 
     useEffect(() => {
         // Initialize chatbot session when opened
@@ -179,16 +180,29 @@ export const Chatbot = () => {
         <>
             {/* Floating Chat Button */}
             {!isOpen && (
-                <Button
-                    isIconOnly
-                    color="primary"
-                    size="lg"
-                    className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-lg"
-                    onPress={() => setIsOpen(true)}
-                    aria-label="Abrir chat"
-                >
-                    <MessageCircle size={28} />
-                </Button>
+                <div className="fixed bottom-6 right-6 z-50">
+                    <Button
+                        isIconOnly
+                        color="primary"
+                        size="lg"
+                        className="w-16 h-16 rounded-full shadow-lg"
+                        onPress={() => setIsOpen(true)}
+                        aria-label="Abrir chat"
+                    >
+                        <MessageCircle size={30} />
+                    </Button>
+                    
+                    {/* Globo de notificación */}
+                    <span className="absolute -top-1 -right-1 flex h-6 w-6 z-10">
+                        {/* Efecto de pulso animado */}
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                        
+                        {/* Círculo amarillo con el número */}
+                        <span className="relative inline-flex items-center justify-center rounded-full h-6 w-6 bg-yellow-500 text-[10px] font-bold text-white border-2 border-primary">
+                            !
+                        </span>
+                    </span>
+                </div>
             )}
 
             {/* Chat Window */}
