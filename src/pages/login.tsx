@@ -8,8 +8,10 @@ import { useNavigate } from "react-router-dom";
 import travelersLogo from "@/assets/verified-shield.png";
 const loginBg = "https://yt3.googleusercontent.com/ytc/AIdro_lyqluIFafhhwC88lk9OE-9KApzRXb7IIgHQO4-GRm04qg=s900-c-k-c0x00ffffff-no-rj"; // Nueva imagen
 import DefaultLayout from "@/layouts/default"; // Importar el layout
+import { useTranslation } from "react-i18next";
 
 export default function LoginPage() {
+    const { t } = useTranslation();
     const [email, setEmail] = useState(DUMMY_USER.email);
     const [password, setPassword] = useState(DUMMY_USER.password || 'password123');
     const [error, setError] = useState("");
@@ -23,7 +25,7 @@ export default function LoginPage() {
         if (success) {
             navigate("/");
         } else {
-            setError("Invalid email or password");
+            setError(t("signIn.invalidCredentials"));
         }
     };
 
@@ -41,8 +43,8 @@ export default function LoginPage() {
                         {/* Overlay con gradiente */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-l-2xl hidden md:block"></div>
                         <div className="absolute bottom-10 left-10 hidden md:block">
-                            <h2 className="text-3xl font-bold text-white">Peace of Mind, Secured.</h2>
-                            <p className="text-white/80 mt-2">Your devices are safe with us. Access your portal to manage your policies.</p>
+                            <h2 className="text-3xl font-bold text-white">{t("signIn.peaceOfMind")}</h2>
+                            <p className="text-white/80 mt-2">{t("signIn.yourDevicesSafe")}</p>
                         </div>
                     </div>
 
@@ -50,13 +52,13 @@ export default function LoginPage() {
                     <div className="flex flex-col justify-center p-8 md:p-14 md:w-1/2">
                         <div className="text-center mb-8">
                             <img src={travelersLogo} alt="Logo" className="w-28 mx-auto mb-4" />
-                            <h1 className="text-2xl font-bold text-gray-800">Welcome Back</h1>
-                            <p className="text-gray-500">Sign in to continue.</p>
+                            <h1 className="text-2xl font-bold text-gray-800">{t("signIn.welcomeBack")}</h1>
+                            <p className="text-gray-500">{t("signIn.signInToContinue")}</p>
                         </div>
 
                         <form onSubmit={handleLogin} className="space-y-6">
                             <Input
-                                label="Email"
+                                label={t("signIn.email")}
                                 type="email"
                                 value={email}
                                 onValueChange={setEmail}
@@ -66,7 +68,7 @@ export default function LoginPage() {
                                 classNames={{ inputWrapper: "bg-gray-50 focus-within:scale-105 transition-transform" }}
                             />
                             <Input
-                                label="Password"
+                                label={t("signIn.password")}
                                 type="password"
                                 value={password}
                                 onValueChange={setPassword}
@@ -77,7 +79,7 @@ export default function LoginPage() {
                             />
                             {error && <p className="text-danger text-sm text-center animate-shake">{error}</p>}
                             <Button color="primary" type="submit" className="w-full text-lg py-3 transition-transform hover:scale-105">
-                                Sign In
+                                {t("signIn.signIn")}
                             </Button>
                         </form>
                     </div>

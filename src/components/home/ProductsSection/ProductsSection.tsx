@@ -4,8 +4,10 @@ import { Image } from "@heroui/image";
 import './ProductsSection.css';
 import { useNavigate } from 'react-router-dom';
 import { products } from '@/data/products';
+import { useTranslation } from 'react-i18next';
 
 const ProductsSection = () => {
+    const { t } = useTranslation();
     const sectionRef = useRef(null);
     const navigate = useNavigate();
 
@@ -55,10 +57,10 @@ const ProductsSection = () => {
             <div className="max-w-6xl mx-auto px-4">
                 <div className="text-center mb-12 product-title">
                     <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
-                        Our most popular insurance products
+                        {t("productsSection.title")}
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                        Comprehensive coverage for all your electronic devices, with flexible plans tailored to your needs.
+                        {t("productsSection.subtitle")}
                     </p>
                 </div>
 
@@ -84,7 +86,7 @@ const ProductsSection = () => {
                                         className="product-button"
                                         onClick={() => handleGetInsurance(product)}
                                     >
-                                        Get Insurance
+                                        {t("productsSection.getInsurance")}
                                     </button>
                                 </CardBody>
                             </Card>

@@ -5,9 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { products } from '@/data/products';
 import { SearchBar } from '@/components/ui/SearchBar';
 import DefaultLayout from "@/layouts/default";
+import { useTranslation } from 'react-i18next';
 import '../components/home/ProductsSection/ProductsSection.css';
 
 const ProductsServicesPage = () => {
+    const { t } = useTranslation();
     const [activeCategory, setActiveCategory] = useState('All');
     const [activeSection, setActiveSection] = useState<'patrimonio' | 'dispositivos' | null>(null);
     const [patrimonioProducts, setPatrimonioProducts] = useState(
@@ -21,11 +23,11 @@ const ProductsServicesPage = () => {
     const navigate = useNavigate();
 
     const categories = [
-        { name: "Mobile", icon: "📱" },
-        { name: "Computers", icon: "💻" },
-        { name: "Tablets", icon: "📟" },
-        { name: "Wearables", icon: "⌚" },
-        { name: "Other", icon: "📷" },
+        { id: "Mobile", name: t("productsServices.categories.mobile"), icon: "📱" },
+        { id: "Computers", name: t("productsServices.categories.computers"), icon: "💻" },
+        { id: "Tablets", name: t("productsServices.categories.tablets"), icon: "📟" },
+        { id: "Wearables", name: t("productsServices.categories.wearables"), icon: "⌚" },
+        { id: "Other", name: t("productsServices.categories.other"), icon: "📷" },
     ];
 
     // Filter products based on category and search query
@@ -98,10 +100,10 @@ const ProductsServicesPage = () => {
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="text-center mb-12 product-title">
                         <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
-                            Products & Services
+                            {t("productsServices.title")}
                         </h1>
                         <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg">
-                            Comprehensive coverage for all your electronic devices and property, with flexible plans tailored to your needs.
+                            {t("productsServices.subtitle")}
                         </p>
                     </div>
 
@@ -118,10 +120,10 @@ const ProductsServicesPage = () => {
                                         🏠
                                     </div>
                                     <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-3">
-                                        Patrimonio
+                                        {t("productsServices.patrimonio")}
                                     </h2>
                                     <p className="text-gray-600 dark:text-gray-300 text-lg">
-                                        Protection for your home
+                                        {t("productsServices.patrimonioDesc")}
                                     </p>
                                 </div>
                             </button>
@@ -136,10 +138,10 @@ const ProductsServicesPage = () => {
                                         📱
                                     </div>
                                     <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-3">
-                                        Dispositivos
+                                        {t("productsServices.dispositivos")}
                                     </h2>
                                     <p className="text-gray-600 dark:text-gray-300 text-lg">
-                                        Electronic devices coverage
+                                        {t("productsServices.dispositivosDesc")}
                                     </p>
                                 </div>
                             </button>
@@ -157,12 +159,12 @@ const ProductsServicesPage = () => {
                                     }}
                                     className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold transition-colors"
                                 >
-                                    <span className="text-xl">←</span> Back to Categories
+                                    <span className="text-xl">←</span> {t("productsServices.backToCategories")}
                                 </button>
                             </div>
                             <div className="mb-10 max-w-2xl mx-auto">
                                 <SearchBar
-                                    placeholder="Search for products..."
+                                    placeholder={t("productsServices.searchProducts")}
                                     onSearch={handleSearch}
                                 />
                             </div>
@@ -188,7 +190,7 @@ const ProductsServicesPage = () => {
                                                     className="product-button"
                                                     onClick={() => handleGetInsurance(product)}
                                                 >
-                                                    Get Insurance
+                                                    {t("productsServices.getInsurance")}
                                                 </button>
                                             </CardBody>
                                         </Card>
@@ -210,12 +212,12 @@ const ProductsServicesPage = () => {
                                     }}
                                     className="flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-semibold transition-colors"
                                 >
-                                    <span className="text-xl">←</span> Back to Categories
+                                    <span className="text-xl">←</span> {t("productsServices.backToCategories")}
                                 </button>
                             </div>
                             <div className="mb-10 max-w-2xl mx-auto">
                                 <SearchBar
-                                    placeholder="Search for products or categories..."
+                                    placeholder={t("productsServices.searchCategories")}
                                     onSearch={handleSearch}
                                 />
                             </div>
@@ -224,14 +226,14 @@ const ProductsServicesPage = () => {
                                     className={`category-btn ${activeCategory === 'All' ? 'active' : ''}`}
                                     onClick={() => setActiveCategory('All')}
                                 >
-                                    All
+                                    {t("productsServices.all")}
                                 </button>
                                 {categories.map((category, index) => (
                                     <button
-                                        key={category.name}
-                                        className={`category-btn ${activeCategory === category.name ? 'active' : ''}`}
+                                        key={category.id}
+                                        className={`category-btn ${activeCategory === category.id ? 'active' : ''}`}
                                         style={{ "--delay": `${index * 0.1}s` } as React.CSSProperties}
-                                        onClick={() => setActiveCategory(category.name)}
+                                        onClick={() => setActiveCategory(category.id)}
                                     >
                                         <span className="mr-2">{category.icon}</span>
                                         {category.name}
@@ -241,7 +243,7 @@ const ProductsServicesPage = () => {
                             {dispositivosProducts.length === 0 ? (
                                 <div className="text-center py-12">
                                     <p className="text-gray-500 dark:text-gray-400 text-lg">
-                                        No products found matching your search.
+                                        {t("productsServices.noProductsFound")}
                                     </p>
                                 </div>
                             ) : (
@@ -267,7 +269,7 @@ const ProductsServicesPage = () => {
                                                         className="product-button"
                                                         onClick={() => handleGetInsurance(product)}
                                                     >
-                                                        Get Insurance
+                                                        {t("productsServices.getInsurance")}
                                                     </button>
                                                 </CardBody>
                                             </Card>

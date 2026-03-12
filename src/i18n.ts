@@ -240,6 +240,286 @@ i18n
                         effectiveDate: 'Effective Date',
                         expiryDate: 'Expiry Date',
                         policyHolderName: 'Policy Holder Name',
+                    },
+                    
+                    productsSection: {
+                        title: 'Our most popular insurance products',
+                        subtitle: 'Comprehensive coverage for all your electronic devices, with flexible plans tailored to your needs.',
+                        getInsurance: 'Get Insurance'
+                    },
+
+                    signIn: {
+                        peaceOfMind: 'Peace of Mind, Secured.',
+                        yourDevicesSafe: 'Your devices are safe with us. Access your portal to manage your policies.',
+                        welcomeBack: 'Welcome Back',
+                        signInToContinue: 'Sign in to continue.',
+                        email: 'Email',
+                        password: 'Password',
+                        signIn: 'Sign In',
+                        invalidCredentials: 'Invalid email or password'
+                    },
+
+                    productsServices: {
+                        title: 'Products & Services',
+                        subtitle: 'Comprehensive coverage for all your electronic devices and property, with flexible plans tailored to your needs.',
+                        patrimonio: 'Patrimonio',
+                        patrimonioDesc: 'Protection for your home',
+                        dispositivos: 'Dispositivos',
+                        dispositivosDesc: 'Electronic devices coverage',
+                        backToCategories: 'Back to Categories',
+                        searchProducts: 'Search for products...',
+                        searchCategories: 'Search for products or categories...',
+                        all: 'All',
+                        noProductsFound: 'No products found matching your search.',
+                        getInsurance: 'Get Insurance',
+                        categories: {
+                            mobile: 'Mobile',
+                            computers: 'Computers',
+                            tablets: 'Tablets',
+                            wearables: 'Wearables',
+                            other: 'Other'
+                        }
+                    },
+
+                    // Home Insurance Form
+                    homeInsuranceForm: {
+                        title: 'Home Insurance Application',
+                        steps: {
+                            property: 'Property',
+                            location: 'Location',
+                            security: 'Security',
+                            coverage: 'Coverage',
+                            review: 'Review'
+                        },
+                        propertyInfo: {
+                            title: 'Property Information',
+                            homeType: 'Home Type',
+                            selectHomeType: 'Select home type',
+                            constructionType: 'Construction Type',
+                            selectConstructionType: 'Select construction type',
+                            yearConstruction: 'Year of Construction',
+                            buildingArea: 'Building Area (m²)',
+                            landArea: 'Land Area (m²)',
+                            numberOfFloors: 'Number of Floors',
+                            numberOfRooms: 'Number of Rooms',
+                            propertyValue: 'Property Value (USD)',
+                            replacementCost: 'Replacement Cost Estimate (USD)',
+                            dwellingUse: 'Dwelling Use',
+                            selectDwellingUse: 'Select dwelling use',
+                            numberOfOccupants: 'Number of Occupants',
+                            homeTypes: {
+                                singleFamily: 'Single Family Home',
+                                multiFamily: 'Multi Family Home',
+                                villa: 'Villa',
+                                chalet: 'Chalet',
+                                apartment: 'Apartment',
+                                mansion: 'Mansion'
+                            },
+                            constructionTypes: {
+                                concrete: 'Concrete',
+                                wood: 'Wood',
+                                stone: 'Stone',
+                                concreteReinforced: 'Concrete Reinforced',
+                                drywall: 'Drywall',
+                                prefabricated: 'Prefabricated'
+                            },
+                            dwellingUses: {
+                                housing: 'Housing',
+                                rental: 'Rental',
+                                storage: 'Storage',
+                                commercial: 'Commercial Use',
+                                other: 'Other Use',
+                                nursingHome: 'Nursing Home'
+                            }
+                        },
+                        location: {
+                            title: 'Property Location',
+                            address1: 'Address Line 1',
+                            address2: 'Address Line 2 (Optional)',
+                            fullAddress: 'Full Address',
+                            district: 'District',
+                            province: 'Province',
+                            department: 'Department',
+                            postalCode: 'Postal Code',
+                            latitude: 'Latitude (Optional)',
+                            longitude: 'Longitude (Optional)'
+                        },
+                        security: {
+                            title: 'Security & Features',
+                            yes: 'Yes',
+                            no: 'No',
+                            antiTheftAlarm: 'Anti-theft Alarm',
+                            securityBars: 'Security Bars',
+                            securityCameras: 'Security Cameras',
+                            fireAlarm: 'Fire Alarm',
+                            fireExtinguishers: 'Fire Extinguishers',
+                            numberOfExtinguishers: 'Number of Fire Extinguishers',
+                            distanceHydrant: 'Distance to Fire Hydrant (m)',
+                            distanceStation: 'Distance to Fire Station (km)',
+                            swimmingPool: 'Swimming Pool',
+                            floodZone: 'Property in Flood Zone',
+                            electronicValue: 'Electronic Equipment Value (USD)',
+                            jewelryValue: 'Jewelry Value (USD)'
+                        },
+                        coverage: {
+                            title: 'Select Coverage Package',
+                            packCoverages: '{{packName}} Pack Coverages',
+                            individualTitle: 'Coverages {{modifiable}}',
+                            modifiableText: '(Modifiable)',
+                            customDesc: 'Select the individual coverages you need.',
+                            modifiableDesc: 'You can adjust coverages or switch to custom if you prefer.',
+                            sumInsured: 'Sum insured up to (USD)',
+                            selectedCount: 'Selected Coverages:',
+                            totalValue: 'Total Coverage Value:',
+                            of: 'of',
+                            includedCoverages: '{{count}} of 13 coverages included',
+                            packs: {
+                                basic: {
+                                    name: 'BASIC HOME',
+                                    desc: 'Essential protection for your home'
+                                },
+                                standard: {
+                                    name: 'STANDARD HOME',
+                                    desc: 'Complete protection with additional coverages'
+                                },
+                                plus: {
+                                    name: 'PLUS HOME',
+                                    desc: 'Greater protection with coverage for natural phenomena'
+                                },
+                                premium: {
+                                    name: 'PREMIUM HOME',
+                                    desc: 'Total protection for your home and valuables'
+                                }
+                            },
+                            types: {
+                                fireBuilding: 'Building Fire',
+                                fireContent: 'Contents Fire',
+                                liability: 'Family Civil Liability',
+                                homeCare: 'Home Assistance',
+                                burglary: 'Robbery / Theft',
+                                flood: 'Water Damage',
+                                crystalGlass: 'Glass',
+                                debrisRemoval: 'Debris Removal',
+                                tempAccommod: 'Temporary Accommodation',
+                                naturPhenom: 'Natural Phenomena',
+                                electroEquip: 'Appliances / Electronic Equipment',
+                                jewelry: 'Jewelry and Valuables',
+                                swimPool: 'Swimming Pool / Trampoline'
+                            }
+                        },
+                        review: {
+                            title: 'Review Your Information',
+                            homeType: 'Home Type:',
+                            propertyValue: 'Property Value:',
+                            buildingArea: 'Building Area:',
+                            address: 'Address:',
+                            securityFeatures: 'Security Features:',
+                            selectedCoverages: 'Selected Coverages:',
+                            totalCoverageValue: 'Total Coverage Value:',
+                            none: 'None',
+                            features: {
+                                alarm: 'Alarm',
+                                cameras: 'Cameras',
+                                fireAlarm: 'Fire Alarm'
+                            },
+                            notice: 'Please review all information carefully before submitting. Once submitted, your application will be processed.'
+                        },
+                        buttons: {
+                            back: 'Back',
+                            next: 'Next',
+                            submit: 'Submit Application',
+                            cancel: 'Cancel',
+                            continuePayment: 'Continue to Payment'
+                        },
+                        notifications: {
+                            fillCardDetails: 'Please fill all card details',
+                            policyIssued: 'Policy issued successfully! Policy Number: {{policyNumber}}',
+                            errorCreating: 'Error creating policy',
+                            errorCreatingHome: 'Error creating home insurance policy'
+                        },
+                        modal: {
+                            title: 'Policy Summary - Confirm Details',
+                            proposalNo: 'Proposal Number',
+                            validity: 'Policy Validity',
+                            effectiveDate: 'Effective Date',
+                            expiryDate: 'Expiry Date',
+                            propertyInfo: 'Property Information',
+                            address: 'Address',
+                            homeType: 'Home Type',
+                            propertyValue: 'Property Value',
+                            buildingArea: 'Building Area',
+                            selectedCoverages: 'Selected Coverages',
+                            securityFeatures: 'Security Features',
+                            important: 'Important:',
+                            importantNotice: 'Please review all information before proceeding to payment. By clicking "Continue to Payment", you confirm that all details are correct.',
+                            features: {
+                                antiTheft: 'Anti-theft Alarm',
+                                cameras: 'Security Cameras',
+                                fireAlarm: 'Fire Alarm',
+                                extinguishers: 'Extinguishers'
+                            }
+                        },
+                        payment: {
+                            title: 'Payment Information',
+                            orderSummary: 'Order Summary',
+                            totalPremium: 'Total Premium:',
+                            dueAmount: 'Due Amount:',
+                            enterDetails: 'Enter Card Details',
+                            cardholderName: 'Cardholder Name',
+                            cardNumber: 'Card Number',
+                            expiryDate: 'Expiry Date',
+                            cvv: 'CVV',
+                            simulated: 'This is a simulated payment. No real transaction will be processed.',
+                            cancel: 'Cancel',
+                            processing: 'Processing...',
+                            payNow: 'Pay Now'
+                        }
+                    },
+                    
+                    // Home Insurance Receipt
+                    homeInsuranceReceipt: {
+                        successTitle: 'Payment Processed Successfully!',
+                        successSubtitle: 'Your policy has been issued successfully',
+                        receiptTitle: 'Payment Receipt',
+                        insuranceType: 'Home Insurance',
+                        policyNumber: 'Policy Number',
+                        proposalNumber: 'Proposal Number',
+                        paymentSummaryTitle: 'Payment Summary',
+                        grossPremium: 'Gross Premium',
+                        beforeVat: 'Before VAT',
+                        vat: 'VAT',
+                        commission: 'Commission',
+                        totalPremium: 'Total Premium',
+                        duePremium: 'Due Premium',
+                        paymentConfirmed: 'Payment Confirmed',
+                        paymentConfirmedDesc: 'Your payment has been processed successfully. The policy is active and coverage has begun.',
+                        processingDate: 'Processing Date',
+                        nextSteps: 'Next Steps',
+                        nextStep1: 'You will receive a copy of your policy by email within the next 24 hours',
+                        nextStep2: 'You can check the full details of your policy in your profile',
+                        nextStep3: 'Keep this receipt for your records',
+                        nextStep4: 'For any queries, contact our customer service',
+                        printReceipt: 'Print Receipt',
+                        downloadPDF: 'Download Policy PDF',
+                        viewPolicyDetails: 'View Policy Details',
+                        goHome: 'Back to Home',
+                        receiptFooterTitle: 'Payment Receipt - Home Insurance',
+                        policyNo: 'Policy No',
+                        generatedOn: 'Generated on {{date}}',
+                        pdfTitle: 'Home Insurance Policy',
+                        pdfStatus: 'Issue Confirmed',
+                        policyDetailsTitle: 'Policy Details:',
+                        issueDate: 'Issue Date',
+                        field: 'Field',
+                        value: 'Value',
+                        insuredDataTitle: 'Insured Data:',
+                        fullName: 'Full Name',
+                        email: 'Email',
+                        idType: 'ID Type',
+                        idNumber: 'ID Number',
+                        concept: 'Concept',
+                        amount: 'Amount',
+                        validDocumentNotice: 'This document is a valid receipt of your insurance policy issuance.',
                     }
                 }
             },
@@ -490,6 +770,286 @@ i18n
                         effectiveDate: 'Fecha de Inicio',
                         expiryDate: 'Fecha de Vencimiento',
                         policyHolderName: 'Nombre del Titular',
+                    },
+                    
+                    productsSection: {
+                        title: 'Nuestros productos de seguro más populares',
+                        subtitle: 'Cobertura integral para todos tus dispositivos electrónicos, con planes flexibles adaptados a tus necesidades.',
+                        getInsurance: 'Obtener Seguro'
+                    },
+
+                    signIn: {
+                        peaceOfMind: 'Tranquilidad Asegurada.',
+                        yourDevicesSafe: 'Tus dispositivos están a salvo con nosotros. Accede a tu portal para gestionar tus pólizas.',
+                        welcomeBack: 'Bienvenido de Nuevo',
+                        signInToContinue: 'Inicia sesión para continuar.',
+                        email: 'Correo Electrónico',
+                        password: 'Contraseña',
+                        signIn: 'Iniciar Sesión',
+                        invalidCredentials: 'Correo o contraseña inválidos'
+                    },
+
+                    productsServices: {
+                        title: 'Productos y Servicios',
+                        subtitle: 'Cobertura integral para todos tus dispositivos electrónicos y propiedad, con planes flexibles adaptados a tus necesidades.',
+                        patrimonio: 'Patrimonio',
+                        patrimonioDesc: 'Protección para tu hogar',
+                        dispositivos: 'Dispositivos',
+                        dispositivosDesc: 'Cobertura para dispositivos electrónicos',
+                        backToCategories: 'Volver a Categorías',
+                        searchProducts: 'Buscar productos...',
+                        searchCategories: 'Buscar productos o categorías...',
+                        all: 'Todos',
+                        noProductsFound: 'No se encontraron productos que coincidan con tu búsqueda.',
+                        getInsurance: 'Obtener Seguro',
+                        categories: {
+                            mobile: 'Móviles',
+                            computers: 'Computadoras',
+                            tablets: 'Tablets',
+                            wearables: 'Wearables',
+                            other: 'Otros'
+                        }
+                    },
+
+                    // Home Insurance Form
+                    homeInsuranceForm: {
+                        title: 'Solicitud de Seguro de Hogar',
+                        steps: {
+                            property: 'Propiedad',
+                            location: 'Ubicación',
+                            security: 'Seguridad',
+                            coverage: 'Cobertura',
+                            review: 'Revisión'
+                        },
+                        propertyInfo: {
+                            title: 'Información de la Propiedad',
+                            homeType: 'Tipo de Vivienda',
+                            selectHomeType: 'Seleccionar tipo de vivienda',
+                            constructionType: 'Tipo de Construcción',
+                            selectConstructionType: 'Seleccionar tipo de construcción',
+                            yearConstruction: 'Año de Construcción',
+                            buildingArea: 'Área de Construcción (m²)',
+                            landArea: 'Área de Terreno (m²)',
+                            numberOfFloors: 'Número de Pisos',
+                            numberOfRooms: 'Número de Habitaciones',
+                            propertyValue: 'Valor de la Propiedad (USD)',
+                            replacementCost: 'Costo Estimado de Reemplazo (USD)',
+                            dwellingUse: 'Uso de la Vivienda',
+                            selectDwellingUse: 'Seleccionar uso de vivienda',
+                            numberOfOccupants: 'Número de Ocupantes',
+                            homeTypes: {
+                                singleFamily: 'Casa Unifamiliar',
+                                multiFamily: 'Casa Multifamiliar',
+                                villa: 'Villa',
+                                chalet: 'Chalet',
+                                apartment: 'Departamento',
+                                mansion: 'Mansión'
+                            },
+                            constructionTypes: {
+                                concrete: 'Concreto',
+                                wood: 'Madera',
+                                stone: 'Piedra',
+                                concreteReinforced: 'Concreto Reforzado',
+                                drywall: 'Drywall',
+                                prefabricated: 'Prefabricado'
+                            },
+                            dwellingUses: {
+                                housing: 'Vivienda',
+                                rental: 'Alquiler',
+                                storage: 'Almacén',
+                                commercial: 'Uso Comercial',
+                                other: 'Otro Uso',
+                                nursingHome: 'Residencia de Ancianos'
+                            }
+                        },
+                        location: {
+                            title: 'Ubicación de la Propiedad',
+                            address1: 'Dirección Línea 1',
+                            address2: 'Dirección Línea 2 (Opcional)',
+                            fullAddress: 'Dirección Completa',
+                            district: 'Distrito',
+                            province: 'Provincia',
+                            department: 'Departamento',
+                            postalCode: 'Código Postal',
+                            latitude: 'Latitud (Opcional)',
+                            longitude: 'Longitud (Opcional)'
+                        },
+                        security: {
+                            title: 'Seguridad y Características',
+                            yes: 'Sí',
+                            no: 'No',
+                            antiTheftAlarm: 'Alarma Anti-robo',
+                            securityBars: 'Rejas de Seguridad',
+                            securityCameras: 'Cámaras de Seguridad',
+                            fireAlarm: 'Alarma contra Incendios',
+                            fireExtinguishers: 'Extintores',
+                            numberOfExtinguishers: 'Número de Extintores',
+                            distanceHydrant: 'Distancia al Hidrante (m)',
+                            distanceStation: 'Distancia a la Estación de Bomberos (km)',
+                            swimmingPool: 'Piscina',
+                            floodZone: 'Propiedad en Zona de Inundación',
+                            electronicValue: 'Valor de Equipos Electrónicos (USD)',
+                            jewelryValue: 'Valor de Joyas (USD)'
+                        },
+                        coverage: {
+                            title: 'Seleccionar Paquete de Cobertura',
+                            packCoverages: 'Coberturas del Pack {{packName}}',
+                            individualTitle: 'Coberturas {{modifiable}}',
+                            modifiableText: '(Modificables)',
+                            customDesc: 'Selecciona las coberturas individuales que necesitas.',
+                            modifiableDesc: 'Puedes ajustar las coberturas o cambiar a personalizado si lo prefieres.',
+                            sumInsured: 'Suma asegurada hasta (USD)',
+                            selectedCount: 'Coberturas Seleccionadas:',
+                            totalValue: 'Valor Total de Cobertura:',
+                            of: 'de',
+                            includedCoverages: '{{count}} de 13 coberturas incluidas',
+                            packs: {
+                                basic: {
+                                    name: 'HOGAR BÁSICO',
+                                    desc: 'Protección esencial para tu hogar'
+                                },
+                                standard: {
+                                    name: 'HOGAR ESTÁNDAR',
+                                    desc: 'Protección completa con coberturas adicionales'
+                                },
+                                plus: {
+                                    name: 'HOGAR PLUS',
+                                    desc: 'Mayor protección con cobertura para fenómenos naturales'
+                                },
+                                premium: {
+                                    name: 'HOGAR PREMIUM',
+                                    desc: 'Protección total para tu hogar y bienes de valor'
+                                }
+                            },
+                            types: {
+                                fireBuilding: 'Incendio Edificio',
+                                fireContent: 'Incendio Contenidos',
+                                liability: 'Responsabilidad Civil Familiar',
+                                homeCare: 'Asistencia Domiciliaria',
+                                burglary: 'Robo / Hurto',
+                                flood: 'Daños por Agua',
+                                crystalGlass: 'Cristales',
+                                debrisRemoval: 'Remoción de Escombros',
+                                tempAccommod: 'Alojamiento Temporal',
+                                naturPhenom: 'Fenómenos Naturales',
+                                electroEquip: 'Electrodomésticos / Equipos electrónicos',
+                                jewelry: 'Joyas y Objetos de Valor',
+                                swimPool: 'Piscina / Trampolín'
+                            }
+                        },
+                        review: {
+                            title: 'Revise su Información',
+                            homeType: 'Tipo de Vivienda:',
+                            propertyValue: 'Valor de la Propiedad:',
+                            buildingArea: 'Área de Construcción:',
+                            address: 'Dirección:',
+                            securityFeatures: 'Características de Seguridad:',
+                            selectedCoverages: 'Coberturas Seleccionadas:',
+                            totalCoverageValue: 'Valor Total de Cobertura:',
+                            none: 'Ninguna',
+                            features: {
+                                alarm: 'Alarma',
+                                cameras: 'Cámaras',
+                                fireAlarm: 'Alarma contra Incendios'
+                            },
+                            notice: 'Por favor revise toda la información cuidadosamente antes de enviar. Una vez enviada, su solicitud será procesada.'
+                        },
+                        buttons: {
+                            back: 'Atrás',
+                            next: 'Siguiente',
+                            submit: 'Enviar Solicitud',
+                            cancel: 'Cancelar',
+                            continuePayment: 'Continuar con el Pago'
+                        },
+                        notifications: {
+                            fillCardDetails: 'Por favor complete todos los datos de la tarjeta',
+                            policyIssued: '¡Póliza emitida exitosamente! Número de Póliza: {{policyNumber}}',
+                            errorCreating: 'Error al crear la póliza',
+                            errorCreatingHome: 'Error al crear la póliza de seguro de hogar'
+                        },
+                        modal: {
+                            title: 'Resumen de Póliza - Confirme los Detalles',
+                            proposalNo: 'Número de Propuesta',
+                            validity: 'Vigencia de la Póliza',
+                            effectiveDate: 'Fecha de Inicio',
+                            expiryDate: 'Fecha de Vencimiento',
+                            propertyInfo: 'Información de la Propiedad',
+                            address: 'Dirección',
+                            homeType: 'Tipo de Vivienda',
+                            propertyValue: 'Valor de la Propiedad',
+                            buildingArea: 'Área de Construcción',
+                            selectedCoverages: 'Coberturas Seleccionadas',
+                            securityFeatures: 'Características de Seguridad',
+                            important: 'Importante:',
+                            importantNotice: 'Por favor revise toda la información antes de continuar con el pago. Al hacer clic en "Continuar con el Pago", estará confirmando que todos los datos son correctos.',
+                            features: {
+                                antiTheft: 'Alarma Anti-robo',
+                                cameras: 'Cámaras de Seguridad',
+                                fireAlarm: 'Alarma contra Incendios',
+                                extinguishers: 'Extintores'
+                            }
+                        },
+                        payment: {
+                            title: 'Información de Pago',
+                            orderSummary: 'Resumen del Pedido',
+                            totalPremium: 'Prima Total:',
+                            dueAmount: 'Monto a Pagar:',
+                            enterDetails: 'Ingrese los Detalles de la Tarjeta',
+                            cardholderName: 'Nombre del Titular',
+                            cardNumber: 'Número de Tarjeta',
+                            expiryDate: 'Fecha de Venc.',
+                            cvv: 'CVV',
+                            simulated: 'Este es un pago simulado. No se procesará ninguna transacción real.',
+                            cancel: 'Cancelar',
+                            processing: 'Procesando...',
+                            payNow: 'Pagar Ahora'
+                        }
+                    },
+                    
+                    // Home Insurance Receipt
+                    homeInsuranceReceipt: {
+                        successTitle: '¡Pago Procesado Exitosamente!',
+                        successSubtitle: 'Tu póliza ha sido emitida correctamente',
+                        receiptTitle: 'Comprobante de Pago',
+                        insuranceType: 'Seguro de Hogar',
+                        policyNumber: 'Número de Póliza',
+                        proposalNumber: 'Número de Propuesta',
+                        paymentSummaryTitle: 'Resumen de Pago',
+                        grossPremium: 'Prima Bruta',
+                        beforeVat: 'Antes de IVA',
+                        vat: 'IVA',
+                        commission: 'Comisión',
+                        totalPremium: 'Prima Total',
+                        duePremium: 'Prima Adeudada',
+                        paymentConfirmed: 'Pago Confirmado',
+                        paymentConfirmedDesc: 'Tu pago ha sido procesado exitosamente. La póliza está activa y la cobertura ha comenzado.',
+                        processingDate: 'Fecha de procesamiento',
+                        nextSteps: 'Próximos Pasos',
+                        nextStep1: 'Recibirás una copia de tu póliza por correo electrónico en las próximas 24 horas',
+                        nextStep2: 'Puedes consultar los detalles completos de tu póliza en tu perfil',
+                        nextStep3: 'Guarda este comprobante para tus registros',
+                        nextStep4: 'Para cualquier consulta, contacta a nuestro servicio al cliente',
+                        printReceipt: 'Imprimir Comprobante',
+                        downloadPDF: 'Descargar Póliza PDF',
+                        viewPolicyDetails: 'Ver Detalles de la Póliza',
+                        goHome: 'Volver al Inicio',
+                        receiptFooterTitle: 'Comprobante de pago - Seguro de Hogar',
+                        policyNo: 'Póliza No',
+                        generatedOn: 'Generado el {{date}}',
+                        pdfTitle: 'Póliza de Seguro de Hogar',
+                        pdfStatus: 'Emisión Confirmada',
+                        policyDetailsTitle: 'Detalles de la Póliza:',
+                        issueDate: 'Fecha de Emisión',
+                        field: 'Campo',
+                        value: 'Valor',
+                        insuredDataTitle: 'Datos del Asegurado:',
+                        fullName: 'Nombre Completo',
+                        email: 'Email',
+                        idType: 'Tipo de Identificación',
+                        idNumber: 'Número de Identificación',
+                        concept: 'Concepto',
+                        amount: 'Monto',
+                        validDocumentNotice: 'Este documento es un comprobante válido de la emisión de su póliza de seguro.',
                     }
                 }
             },
@@ -528,13 +1088,13 @@ i18n
                     
                     // Navbar
                     contactUs: 'Contate-nos',
-                    findBroker: 'Encontrar um Corretor',
-                    getInsuranceNav: 'Contratar Seguro',
+                    findBroker: 'Encontrar um corretor',
+                    getInsuranceNav: 'Fazer um seguro',
                     industrySolutions: 'Soluções para a indústria',
                     productsAndServices: 'Produtos e Serviços',
                     whyTravelers: 'Por que Travelers',
                     brokers: 'Corretores',
-                    claimsCentre: 'Centro de Sinistros',
+                    claimsCentre: 'Central de Reclamações',
                     logout: 'Encerrar sessão',
                     login: 'Iniciar sessão',
 
@@ -739,6 +1299,286 @@ i18n
                         effectiveDate: 'Data de Início',
                         expiryDate: 'Data de Vencimento',
                         policyHolderName: 'Nome do Titular',
+                    },
+                    
+                    productsSection: {
+                        title: 'Nossos produtos de seguro mais populares',
+                        subtitle: 'Cobertura abrangente para todos os seus dispositivos eletrônicos, com planos flexíveis adaptados às suas necessidades.',
+                        getInsurance: 'Obter Seguro'
+                    },
+
+                    signIn: {
+                        peaceOfMind: 'Tranquilidade Garantida.',
+                        yourDevicesSafe: 'Seus dispositivos estão seguros conosco. Acesse seu portal para gerenciar suas apólices.',
+                        welcomeBack: 'Bem-vindo de Volta',
+                        signInToContinue: 'Faça login para continuar.',
+                        email: 'E-mail',
+                        password: 'Senha',
+                        signIn: 'Entrar',
+                        invalidCredentials: 'E-mail ou senha inválidos'
+                    },
+
+                    productsServices: {
+                        title: 'Produtos e Serviços',
+                        subtitle: 'Cobertura abrangente para todos os seus dispositivos eletrônicos e propriedade, com planos flexíveis adaptados às suas necessidades.',
+                        patrimonio: 'Patrimônio',
+                        patrimonioDesc: 'Proteção para sua casa',
+                        dispositivos: 'Dispositivos',
+                        dispositivosDesc: 'Cobertura para dispositivos eletrônicos',
+                        backToCategories: 'Voltar às Categorias',
+                        searchProducts: 'Buscar produtos...',
+                        searchCategories: 'Buscar produtos ou categorias...',
+                        all: 'Todos',
+                        noProductsFound: 'Nenhum produto encontrado correspondente à sua busca.',
+                        getInsurance: 'Obter Seguro',
+                        categories: {
+                            mobile: 'Celulares',
+                            computers: 'Computadores',
+                            tablets: 'Tablets',
+                            wearables: 'Wearables',
+                            other: 'Outros'
+                        }
+                    },
+
+                    // Home Insurance Form
+                    homeInsuranceForm: {
+                        title: 'Solicitação de Seguro Residencial',
+                        steps: {
+                            property: 'Propriedade',
+                            location: 'Localização',
+                            security: 'Segurança',
+                            coverage: 'Cobertura',
+                            review: 'Revisão'
+                        },
+                        propertyInfo: {
+                            title: 'Informações da Propriedade',
+                            homeType: 'Tipo de Residência',
+                            selectHomeType: 'Selecione o tipo de residência',
+                            constructionType: 'Tipo de Construção',
+                            selectConstructionType: 'Selecione o tipo de construção',
+                            yearConstruction: 'Ano de Construção',
+                            buildingArea: 'Área Construída (m²)',
+                            landArea: 'Área do Terreno (m²)',
+                            numberOfFloors: 'Número de Andares',
+                            numberOfRooms: 'Número de Quartos',
+                            propertyValue: 'Valor da Propriedade (USD)',
+                            replacementCost: 'Custo Estimado de Reposição (USD)',
+                            dwellingUse: 'Uso da Residência',
+                            selectDwellingUse: 'Selecione o uso',
+                            numberOfOccupants: 'Número de Ocupantes',
+                            homeTypes: {
+                                singleFamily: 'Casa Unifamiliar',
+                                multiFamily: 'Casa Multifamiliar',
+                                villa: 'Vila',
+                                chalet: 'Chalé',
+                                apartment: 'Apartamento',
+                                mansion: 'Mansão'
+                            },
+                            constructionTypes: {
+                                concrete: 'Concreto',
+                                wood: 'Madeira',
+                                stone: 'Pedra',
+                                concreteReinforced: 'Concreto Armado',
+                                drywall: 'Drywall',
+                                prefabricated: 'Pré-fabricado'
+                            },
+                            dwellingUses: {
+                                housing: 'Moradia',
+                                rental: 'Aluguel',
+                                storage: 'Armazenamento',
+                                commercial: 'Uso Comercial',
+                                other: 'Outro Uso',
+                                nursingHome: 'Casa de Repouso'
+                            }
+                        },
+                        location: {
+                            title: 'Localização da Propriedade',
+                            address1: 'Endereço Linha 1',
+                            address2: 'Endereço Linha 2 (Opcional)',
+                            fullAddress: 'Endereço Completo',
+                            district: 'Distrito',
+                            province: 'Província',
+                            department: 'Departamento',
+                            postalCode: 'CEP',
+                            latitude: 'Latitude (Opcional)',
+                            longitude: 'Longitude (Opcional)'
+                        },
+                        security: {
+                            title: 'Segurança e Recursos',
+                            yes: 'Sim',
+                            no: 'Não',
+                            antiTheftAlarm: 'Alarme Antirroubo',
+                            securityBars: 'Grades de Segurança',
+                            securityCameras: 'Câmeras de Segurança',
+                            fireAlarm: 'Alarme de Incêndio',
+                            fireExtinguishers: 'Extintores',
+                            numberOfExtinguishers: 'Número de Extintores',
+                            distanceHydrant: 'Distância do Hidrante (m)',
+                            distanceStation: 'Distância do Corpo de Bombeiros (km)',
+                            swimmingPool: 'Piscina',
+                            floodZone: 'Propriedade em Área de Inundação',
+                            electronicValue: 'Valor de Equipamentos Eletrônicos (USD)',
+                            jewelryValue: 'Valor de Joias (USD)'
+                        },
+                        coverage: {
+                            title: 'Selecione o Pacote de Cobertura',
+                            packCoverages: 'Coberturas do Pacote {{packName}}',
+                            individualTitle: 'Coberturas {{modifiable}}',
+                            modifiableText: '(Modificáveis)',
+                            customDesc: 'Selecione as coberturas individuais que você precisa.',
+                            modifiableDesc: 'Você pode ajustar as coberturas ou mudar para personalizado se preferir.',
+                            sumInsured: 'Importância segurada até (USD)',
+                            selectedCount: 'Coberturas Selecionadas:',
+                            totalValue: 'Valor Total da Cobertura:',
+                            of: 'de',
+                            includedCoverages: '{{count}} de 13 coberturas incluídas',
+                            packs: {
+                                basic: {
+                                    name: 'RESIDENCIAL BÁSICO',
+                                    desc: 'Proteção essencial para sua casa'
+                                },
+                                standard: {
+                                    name: 'RESIDENCIAL PADRÃO',
+                                    desc: 'Proteção completa com coberturas adicionais'
+                                },
+                                plus: {
+                                    name: 'RESIDENCIAL PLUS',
+                                    desc: 'Maior proteção com cobertura para fenômenos naturais'
+                                },
+                                premium: {
+                                    name: 'RESIDENCIAL PREMIUM',
+                                    desc: 'Proteção total para sua casa e bens de valor'
+                                }
+                            },
+                            types: {
+                                fireBuilding: 'Incêndio Edifício',
+                                fireContent: 'Incêndio Conteúdos',
+                                liability: 'Responsabilidade Civil Familiar',
+                                homeCare: 'Assistência Domiciliar',
+                                burglary: 'Roubo / Furto',
+                                flood: 'Danos por Água',
+                                crystalGlass: 'Vidros',
+                                debrisRemoval: 'Remoção de Entulho',
+                                tempAccommod: 'Acomodação Temporária',
+                                naturPhenom: 'Fenômenos Naturais',
+                                electroEquip: 'Eletrodomésticos / Equipamentos Eletrônicos',
+                                jewelry: 'Joias e Objetos de Valor',
+                                swimPool: 'Piscina / Trampolim'
+                            }
+                        },
+                        review: {
+                            title: 'Revise suas Informações',
+                            homeType: 'Tipo de Residência:',
+                            propertyValue: 'Valor da Propriedade:',
+                            buildingArea: 'Área Construída:',
+                            address: 'Endereço:',
+                            securityFeatures: 'Recursos de Segurança:',
+                            selectedCoverages: 'Coberturas Selecionadas:',
+                            totalCoverageValue: 'Valor Total da Cobertura:',
+                            none: 'Nenhum',
+                            features: {
+                                alarm: 'Alarme',
+                                cameras: 'Câmeras',
+                                fireAlarm: 'Alarme de Incêndio'
+                            },
+                            notice: 'Por favor, revise todas as informações cuidadosamente antes de enviar. Uma vez enviada, sua solicitação será processada.'
+                        },
+                        buttons: {
+                            back: 'Voltar',
+                            next: 'Próximo',
+                            submit: 'Enviar Solicitação',
+                            cancel: 'Cancelar',
+                            continuePayment: 'Continuar para Pagamento'
+                        },
+                        notifications: {
+                            fillCardDetails: 'Por favor, preencha todos os dados do cartão',
+                            policyIssued: 'Apólice emitida com sucesso! Número da Apólice: {{policyNumber}}',
+                            errorCreating: 'Erro ao criar apólice',
+                            errorCreatingHome: 'Erro ao criar apólice de seguro residencial'
+                        },
+                        modal: {
+                            title: 'Resumo da Apólice - Confirmar Detalhes',
+                            proposalNo: 'Número da Proposta',
+                            validity: 'Vigência da Apólice',
+                            effectiveDate: 'Data de Início',
+                            expiryDate: 'Data de Vencimento',
+                            propertyInfo: 'Informações da Propriedade',
+                            address: 'Endereço',
+                            homeType: 'Tipo de Residência',
+                            propertyValue: 'Valor da Propriedade',
+                            buildingArea: 'Área Construída',
+                            selectedCoverages: 'Coberturas Selecionadas',
+                            securityFeatures: 'Recursos de Segurança',
+                            important: 'Importante:',
+                            importantNotice: 'Por favor, revise todas as informações antes de prosseguir para o pagamento. Ao clicar em "Continuar para Pagamento", você confirma que todos os dados estão corretos.',
+                            features: {
+                                antiTheft: 'Alarme Antirroubo',
+                                cameras: 'Câmeras de Segurança',
+                                fireAlarm: 'Alarme de Incêndio',
+                                extinguishers: 'Extintores'
+                            }
+                        },
+                        payment: {
+                            title: 'Informações de Pagamento',
+                            orderSummary: 'Resumo do Pedido',
+                            totalPremium: 'Prêmio Total:',
+                            dueAmount: 'Valor Devido:',
+                            enterDetails: 'Insira os Dados do Cartão',
+                            cardholderName: 'Nome do Titular',
+                            cardNumber: 'Número do Cartão',
+                            expiryDate: 'Data de Validade',
+                            cvv: 'CVV',
+                            simulated: 'Este é um pagamento simulado. Nenhuma transação real será processada.',
+                            cancel: 'Cancelar',
+                            processing: 'Processando...',
+                            payNow: 'Pagar Agora'
+                        }
+                    },
+                    
+                    // Home Insurance Receipt
+                    homeInsuranceReceipt: {
+                        successTitle: 'Pagamento Processado com Sucesso!',
+                        successSubtitle: 'Sua apólice foi emitida com sucesso',
+                        receiptTitle: 'Comprovante de Pagamento',
+                        insuranceType: 'Seguro Residencial',
+                        policyNumber: 'Número da Apólice',
+                        proposalNumber: 'Número da Proposta',
+                        paymentSummaryTitle: 'Resumo do Pagamento',
+                        grossPremium: 'Prêmio Bruto',
+                        beforeVat: 'Antes do IVA',
+                        vat: 'IVA',
+                        commission: 'Comissão',
+                        totalPremium: 'Prêmio Total',
+                        duePremium: 'Prêmio Devido',
+                        paymentConfirmed: 'Pagamento Confirmado',
+                        paymentConfirmedDesc: 'Seu pagamento foi processado com sucesso. A apólice está ativa e a cobertura começou.',
+                        processingDate: 'Data de processamento',
+                        nextSteps: 'Próximos Passos',
+                        nextStep1: 'Você receberá uma cópia da sua apólice por e-mail nas próximas 24 horas',
+                        nextStep2: 'Você pode verificar os detalhes completos da sua apólice no seu perfil',
+                        nextStep3: 'Guarde este recibo para seus registros',
+                        nextStep4: 'Para qualquer dúvida, entre em contato com nosso atendimento ao cliente',
+                        printReceipt: 'Imprimir Comprovante',
+                        downloadPDF: 'Baixar Apólice PDF',
+                        viewPolicyDetails: 'Ver Detalhes da Apólice',
+                        goHome: 'Voltar ao Início',
+                        receiptFooterTitle: 'Comprovante de pagamento - Seguro Residencial',
+                        policyNo: 'Apólice Nº',
+                        generatedOn: 'Gerado em {{date}}',
+                        pdfTitle: 'Apólice de Seguro Residencial',
+                        pdfStatus: 'Emissão Confirmada',
+                        policyDetailsTitle: 'Detalhes da Apólice:',
+                        issueDate: 'Data de Emissão',
+                        field: 'Campo',
+                        value: 'Valor',
+                        insuredDataTitle: 'Dados do Segurado:',
+                        fullName: 'Nome Completo',
+                        email: 'Email',
+                        idType: 'Tipo de Identificação',
+                        idNumber: 'Número de Identificação',
+                        concept: 'Conceito',
+                        amount: 'Valor',
+                        validDocumentNotice: 'Este documento é um comprovante válido da emissão da sua apólice de seguro.',
                     }
                 }
             }
