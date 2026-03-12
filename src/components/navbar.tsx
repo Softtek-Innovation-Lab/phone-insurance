@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, UserCircle, Menu, X } from "lucide-react";
 import travelersLogo from "@/assets/verified-shield.png"
 import { useGlobalStore } from "@/hooks/useGlobalStore";
-import { useAuth } from "@/auth/AuthProvider";
+import { useAuth } from "@/auth/authService";
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
 

@@ -2,7 +2,7 @@ import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Mail, Lock } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "@/auth/AuthProvider";
+import { useAuth } from "@/auth/authService";
 import { DUMMY_USER } from "@/data/user";
 import { useNavigate } from "react-router-dom";
 import travelersLogo from "@/assets/verified-shield.png";

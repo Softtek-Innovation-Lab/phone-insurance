@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DefaultLayout from "@/layouts/default";
-import { useAuth } from "@/auth/AuthProvider";
+import { useAuth } from "@/auth/authService";
 import { Card, CardBody } from "@heroui/card";
 import { Avatar } from "@heroui/avatar";
 import { Tabs, Tab } from "@heroui/tabs";

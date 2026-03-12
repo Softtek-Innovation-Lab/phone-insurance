@@ -1,4 +1,4 @@
-import { useAuth } from "@/auth/AuthProvider";
+import { useAuth } from "@/auth/authService";
 import { Card, CardBody } from "@heroui/card";
 import { Input } from "@heroui/input";
 

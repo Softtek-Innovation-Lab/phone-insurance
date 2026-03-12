@@ -3,7 +3,7 @@ import type {
   HomeInsuranceAPIPayload,
   HomeInsuranceQuoteResponse,
 } from '@/types/homeInsurance';
-import { authenticateInsuremo, AUTH_CONSTANTS } from './authService';
+import { authenticateInsuremo, AUTH_CONSTANTS } from '@/auth/authService';
 
 const INSUREMO_API_BASE_URL = 'https://softtek-sandbox-am.insuremo.com/api/softtek';
 const TENANT_CODE = AUTH_CONSTANTS.TENANT_CODE;

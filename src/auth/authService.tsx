@@ -1,15 +1,18 @@
-/**
- * Servicio centralizado de autenticación para Insuremo API
- * 
- * Este servicio maneja toda la lógica de autenticación con la API de Insuremo,
- * incluyendo login, exchange de tokens y helpers de autenticación.
- */
-
+import { createContext, useContext, ReactNode, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { User } from '@/types';
+import { DUMMY_USER } from '@/data/user';
+import { AppDispatch, RootState } from '@/store';
+import { getToken, logout as logoutAction } from '@/store/slices/authSlice';
 import type { 
     InsuremoAuthResponse, 
     InsuremoTokenResponse, 
     CallCenterAuthResponse 
 } from '@/types/api';
+
+/**
+ * Servicio centralizado de autenticación para Insuremo API y la Aplicación
+ */
 
 const INSUREMO_BASE_URL = 'https://sandbox-am.insuremo.com';
 const TENANT_CODE = 'softtek';
@@ -21,7 +24,7 @@ const API_ENCRYPTED_PASSWORD = '*mo_encrypted_rsa*wPrnrKJv8DryAiH59R/xJ1+ryhdDuy
 /**
  * Paso 1: Autenticación - Obtener exchange_code
  */
-async function login(): Promise<string> {
+async function apiLogin(): Promise<string> {
     const response = await fetch(
         `${INSUREMO_BASE_URL}/cas/v2/login?client_id=key&response_type=code&tenant_code=${TENANT_CODE}&redirect_uri=${INSUREMO_BASE_URL}&tenant_uri=https://${TENANT_CODE}-sandbox-am.insuremo.com/ui/admin/%23/&format=json`,
         {
@@ -79,7 +82,7 @@ async function getAccessToken(exchangeCode: string): Promise<string> {
  * Usado principalmente para operaciones de pólizas y consultas
  */
 export async function authenticateInsuremo(): Promise<string> {
-    const exchangeCode = await login();
+    const exchangeCode = await apiLogin();
     const accessToken = await getAccessToken(exchangeCode);
     return accessToken;
 }
@@ -128,3 +131,57 @@ export const AUTH_CONSTANTS = {
     TENANT_CODE,
     API_USERNAME,
 } as const;
+
+// --- Funcionalidad del Proveedor de Autenticación de React ---
+
+interface AuthContextType {
+    user: User | null;
+    login: (email: string, password: string) => Promise<boolean>;
+    logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const dispatch = useDispatch<AppDispatch>();
+    const authStatus = useSelector((state: RootState) => state.auth.status);
+
+    // Derivar el estado del usuario directamente del store de Redux
+    // Esto elimina el retraso del useEffect y soluciona el problema de redirección
+    const user = authStatus === 'succeeded' ? DUMMY_USER : null;
+
+    const login = async (email: string, password: string): Promise<boolean> => {
+        if (email === DUMMY_USER.email && password === DUMMY_USER.password) {
+            try {
+                // Despachar la acción para obtener el token con las nuevas credenciales
+                await dispatch(getToken({ username: "martin.gimenezartero@softtek.com", password: "Tinchogi500--" })).unwrap();
+                return true;
+            } catch (error) {
+                console.error("API Login failed:", error);
+                return false;
+            }
+        }
+        return false;
+    };
+
+    const logout = () => {
+        dispatch(logoutAction());
+    };
+
+    // El \`user\` en el array de dependencias ahora se actualiza instantáneamente con el store
+    const value = useMemo(() => ({ user, login, logout }), [user]);
+
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};

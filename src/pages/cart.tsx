@@ -13,7 +13,7 @@ import { Trash2, ShoppingCart, Shield, CreditCard, MapPin, Phone, Mail, User, Pa
 import { generatePolicy } from "@/store/slices/policySlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { useAuth } from "@/auth/AuthProvider";
+import { useAuth } from "@/auth/authService";
 import { faker } from '@faker-js/faker';
 import { useTranslation } from 'react-i18next';
 

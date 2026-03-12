@@ -1,7 +1,7 @@
 import ky from 'ky';
 import { formatDateForApi } from '@/utils/constants';
 import { FNOLData } from '@/components/claims/FNOLForm';
-import { authenticateInsuremo, getCallCenterToken, AUTH_CONSTANTS } from './authService';
+import { authenticateInsuremo, getCallCenterToken, AUTH_CONSTANTS } from '@/auth/authService';
 
 const API_URL = 'https://ebaogi-gi-sandbox-am.insuremo.com/api/platform';
 const TENANT_CODE = AUTH_CONSTANTS.TENANT_CODE;
