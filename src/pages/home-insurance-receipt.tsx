@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { CheckCircle2 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import travelersLogo from "@/assets/verified-shield.png";
 
 interface ReceiptData {
   policyNumber: string;
@@ -47,7 +48,7 @@ export default function HomeInsuranceReceiptPage() {
     window.print();
   };
 
-  const generatePDF = () => {
+  const generatePDF = async () => {
     const doc = new jsPDF();
     
     // Configuración inicial
@@ -56,20 +57,51 @@ export default function HomeInsuranceReceiptPage() {
     const isEs = i18n.language === 'es';
     const isPt = i18n.language === 'pt';
 
-    // Título
-    doc.setFontSize(22);
-    doc.setTextColor(40, 167, 69); // Verde
-    doc.text(t("homeInsuranceReceipt.pdfTitle", "Póliza de Seguro de Hogar"), 105, 20, { align: "center" });
+    // Función auxiliar para cargar imagen
+    const loadImage = (url: string): Promise<HTMLImageElement> => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => resolve(img);
+        img.onerror = (e) => reject(e);
+      });
+    };
+
+    try {
+      // Banner azul en la parte superior
+      doc.setFillColor(0, 82, 155); // Azul Travelers
+      doc.rect(0, 0, 210, 40, "F");
+
+      // Cargar y añadir logo
+      const img = await loadImage(travelersLogo);
+      // Ajustar tamaño del logo: supongamos width 20, height proporcional
+      const imgWidth = 20;
+      const imgHeight = (img.height * imgWidth) / img.width;
+      doc.addImage(img, "PNG", 15, (40 - imgHeight) / 2, imgWidth, imgHeight);
+
+      // Título en el banner
+      doc.setFontSize(24);
+      doc.setTextColor(255, 255, 255); // Blanco
+      doc.text(t("homeInsuranceReceipt.pdfTitle", "Póliza de Seguro de Hogar"), 210 - 15, 25, { align: "right" });
+    } catch (error) {
+      console.error("Error loading logo image", error);
+      // Fallback si no carga la imagen: solo el banner y título
+      doc.setFillColor(0, 82, 155);
+      doc.rect(0, 0, 210, 40, "F");
+      doc.setFontSize(24);
+      doc.setTextColor(255, 255, 255);
+      doc.text(t("homeInsuranceReceipt.pdfTitle", "Póliza de Seguro de Hogar"), 105, 25, { align: "center" });
+    }
     
     // Estado
     doc.setFontSize(14);
-    doc.setTextColor(100, 100, 100);
-    doc.text(t("homeInsuranceReceipt.pdfStatus", "Emisión Confirmada"), 105, 30, { align: "center" });
+    doc.setTextColor(40, 167, 69); // Verde
+    doc.text(t("homeInsuranceReceipt.pdfStatus", "Emisión Confirmada"), 105, 55, { align: "center" });
 
     // Información General
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    doc.text(t("homeInsuranceReceipt.policyDetailsTitle", "Detalles de la Póliza:"), 20, 50);
+    doc.text(t("homeInsuranceReceipt.policyDetailsTitle", "Detalles de la Póliza:"), 20, 70);
     
     const policyDetails = [
       [t("homeInsuranceReceipt.policyNumber", "Número de Póliza"), policyNumber || "N/A"],
@@ -78,22 +110,22 @@ export default function HomeInsuranceReceiptPage() {
     ];
 
     autoTable(doc, {
-      startY: 55,
+      startY: 75,
       head: [[t("homeInsuranceReceipt.field", "Campo"), t("homeInsuranceReceipt.value", "Valor")]],
       body: policyDetails,
       theme: "grid",
-      headStyles: { fillColor: [40, 167, 69] },
+      headStyles: { fillColor: [0, 82, 155] }, // Azul
     });
 
     // Información del Cliente
-    const finalY1 = (doc as any).lastAutoTable.finalY || 55;
+    const finalY1 = (doc as any).lastAutoTable.finalY || 75;
     doc.text(t("homeInsuranceReceipt.insuredDataTitle", "Datos del Asegurado:"), 20, finalY1 + 15);
 
     const customerDetails = [
-      [t("homeInsuranceReceipt.fullName", "Nombre Completo"), receiptData?.customerData?.FullName || "N/A"],
-      [t("homeInsuranceReceipt.email", "Email"), receiptData?.customerData?.Email || "N/A"],
-      [t("homeInsuranceReceipt.idType", "Tipo de Identificación"), receiptData?.customerData?.IdType || "N/A"],
-      [t("homeInsuranceReceipt.idNumber", "Número de Identificación"), receiptData?.customerData?.IdNo || "N/A"],
+      [t("homeInsuranceReceipt.fullName", "Nombre Completo"), receiptData?.customerData?.name || receiptData?.customerData?.FullName || "N/A"],
+      [t("homeInsuranceReceipt.email", "Email"), receiptData?.customerData?.email || receiptData?.customerData?.Email || "N/A"],
+      [t("homeInsuranceReceipt.idType", "Tipo de Identificación"), receiptData?.customerData?.idType || receiptData?.customerData?.IdType || "N/A"],
+      [t("homeInsuranceReceipt.idNumber", "Número de Identificación"), receiptData?.customerData?.idNumber || receiptData?.customerData?.IdNo || "N/A"],
     ];
 
     autoTable(doc, {
@@ -101,12 +133,34 @@ export default function HomeInsuranceReceiptPage() {
       head: [[t("homeInsuranceReceipt.field", "Campo"), t("homeInsuranceReceipt.value", "Valor")]],
       body: customerDetails,
       theme: "grid",
-      headStyles: { fillColor: [40, 167, 69] },
+      headStyles: { fillColor: [0, 82, 155] }, // Azul
+    });
+
+    // Coberturas Seleccionadas
+    const finalY2 = (doc as any).lastAutoTable.finalY || finalY1 + 20;
+    doc.text(t("homeInsuranceReceipt.selectedCoveragesTitle", "Coberturas Contratadas:"), 20, finalY2 + 15);
+
+    const selectedCoveragesData = receiptData?.formData?.selectedCoverages || [];
+    const coveragesTableBody = selectedCoveragesData.map((cov: any) => [
+      cov.CoverageName || cov.ProductElementCode,
+      formatCurrency(cov.SumInsured)
+    ]);
+
+    if (coveragesTableBody.length === 0) {
+      coveragesTableBody.push([t("homeInsuranceReceipt.noCoverages", "Sin coberturas seleccionadas"), "-"]);
+    }
+
+    autoTable(doc, {
+      startY: finalY2 + 20,
+      head: [[t("homeInsuranceReceipt.coverageColumn", "Cobertura"), t("homeInsuranceReceipt.sumInsuredColumn", "Suma Asegurada")]],
+      body: coveragesTableBody,
+      theme: "grid",
+      headStyles: { fillColor: [0, 82, 155] }, // Azul
     });
 
     // Resumen de Pago
-    const finalY2 = (doc as any).lastAutoTable.finalY || finalY1 + 20;
-    doc.text(t("homeInsuranceReceipt.paymentSummaryTitle", "Resumen de Pago:"), 20, finalY2 + 15);
+    const finalY3 = (doc as any).lastAutoTable.finalY || finalY2 + 20;
+    doc.text(t("homeInsuranceReceipt.paymentSummaryTitle", "Resumen de Pago:"), 20, finalY3 + 15);
 
     const paymentDetails = [
       [t("homeInsuranceReceipt.grossPremium", "Prima Bruta"), formatCurrency(calculatedData?.GrossPremium)],
@@ -118,7 +172,7 @@ export default function HomeInsuranceReceiptPage() {
     ];
 
     autoTable(doc, {
-      startY: finalY2 + 20,
+      startY: finalY3 + 20,
       head: [[t("homeInsuranceReceipt.concept", "Concepto"), t("homeInsuranceReceipt.amount", "Monto")]],
       body: paymentDetails,
       theme: "striped",
@@ -126,11 +180,98 @@ export default function HomeInsuranceReceiptPage() {
     });
 
     // Footer
-    const finalY3 = (doc as any).lastAutoTable.finalY || finalY2 + 20;
+    const finalY4 = (doc as any).lastAutoTable.finalY || finalY3 + 20;
     doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
-    doc.text(t("homeInsuranceReceipt.validDocumentNotice", "Este documento es un comprobante válido de la emisión de su póliza de seguro."), 105, finalY3 + 20, { align: "center" });
-    doc.text(t("homeInsuranceReceipt.generatedOn", "Generado el {{date}}", { date: new Date().toLocaleString(i18n.language) }), 105, finalY3 + 26, { align: "center" });
+    doc.text(t("homeInsuranceReceipt.validDocumentNotice", "Este documento es un comprobante válido de la emisión de su póliza de seguro."), 105, finalY4 + 20, { align: "center" });
+    doc.text(t("homeInsuranceReceipt.generatedOn", "Generado el {{date}}", { date: new Date().toLocaleString(i18n.language) }), 105, finalY4 + 26, { align: "center" });
+
+    // Nueva página: Explicación de coberturas
+    doc.addPage();
+    
+    // Header de la segunda página
+    doc.setFillColor(0, 82, 155);
+    doc.rect(0, 0, 210, 25, "F");
+    doc.setFontSize(18);
+    doc.setTextColor(255, 255, 255);
+    doc.text(t("homeInsuranceReceipt.coverageDetailsTitle", "Detalle de Coberturas"), 105, 17, { align: "center" });
+
+    doc.setFontSize(14);
+    doc.setTextColor(0, 82, 155);
+    doc.text(t("homeInsuranceReceipt.howItWorks", "¿Cómo funcionan sus coberturas?"), 20, 40);
+
+    const coveragesExplanation = [
+      [
+        t("homeInsurance.coverage.types.fireBuilding", "Incendio Edificio"),
+        t("homeInsuranceReceipt.explanation.fireBuilding", "Protege la estructura de su hogar contra daños causados por fuego, rayo o explosión.")
+      ],
+      [
+        t("homeInsurance.coverage.types.fireContent", "Incendio Contenido"),
+        t("homeInsuranceReceipt.explanation.fireContent", "Cubre los bienes dentro de su hogar (muebles, ropa, electrodomésticos) en caso de incendio.")
+      ],
+      [
+        t("homeInsurance.coverage.types.liability", "Responsabilidad Civil"),
+        t("homeInsuranceReceipt.explanation.liability", "Cubre los daños materiales o lesiones que usted o su familia puedan causar a terceros.")
+      ],
+      [
+        t("homeInsurance.coverage.types.homeCare", "Asistencia en el Hogar"),
+        t("homeInsuranceReceipt.explanation.homeCare", "Servicios de emergencia para el hogar como plomería, electricidad, cerrajería y vidriería.")
+      ],
+      [
+        t("homeInsurance.coverage.types.burglary", "Robo"),
+        t("homeInsuranceReceipt.explanation.burglary", "Indemnización por la pérdida de sus bienes debido a robo o intento de robo en su domicilio.")
+      ],
+      [
+        t("homeInsurance.coverage.types.flood", "Inundación"),
+        t("homeInsuranceReceipt.explanation.flood", "Protección contra daños materiales directos causados por inundación o daños por agua.")
+      ],
+      [
+        t("homeInsurance.coverage.types.crystalGlass", "Rotura de Cristales"),
+        t("homeInsuranceReceipt.explanation.crystalGlass", "Cobertura para la rotura accidental de vidrios, cristales o espejos instalados en el hogar.")
+      ],
+      [
+        t("homeInsurance.coverage.types.debrisRemoval", "Remoción de Escombros"),
+        t("homeInsuranceReceipt.explanation.debrisRemoval", "Cubre los gastos para limpiar y remover escombros después de un siniestro cubierto.")
+      ],
+      [
+        t("homeInsurance.coverage.types.tempAccommod", "Alojamiento Temporal"),
+        t("homeInsuranceReceipt.explanation.tempAccommod", "Cubre gastos de hotel o alquiler si su hogar queda inhabitable tras un siniestro cubierto.")
+      ],
+      [
+        t("homeInsurance.coverage.types.naturPhenom", "Fenómenos Naturales"),
+        t("homeInsuranceReceipt.explanation.naturPhenom", "Protege su propiedad contra daños por huracanes, vendavales, granizo u otros fenómenos de la naturaleza.")
+      ],
+      [
+        t("homeInsurance.coverage.types.electroEquip", "Equipos Electrónicos"),
+        t("homeInsuranceReceipt.explanation.electroEquip", "Cobertura específica para daños o robo de equipos electrónicos y electrodomésticos.")
+      ],
+      [
+        t("homeInsurance.coverage.types.jewelry", "Joyas y Valores"),
+        t("homeInsuranceReceipt.explanation.jewelry", "Protección para joyas, relojes y otros objetos de alto valor especificados en la póliza.")
+      ],
+      [
+        t("homeInsurance.coverage.types.swimPool", "Piscina y Trampolín"),
+        t("homeInsuranceReceipt.explanation.swimPool", "Cobertura de responsabilidad civil extendida y daños materiales para instalaciones recreativas.")
+      ]
+    ];
+
+    autoTable(doc, {
+      startY: 50,
+      head: [[t("homeInsuranceReceipt.coverageColumn", "Cobertura"), t("homeInsuranceReceipt.descriptionColumn", "Descripción")]],
+      body: coveragesExplanation,
+      theme: "striped",
+      headStyles: { fillColor: [0, 82, 155] },
+      columnStyles: {
+        0: { cellWidth: 50, fontStyle: 'bold' },
+        1: { cellWidth: 'auto' }
+      },
+      styles: { fontSize: 10 }
+    });
+
+    const finalY5 = (doc as any).lastAutoTable.finalY || 50;
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(t("homeInsuranceReceipt.coverageFooter", "* Solo aplican las coberturas que han sido contratadas e indicadas en la primera página."), 20, finalY5 + 15);
 
     // Descargar el PDF
     const filenamePrefix = isEs ? "Poliza_Hogar" : isPt ? "Apolice_Residencial" : "Home_Policy";

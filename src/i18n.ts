@@ -520,6 +520,29 @@ i18n
                         concept: 'Concept',
                         amount: 'Amount',
                         validDocumentNotice: 'This document is a valid receipt of your insurance policy issuance.',
+                        selectedCoveragesTitle: 'Contracted Coverages:',
+                        noCoverages: 'No coverages selected',
+                        coverageColumn: 'Coverage',
+                        sumInsuredColumn: 'Sum Insured',
+                        descriptionColumn: 'Description',
+                        coverageDetailsTitle: 'Coverage Details',
+                        howItWorks: 'How do your coverages work?',
+                        explanation: {
+                            fireBuilding: 'Protects your home structure against damage caused by fire, lightning, or explosion.',
+                            fireContent: 'Covers the goods inside your home (furniture, clothing, appliances) in case of fire.',
+                            liability: 'Covers material damages or injuries that you or your family may cause to third parties.',
+                            homeCare: 'Emergency home services such as plumbing, electricity, locksmithing, and glazing.',
+                            burglary: 'Compensation for the loss of your goods due to robbery or attempted robbery in your home.',
+                            flood: 'Protection against direct material damage caused by flood or water damage.',
+                            crystalGlass: 'Coverage for the accidental breakage of glass, crystals, or mirrors installed in the home.',
+                            debrisRemoval: 'Covers the expenses to clean and remove debris after a covered incident.',
+                            tempAccommod: 'Covers hotel or rental expenses if your home becomes uninhabitable after a covered incident.',
+                            naturPhenom: 'Protects your property against damage from hurricanes, gales, hail, or other natural phenomena.',
+                            electroEquip: 'Specific coverage for damage or theft of electronic equipment and appliances.',
+                            jewelry: 'Protection for jewelry, watches, and other high-value items specified in the policy.',
+                            swimPool: 'Extended liability coverage and material damage for recreational facilities.'
+                        },
+                        coverageFooter: '* Only the coverages that have been contracted and indicated on the first page apply.'
                     }
                 }
             },
@@ -1050,6 +1073,29 @@ i18n
                         concept: 'Concepto',
                         amount: 'Monto',
                         validDocumentNotice: 'Este documento es un comprobante válido de la emisión de su póliza de seguro.',
+                        selectedCoveragesTitle: 'Coberturas Contratadas:',
+                        noCoverages: 'Sin coberturas seleccionadas',
+                        coverageColumn: 'Cobertura',
+                        sumInsuredColumn: 'Suma Asegurada',
+                        descriptionColumn: 'Descripción',
+                        coverageDetailsTitle: 'Detalle de Coberturas',
+                        howItWorks: '¿Cómo funcionan sus coberturas?',
+                        explanation: {
+                            fireBuilding: 'Protege la estructura de su hogar contra daños causados por fuego, rayo o explosión.',
+                            fireContent: 'Cubre los bienes dentro de su hogar (muebles, ropa, electrodomésticos) en caso de incendio.',
+                            liability: 'Cubre los daños materiales o lesiones que usted o su familia puedan causar a terceros.',
+                            homeCare: 'Servicios de emergencia para el hogar como plomería, electricidad, cerrajería y vidriería.',
+                            burglary: 'Indemnización por la pérdida de sus bienes debido a robo o intento de robo en su domicilio.',
+                            flood: 'Protección contra daños materiales directos causados por inundación o daños por agua.',
+                            crystalGlass: 'Cobertura para la rotura accidental de vidrios, cristales o espejos instalados en el hogar.',
+                            debrisRemoval: 'Cubre los gastos para limpiar y remover escombros después de un siniestro cubierto.',
+                            tempAccommod: 'Cubre gastos de hotel o alquiler si su hogar queda inhabitable tras un siniestro cubierto.',
+                            naturPhenom: 'Protege su propiedad contra daños por huracanes, vendavales, granizo u otros fenómenos de la naturaleza.',
+                            electroEquip: 'Cobertura específica para daños o robo de equipos electrónicos y electrodomésticos.',
+                            jewelry: 'Protección para joyas, relojes y otros objetos de alto valor especificados en la póliza.',
+                            swimPool: 'Cobertura de responsabilidad civil extendida y daños materiales para instalaciones recreativas.'
+                        },
+                        coverageFooter: '* Solo aplican las coberturas que han sido contratadas e indicadas en la primera página.'
                     }
                 }
             },
@@ -1579,6 +1625,29 @@ i18n
                         concept: 'Conceito',
                         amount: 'Valor',
                         validDocumentNotice: 'Este documento é um comprovante válido da emissão da sua apólice de seguro.',
+                        selectedCoveragesTitle: 'Coberturas Contratadas:',
+                        noCoverages: 'Nenhuma cobertura selecionada',
+                        coverageColumn: 'Cobertura',
+                        sumInsuredColumn: 'Importância Segurada',
+                        descriptionColumn: 'Descrição',
+                        coverageDetailsTitle: 'Detalhes da Cobertura',
+                        howItWorks: 'Como funcionam suas coberturas?',
+                        explanation: {
+                            fireBuilding: 'Protege a estrutura da sua casa contra danos causados por incêndio, raio ou explosão.',
+                            fireContent: 'Cobre os bens dentro de sua casa (móveis, roupas, eletrodomésticos) em caso de incêndio.',
+                            liability: 'Cobre danos materiais ou lesões que você ou sua família possam causar a terceiros.',
+                            homeCare: 'Serviços de emergência para a casa, como encanamento, eletricidade, chaveiro e vidraçaria.',
+                            burglary: 'Indenização pela perda de seus bens devido a roubo ou tentativa de roubo em sua residência.',
+                            flood: 'Proteção contra danos materiais diretos causados por inundação ou danos por água.',
+                            crystalGlass: 'Cobertura para a quebra acidental de vidros, cristais ou espelhos instalados na casa.',
+                            debrisRemoval: 'Cobre as despesas para limpar e remover entulhos após um sinistro coberto.',
+                            tempAccommod: 'Cobre despesas de hotel ou aluguel se sua casa ficar inabitável após um sinistro coberto.',
+                            naturPhenom: 'Protege sua propriedade contra danos causados por furacões, vendavais, granizo ou outros fenômenos da natureza.',
+                            electroEquip: 'Cobertura específica para danos ou roubo de equipamentos eletrônicos e eletrodomésticos.',
+                            jewelry: 'Proteção para joias, relógios e outros itens de alto valor especificados na apólice.',
+                            swimPool: 'Cobertura estendida de responsabilidade civil e danos materiais para instalações recreativas.'
+                        },
+                        coverageFooter: '* Apenas se aplicam as coberturas que foram contratadas e indicadas na primeira página.'
                     }
                 }
             }
