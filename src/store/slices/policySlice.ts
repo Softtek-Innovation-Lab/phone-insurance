@@ -159,9 +159,21 @@ export const bindPolicy = createAsyncThunk('policy/bindPolicy', async (policyDat
 export const issuePolicy = createAsyncThunk('policy/issuePolicy', async (policyData: any, { getState }) => {
   const state = getState() as RootState;
   const token = state.auth.accessToken;
+
+  // Limpiar boundData antes de enviarlo
+  let cleanedData: any;
+  if (policyData && policyData.PolicyObject) {
+    cleanedData = { ...policyData.PolicyObject };
+  } else {
+    cleanedData = { ...policyData };
+  }
+  if (cleanedData && 'UnderwritingResult' in cleanedData) {
+    delete cleanedData.UnderwritingResult;
+  }
+
   const response = await axios.post(
-    'https://softtek-sandbox-am.insuremo.com/api/platform/proposal/v1/issuePolicy',
-    policyData,
+    'https://softtek-sandbox-am.insuremo.com/api/softtek/api-orchestration/v1/flow/easypa_issue',
+    cleanedData,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -245,7 +257,7 @@ export const generatePolicy = async (cart: any, dispatch: any) => {
     const bindResponse = await dispatch(bindPolicy(calculateResponse)).unwrap()
     console.log('Bind Response:', bindResponse);
 
-    const issueResponse = await dispatch(issuePolicy(createOrSaveResponse)).unwrap()
+    const issueResponse = await dispatch(issuePolicy(bindResponse)).unwrap()
     console.log('issueResponse Response:', issueResponse);
 
     return {
