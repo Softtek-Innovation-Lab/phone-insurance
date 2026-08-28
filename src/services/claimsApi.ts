@@ -139,6 +139,14 @@ export interface ClaimResponse {
     };
 }
 
+export interface QueryClaimParams {
+    policyHolderName?: string;
+    claimNo?: string;
+    userIdNumber?: string;
+    pageNo?: number;
+    pageSize?: number;
+}
+
 // Nota: Las funciones de autenticación ahora están centralizadas en authService.ts
 
 // --- Servicio de API ---
@@ -364,33 +372,54 @@ export const claimsApi = {
         }
     },
 
-    async queryClaim(userIdNumber?: string): Promise<ApiResponse<{ ClaimList: any[], PageNo: number, PageSize: number, Total: number }>> {
+    async queryClaim(params?: QueryClaimParams | string): Promise<ApiResponse<{ ClaimList: any[], PageNo: number, PageSize: number, Total: number }>> {
         // Usar autenticación Insuremo (login + exchange) igual que easypa_createOrSave
         const accessToken = await authenticateInsuremo();
         
-        const payload = {
+        let policyHolderName: string | undefined;
+        let claimNo: string | undefined;
+        let userIdNumber: string | undefined;
+        let pageNo = 1;
+        let pageSize = 10;
+
+        if (typeof params === 'string') {
+            policyHolderName = params;
+        } else if (params) {
+            policyHolderName = params.policyHolderName;
+            claimNo = params.claimNo;
+            userIdNumber = params.userIdNumber;
+            if (params.pageNo) pageNo = params.pageNo;
+            if (params.pageSize) pageSize = params.pageSize;
+        }
+        
+        const payload: any = {
             "SortFieldsAndTypes": {
                 "AccidentTime": "desc"
             },
-            "PageNo": 1,
-            "PageSize": 10,
-            "MultipleQuery": userIdNumber
+            "PageNo": pageNo,
+            "PageSize": pageSize
         };
+
+        if (policyHolderName) {
+            payload.PolicyHolderName = policyHolderName;
+        }
+        if (claimNo) {
+            payload.ClaimNo = claimNo;
+        }
+        if (userIdNumber) {
+            payload.MultipleQuery = userIdNumber;
+        }
         
         const response = await ky.post(
             `https://softtek-sandbox-am.insuremo.com/api/platform/easyclaim-core-v2/api/v1/queryClaim`,
             {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                    'accept': '*/*',
-                    'accept-language': 'es-419,es;q=0.9,en;q=0.8',
-                    'referer': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.2714630512301402',
-                    'response-type': 'application/json',
+                    'Content-Type': 'application/json; charset=UTF-8',
                     'x-mo-env': 'am_uat',
-                    'x-mo-tenant-id': TENANT_CODE,
                     'x-mo-module-permission-code': 'NEWEST_CLAIM_QUERY',
-                    'x-mo-module-ui-url': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.27146305123014025#/claimQuery?apcforca=NEWEST_CLAIM_QUERY',
+                    'x-mo-module-ui-url': 'https://softtek-sandbox-am.insuremo.com/ui/easyclaim-v2/?iframeV=0.6429571079057927#/claimQuery?apcforca=NEWEST_CLAIM_QUERY',
+                    'x-mo-tenant-id': TENANT_CODE,
                     'x-mo-user-identity': 'softtek.api.test',
                     'x-mo-user-name': 'softtek.api.test',
                 },

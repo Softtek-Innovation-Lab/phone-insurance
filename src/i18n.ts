@@ -543,6 +543,45 @@ i18n
                             swimPool: 'Extended liability coverage and material damage for recreational facilities.'
                         },
                         coverageFooter: '* Only the coverages that have been contracted and indicated on the first page apply.'
+                    },
+
+                    //Claim Details
+                    claimList: {
+                        claimLoading: 'Loading claims...',
+                        claimError: 'Error loading claims.',
+                        noClaims: 'No claims found.',
+                        claimListTitle: 'My Claims History',
+                        claimID: 'Claim ID',
+                        claimDate: 'Date',
+                        claimProduct: 'Product',
+                        claimStatus: 'Status',
+                        claimAmount: 'Amount',
+                        claimActions: 'Actions',
+                        claimViewButton: 'View Details',
+                        details: {
+                            backButton: 'Back to Claims Center',
+                            loading: 'Loading details...',
+                            noDetails: 'No details found for this claim.',
+                            title: 'Claim',
+                            description: 'Traveler properties MKT • Registed on',
+                            claimInfoTitle: 'Claim Information',
+                            claimNo: 'Claim Number',
+                            claimAccidentDate: 'Accident Date',
+                            claimNoticeDate: 'Notice Date',
+                            claimCause: 'Cause',
+                            claimCaseID: 'Case ID',
+                            claimPolicyInfoTitle: 'Policy Information',
+                            claimPolicyNo: 'Policy Number',
+                            claimPropietary: 'Policy Holder',
+                            claimProduct: 'Product',
+                            claimPolicyStart: 'Policy Start Date',
+                            claimPolicyEnd: 'Policy End Date',
+                            claimAmountTitle: 'Amounts and Settlement',
+                            claimAmountRequested: 'Requested',
+                            claimAmountSettled: 'Settled',
+                            claimAmountPending: 'Pending',
+                            claimAmountIncurred: 'Amount Incurred',
+                        }
                     }
                 }
             },
@@ -1096,6 +1135,45 @@ i18n
                             swimPool: 'Cobertura de responsabilidad civil extendida y daños materiales para instalaciones recreativas.'
                         },
                         coverageFooter: '* Solo aplican las coberturas que han sido contratadas e indicadas en la primera página.'
+                    },
+
+                    //Claim Details
+                    claimList: {
+                        claimLoading: 'Cargando siniestros...',
+                        claimError: 'Error al cargar los siniestros.',
+                        noClaims: 'No se encontraron siniestros.',
+                        claimListTitle: 'Mi Historial de Siniestros',
+                        claimID: 'ID de Siniestro',
+                        claimDate: 'Fecha',
+                        claimProduct: 'Producto',
+                        claimStatus: 'Estado',
+                        claimAmount: 'Monto',
+                        claimActions: 'Acciones',
+                        claimViewButton: 'Ver Detalles',
+                        details: {
+                            backButton: 'Volver al Centro de Siniestros',
+                            loading: 'Cargando detalles...',
+                            noDetails: 'No se encontraron detalles del siniestro.',
+                            title: 'Siniestros',
+                            description: 'Propiedades de viaje MKT • Registrado el',
+                            claimInfoTitle: 'Información del Siniestro',
+                            claimNo: 'Número de Siniestro',
+                            claimAccidentDate: 'Fecha de Accidente',
+                            claimNoticeDate: 'Fecha de Notificación',
+                            claimCause: 'Causa',
+                            claimCaseID: 'ID del Caso',
+                            claimPolicyInfoTitle: 'Información de la Póliza',
+                            claimPolicyNo: 'Nro de Póliza',
+                            claimPropietary: 'Titular',
+                            claimProduct: 'Producto',
+                            claimPolicyStart: 'Inicio',
+                            claimPolicyEnd: 'Fin',
+                            claimAmountTitle: 'Montos y Liquidación',
+                            claimAmountRequested: 'Solicitado',
+                            claimAmountSettled: 'Liquidado',
+                            claimAmountPending: 'Pendiente',
+                            claimAmountIncurred: 'Incurrido',
+                        }
                     }
                 }
             },
@@ -1648,6 +1726,45 @@ i18n
                             swimPool: 'Cobertura estendida de responsabilidade civil e danos materiais para instalações recreativas.'
                         },
                         coverageFooter: '* Apenas se aplicam as coberturas que foram contratadas e indicadas na primeira página.'
+                    },
+
+                    //Claim Details
+                    claimList: {
+                        claimLoading: 'Carregando siniestros...',
+                        claimError: 'Erro ao carregar siniestros.',
+                        noClaims: 'Nenhum sinistro encontrado.',
+                        claimListTitle: 'Meu Histórico de Sinistros',
+                        claimID: 'ID do Sinistro',
+                        claimDate: 'Data',
+                        claimProduct: 'Produto',
+                        claimStatus: 'Status',
+                        claimAmount: 'Valor',
+                        claimActions: 'Ações',
+                        claimViewButton: 'Ver Detalhes',
+                        details: {
+                            backButton: 'Voltar ao Centro de Sinistros',
+                            loading: 'Carregando detalhes...',
+                            noDetails: 'Nenhum detalhe encontrado para este sinistro.',
+                            title: 'Sinistros',
+                            description: 'Seguro de Viagem MKT • Registrado em',
+                            claimInfoTitle: 'Informações do Sinistro',
+                            claimNo: 'Número do Sinistro',
+                            claimAccidentDate: 'Data do Acidente',
+                            claimNoticeDate: 'Data de Notificação',
+                            claimCause: 'Causa',
+                            claimCaseID: 'ID do Caso',
+                            claimPolicyInfoTitle: 'Informações da Apólice',
+                            claimPolicyNo: 'Nro da Apólice',
+                            claimPropietary: 'Titular',
+                            claimProduct: 'Produto',
+                            claimPolicyStart: 'Início',
+                            claimPolicyEnd: 'Fim',
+                            claimAmountTitle: 'Valores e Liquidação',
+                            claimAmountRequested: 'Solicitado',
+                            claimAmountSettled: 'Liquidado',
+                            claimAmountPending: 'Pendente',
+                            claimAmountIncurred: 'Despesa Realizada',
+                        }
                     }
                 }
             }

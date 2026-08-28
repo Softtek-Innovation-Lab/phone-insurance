@@ -3,12 +3,16 @@ import { Card, CardBody } from "@heroui/card";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "@/store";
 import { fetchAllClaims } from "@/store/slices/claimsSlice";
+import { useTranslation } from "react-i18next";
 
 export default function ClaimsTab() {
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
     const { claims, loading, error } = useSelector((state: RootState) => state.claims);
+    const t = useTranslation().t;
 
     useEffect(() => {
         dispatch(fetchAllClaims());
@@ -18,45 +22,53 @@ export default function ClaimsTab() {
         <Card>
             <CardBody>
                 <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold">My Claims History</h3>
+                    <h3 className="text-xl font-bold">{t('claimList.claimListTitle')}</h3>
                 </div>
-                {loading && <p>Loading claims...</p>}
-                {error && <p className="text-danger">Error: {error}</p>}
+                {loading && <p>{t('claimList.claimLoading')}</p>}
+                {error && <p className="text-danger">{t('claimList.claimError')}: {error}</p>}
                 {!loading && !error && claims.length === 0 && (
                     <div className="text-center py-12">
-                        <p className="text-gray-500">No tiene siniestros por el momento.</p>
+                        <p className="text-gray-500">{t('claimList.noClaims')}</p>
                     </div>
                 )}
                 {claims.length > 0 && (
                     <Table aria-label="Claims History">
                         <TableHeader>
-                            <TableColumn>Claim ID</TableColumn>
-                            <TableColumn>Date</TableColumn>
-                            <TableColumn>Product</TableColumn>
-                            <TableColumn>Status</TableColumn>
-                            <TableColumn>Amount</TableColumn>
-                            <TableColumn>Actions</TableColumn>
+                            <TableColumn>{t('claimList.claimID')}</TableColumn>
+                            <TableColumn>{t('claimList.claimDate')}</TableColumn>
+                            <TableColumn>{t('claimList.claimProduct')}</TableColumn>
+                            <TableColumn>{t('claimList.claimStatus')}</TableColumn>
+                            <TableColumn>{t('claimList.claimAmount')}</TableColumn>
+                            <TableColumn>{t('claimList.claimActions')}</TableColumn>
                         </TableHeader>
                         <TableBody>
-                            {claims.map((claim: any) => (
-                                <TableRow key={claim.ClaimNo}>
-                                    <TableCell>{claim.ClaimNo || 'N/A'}</TableCell>
+                            {claims.map((claim: any, index: number) => (
+                                <TableRow key={claim.ClaimNo || index}>
+                                    <TableCell className="font-semibold">{claim.ClaimNo || 'N/A'}</TableCell>
                                     <TableCell>
                                         {claim.AccidentTime 
                                             ? new Date(claim.AccidentTime).toLocaleDateString() 
                                             : 'N/A'}
                                     </TableCell>
                                     <TableCell>
-                                        {claim.ClaimObjectList?.[0]?.DamageObject || 'N/A'}
+                                        {claim.ProductName || claim.ProductCode || claim.ClaimObjectList?.[0]?.DamageObject || 'N/A'}
                                     </TableCell>
-                                    <TableCell>{claim.CaseStatus || 'N/A'}</TableCell>
-                                    <TableCell>$0.00</TableCell>
+                                    <TableCell>
+                                        <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-medium">
+                                            {claim.CaseStatus || 'Active'}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        {claim.SettlementAmount ? `$${claim.SettlementAmount}` : '$0.00'}
+                                    </TableCell>
                                     <TableCell>
                                         <Button
                                             size="sm"
-                                            variant="light"
+                                            color="default"
+                                            variant="flat"
+                                            onPress={() => navigate(`/claim/${claim.ClaimNo || index}`)}
                                         >
-                                            View Details
+                                            {t('claimList.claimViewButton')}
                                         </Button>
                                     </TableCell>
                                 </TableRow>

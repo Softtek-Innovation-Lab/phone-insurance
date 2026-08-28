@@ -33,46 +33,48 @@ const initialState: ClaimsState = {
 };
 
 // --- Thunks ---
-export const fetchAllClaims = createAsyncThunk('claims/fetchAllClaims', async (_, { rejectWithValue }) => {
+export const fetchAllClaims = createAsyncThunk('claims/fetchAllClaims', async (_, { getState, rejectWithValue }) => {
     try {
-        // Obtener el ID del usuario desde localStorage o contexto
-        // Por ahora usamos el DUMMY_USER idNumber
-        const userIdNumber = "A123456789"; // Idealmente esto vendría del estado de auth
+        const state = getState() as any;
+        const policyHolderName = state.auth?.user?.name || "Michael Thompson";
         
-        const response: ApiResponse<{ ClaimList: any[], PageNo: number, PageSize: number, Total: number }> = await claimsApi.queryClaim(userIdNumber);
+        const response: any = await claimsApi.queryClaim({ policyHolderName });
         
-        if (response.Status === 'OK' && response.Model.ClaimList) {
+        if (response?.Model?.ClaimList) {
             return response.Model.ClaimList;
         }
         
         return [];
-    } catch (error) {
-        return rejectWithValue('Failed to fetch claims');
+    } catch (error: any) {
+        return rejectWithValue(error.message || 'Failed to fetch claims');
     }
 });
 
-export const fetchClaimDetails = createAsyncThunk('claims/fetchClaimDetails', async (claimNo: string, { rejectWithValue }) => {
+export const fetchClaimDetails = createAsyncThunk('claims/fetchClaimDetails', async (claimNo: string, { getState, rejectWithValue }) => {
     try {
-        // Para obtener detalles de un claim específico, necesitamos usar otra función o filtrar
-        // Por ahora, devolvemos un objeto vacío ya que esta función necesita ser revisada
-        const userIdNumber = "A123456789";
-        const response: ApiResponse<{ ClaimList: any[], PageNo: number, PageSize: number, Total: number }> = await claimsApi.queryClaim(userIdNumber);
+        const state = getState() as any;
+        const policyHolderName = state.auth?.user?.name || "Michael Thompson";
         
-        if (response.Status === 'OK' && response.Model.ClaimList) {
-            // Filtrar por el claimNo específico
-            const claim = response.Model.ClaimList.find((c: any) => c.ClaimNo === claimNo);
+        const response: any = await claimsApi.queryClaim({ policyHolderName, claimNo });
+        
+        if (response?.Model?.ClaimList) {
+            const claim = response.Model.ClaimList.find((c: any) => c.ClaimNo === claimNo) || response.Model.ClaimList[0];
             return claim ? [claim] : [];
         }
         
         return [];
-    } catch (error) {
-        return rejectWithValue('Failed to fetch claim details');
+    } catch (error: any) {
+        return rejectWithValue(error.message || 'Failed to fetch claim details');
     }
 });
 
 export const fetchTasks = createAsyncThunk('claims/fetchTasks', async (claimNo: string) => {
-    const response: ApiResponse<{ TaskInfoList: Task[] }> = await claimsApi.queryTask(claimNo);
-    return response.Model.TaskInfoList;
+    try {
+        const response: ApiResponse<{ TaskInfoList: Task[] }> = await claimsApi.queryTask(claimNo);
+        return response?.Model?.TaskInfoList || [];
+    } catch (err) {
+        return [];
+    }
 });
 
 export const assignTask = createAsyncThunk('claims/assignTask', async ({ claimNo, taskId }: { claimNo: string, taskId: string }) => {
