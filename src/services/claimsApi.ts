@@ -475,7 +475,7 @@ export const claimsApi = {
             "ClaimCase": {
                 "@type": "ClaimCase-ClaimCase",
                 "PolicyNo": policyNo,
-                "AccidentTime": formatDateForApi(new Date(dateOfLoss)),
+                "AccidentTime": formatDateForApi(dateOfLoss),
                 ...(causeOfLoss && { "LossCause": causeOfLoss })
             },
             "IsManualPolicy": false
@@ -509,7 +509,7 @@ export const claimsApi = {
         const payload = {
             "@type": "ClaimRequestForm-ClaimRequestForm",
             "PolicyNo": policyNo,
-            "AccidentTime": formatDateForApi(new Date(accidentTime)),
+            "AccidentTime": formatDateForApi(accidentTime),
             "IsManualPolicy": false
         };
 
@@ -545,7 +545,7 @@ export const claimsApi = {
             "ClaimCase": {
                 "@type": "ClaimCase-ClaimCase",
                 "PolicyNo": policyNo,
-                "AccidentTime": formatDateForApi(new Date(dateOfLoss))
+                "AccidentTime": formatDateForApi(dateOfLoss)
             },
             "IsManualPolicy": false
         };
