@@ -52,8 +52,8 @@ export default function NewAccidentTab() {
 
                 // Ejecutar directamente processFNOL en lugar de abrir el modal
                 const fnolData = {
-                    dateOfLoss: formatDateForApi(new Date(dateOfLoss)),
-                    reportDate: formatDateForApi(new Date(reportDate)),
+                    dateOfLoss: formatDateForApi(dateOfLoss),
+                    reportDate: formatDateForApi(reportDate),
                     causeOfLoss: causeOfLoss,
                     catastropheCode: "",
                     contactPerson: "",
